@@ -118,12 +118,12 @@ def almanac(data):
 @socketio.on('equipment')
 def equipment(data):
     global equipmentThread, equipmentThreadEvent
-    
+
     if 'connect' in data.keys() and data['connect']:
         print("Connecting to INDI server")
         equipmentThreadEvent.set()
         equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
-    
+
     if 'disconnect' in data.keys() and data['disconnect']:
         print("Disconnecting from INDI server")
         equipmentThreadEvent.clear()
@@ -215,7 +215,7 @@ def main():
             cmd = shutil.which("indi-web")
             if cmd and not process_status("indi-web"):
                 print("Starting INDI API")
-                indiAPIThread = subprocess.Popen([cmd])
+                indiAPIThread = subprocess.Popen([cmd, "--cors", "['http://localhost:8080']"])
 
         if vncServerThread is None: # https://wiki.archlinux.org/title/X11vnc
             cmd = shutil.which("x11vnc")
