@@ -554,6 +554,8 @@ fieldset#weather_alerts .checkbox-inline:nth-child(6) { color: #f08c00; } */
 
 .system-maintenance-desc { display: block; font-size: 0.9em; margin-bottom: 10px; }
 
+#system-apikey { display: none; }
+
 /*************************************/
 /*         AUTO SCALING
 /*************************************/
