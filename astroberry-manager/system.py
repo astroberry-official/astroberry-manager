@@ -121,7 +121,7 @@ def get_load_average():
         "load_average_5": load_avg_5,
         "load_average_15": load_avg_15
     }
-    
+
 def get_disk_io_counters():
     io_counters = psutil.disk_io_counters()
     return {
@@ -132,7 +132,7 @@ def get_disk_io_counters():
         "read_time": io_counters.read_time,
         "write_time": io_counters.write_time
     }
-    
+ 
 def get_net_io_counters():
     io_counters = psutil.net_io_counters()
     return {
@@ -208,7 +208,7 @@ def runSystemUpdate(socketio):
         data = {"update": True}
     else:
         data = {"update": False}
-    
+
     socketio.emit('system', data)
 
 def runSystemBackup(socketio):
@@ -223,7 +223,7 @@ def runSystemBackup(socketio):
         data = {"backup": True}
     else:
         data = {"backup": False}
-    
+
     socketio.emit('system', data)
 
 def runSystemRestore(socketio):
@@ -238,13 +238,14 @@ def runSystemRestore(socketio):
         data = {"restore": True}
     else:
         data = {"restore": False}
-    
+
     socketio.emit('system', data)
 
 def runSystemRestart(socketio):
+    sudo = shutil.which("sudo")
     cmd = shutil.which("reboot")
     if cmd and not process_status("reboot"):
-        ret = subprocess.run([cmd])
+        ret = subprocess.run([sudo, cmd])
         status = ret.returncode
     else:
         status = 1
@@ -253,13 +254,14 @@ def runSystemRestart(socketio):
         data = {"restart": True}
     else:
         data = {"restart": False}
-    
+
     socketio.emit('system', data)
 
 def runSystemShutdown(socketio):
+    sudo = shutil.which("sudo")
     cmd = shutil.which("poweroff")
     if cmd and not process_status("poweroff"):
-        ret = subprocess.run([cmd])
+        ret = subprocess.run([sudo, cmd])
         status = ret.returncode
     else:
         status = 1
@@ -268,5 +270,5 @@ def runSystemShutdown(socketio):
         data = {"shutdown": True}
     else:
         data = {"shutdown": False}
-    
+
     socketio.emit('system', data)
