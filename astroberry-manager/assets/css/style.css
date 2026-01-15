@@ -252,7 +252,7 @@ span#main-dock-chart { display: none; }
 .main-container { position: absolute; width: 380px; margin: 0; z-index: 100; top: 20%; left: 80px; }
 .main-container div:nth-child(n).panel-container { display: none; }
 
-.panel-container { display: none; position: relative; float: left; min-width: 380px; width: 380px; height: 530px; margin: 2px;
+.panel-container { display: none; position: relative; float: left; min-width: 380px; width: 380px; height: 540px; margin: 2px;
 	padding: 10px; background-color: #1c1c1ccc; border: 1px solid #e1e1e11f; border-radius: 5px; }
 
 .panel-title { margin-right: 10px; font-size: 1.25em; /* color: #ff3300; */ }
