@@ -33,7 +33,12 @@ function requestDesktop() {
 
     status("Connecting");
 
-     // Use local websockify instance
+    // Ignore when rfb already exists
+    if (typeof rfb !== 'undefined') {
+        return;
+    }
+
+    // Use local websockify instance
     let url = 'ws://' + location.hostname + ':8070/websockify';
 
     // Creating a new RFB object will start a new connection
@@ -42,16 +47,26 @@ function requestDesktop() {
     // Add listeners to important events from the RFB module
     rfb.addEventListener("connect",  connectedToServer);
     rfb.addEventListener("disconnect", disconnectedFromServer);
+    // rfb.addEventListener("serververification", serverVerify);
     rfb.addEventListener("credentialsrequired", credentialsAreRequired);
+    //rfb.addEventListener("securityfailure", securityFailed);
+    //rfb.addEventListener("clippingviewport", updateViewDrag);
+    //rfb.addEventListener("capabilities", updatePowerButton);
+    //rfb.addEventListener("clipboard", clipboardReceive);
+    //rfb.addEventListener("bell", bell);
     rfb.addEventListener("desktopname", updateDesktopName);
 
     // Set parameters that can be changed on an active connection
     rfb.viewOnly = false;
-    rfb.scaleViewport = false;
+    rfb.scaleViewport = true;
     rfb.clipViewport = true;
     rfb.dragViewport = false;
     // rfb.compressionLevel = 0;
     // rfb.qualityLevel = 9;
+}
+
+function closeDesktop() {
+    rfb.disconnect();
 }
 
 // When this function is called we have
@@ -72,8 +87,9 @@ function disconnectedFromServer(e) {
 // When this function is called, the server requires
 // credentials to authenticate
 function credentialsAreRequired(e) {
+    const username = "astroberry";
     const password = prompt("Password Required:");
-    rfb.sendCredentials({ password: password });
+    rfb.sendCredentials({ username: username, password: password });
 }
 
 // When this function is called we have received
@@ -115,4 +131,4 @@ function readQueryVariable(name, defaultValue) {
     return defaultValue;
 }
 
-export { requestDesktop }
+export { requestDesktop, closeDesktop }

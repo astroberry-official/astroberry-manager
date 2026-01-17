@@ -29,7 +29,7 @@ import { socket } from './sockets.js';
 
 function updateAlmanac(data) {
     if (!data) return;
-    
+
     // Moon
     $("#moon_phase_name").html(data.moon_phase);
     $("#moon_light").html(data.moon_light + "%");
@@ -198,7 +198,7 @@ function getReticle(pha_angle) {
     var text_color_small = "white";
     var text_font = "Roboto Medium";
     var text_font_size = (width > 200) ? parseInt(width/27) : 8;
-    
+
     const canvas = document.getElementById("polaris-reticle");
     const ctx = canvas.getContext("2d");
 
@@ -247,7 +247,7 @@ function getReticle(pha_angle) {
         x1 = center_x + (radius - minor - major/5) * Math.sin(i);
         y1 = center_y + (radius - minor - major/5) * Math.cos(i);
         x2 = center_x + (radius + major/5) * Math.sin(i);
-        y2 = center_y + (radius + major/5) * Math.cos(i);    
+        y2 = center_y + (radius + major/5) * Math.cos(i);
 
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -266,12 +266,12 @@ function getReticle(pha_angle) {
         x1 = center_x + (radius - minor) * Math.sin(i);
         y1 = center_y + (radius - minor) * Math.cos(i);
         x2 = center_x + (radius) * Math.sin(i);
-        y2 = center_y + (radius) * Math.cos(i);    
+        y2 = center_y + (radius) * Math.cos(i);
 
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
     }
-    
+
     ctx.strokeStyle = grid_color;
     ctx.stroke();
 
@@ -284,12 +284,12 @@ function getReticle(pha_angle) {
         x1 = center_x + (radius - minor + minor/6) * Math.sin(i);
         y1 = center_y + (radius - minor + minor/6) * Math.cos(i);
         x2 = center_x + (radius - minor/6) * Math.sin(i);
-        y2 = center_y + (radius - minor/6) * Math.cos(i);    
+        y2 = center_y + (radius - minor/6) * Math.cos(i);
 
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
     }
-    
+
     ctx.strokeStyle = grid_color;
     ctx.stroke();
 
@@ -333,14 +333,14 @@ function getReticle(pha_angle) {
     y = center_y + (radius - minor) * Math.cos(pha_angle);
     ctx.setLineDash([1, 3]); // set lines dashed
     ctx.moveTo(center_x, center_y);
-    ctx.lineTo(x, y);    
+    ctx.lineTo(x, y);
     ctx.strokeStyle = polaris_color;
     ctx.stroke();
 }
 
 function renderMoon(phase) { // https://codepen.io/anowodzinski/pen/ZWKXPQ
     phase = 0.5;
-    
+
     //console.log("Moon phase: " + phase);
 
     var width = parseInt($("#moon_phase").width());
@@ -362,7 +362,7 @@ function renderMoon(phase) { // https://codepen.io/anowodzinski/pen/ZWKXPQ
     ctx.beginPath();
     ctx.arc(radius, radius, radius - 5, 0, 2 * Math.PI);
     ctx.closePath();
-    ctx.fill(); 
+    ctx.fill();
 
     ctx.globalCompositeOperation = 'destination-in';
 

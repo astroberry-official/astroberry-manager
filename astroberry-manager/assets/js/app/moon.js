@@ -46,10 +46,10 @@ function DrawMoonShade(Phase, CX, CY, R) {
 	svg.select("circle").remove();
 
 	// full moon
-	if(Phase == 1) { 
+	if(Phase == 1) {
 		return;
 	};
-	
+
 	// new moon
 	if(Math.abs(Phase) == 0) {
 		svg.append("circle")
@@ -61,7 +61,7 @@ function DrawMoonShade(Phase, CX, CY, R) {
 			});
 		return;
 	};
-	
+
 	var d = "M" + CX + "," + (CY - R) +
 		"A" + R + "," + R +
 		" 0 1 " + ((Phase > 0) ? "0" : "1") +
@@ -77,15 +77,15 @@ function DrawMoonShade(Phase, CX, CY, R) {
 			((Phase > -0.5) && (Phase < 0.5) ? 1 - Math.abs(Phase) : Math.abs(Phase))
 						- 0.5);
 		var leg = Math.sqrt(R * R + h * h);
-	
+
 		var bigR = leg * leg / (2 * Math.sqrt(leg * leg - R * R));
-	
+
 		d += "A" + bigR + "," + bigR +
 			" 0 0 " + 
 			((Phase < -0.5) || ((Phase > 0) && (Phase < 0.5)) ? "0" : "1") +
 			" " + CX + "," + (CY - R);
 	};
-	
+
 	svg.append("path")
 		.attr({
 			"class": "moonShade",

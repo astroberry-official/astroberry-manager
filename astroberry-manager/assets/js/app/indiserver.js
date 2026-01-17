@@ -76,7 +76,7 @@ function getIndiStatus() { // Update status using API provided by indi-web
      $.getJSON(indiwebUrl + "/api/server/status", function(data) {
         if (data[0].status === undefined)
             return;
-        
+
         if (data[0].status == "True") {
             $("#profiles").prop('disabled', true);
             $("#profile_name").prop('disabled', true);
@@ -108,7 +108,7 @@ function getIndiStatus() { // Update status using API provided by indi-web
 
             $("#profile_start").css({display: "block"});
             $("#profile_stop").css({display: "none"});
-    
+
             getActiveProfile(); // get active profile from cookie or fallback to Simulators
         }
     });

@@ -277,18 +277,18 @@ function networkLocation() {
         navigator.geolocation.getCurrentPosition((position) => {
             data['mode'] = 0;
             data['gpstime'] = new Date().toISOString();
-    
+
             var latitude = position.coords.latitude ? position.coords.latitude : 0;
             if (typeof latitude === 'number' && isFinite(latitude))
                 data['latitude'] = latitude;
-    
+
             var longitude = position.coords.longitude ? position.coords.longitude : 0;
             if (typeof longitude === 'number' && isFinite(longitude))
                 data['longitude'] = longitude;
-    
+
             var altitude = position.coords.altitude ? position.coords.altitude : 0;
             if (typeof altitude === 'number' && isFinite(altitude))
-                data['altitude'] = altitude;    
+                data['altitude'] = altitude;
 
             syslogPrint("Location updated from network", "success");
             updateGeoloc(data);
@@ -296,7 +296,7 @@ function networkLocation() {
     } else {
         syslogPrint("Error getting location from network", "danger");
         return;
-    }    
+    }
 }
 
 function shareLocation(data) {
@@ -310,7 +310,7 @@ function shareLocation(data) {
             } else {
                 syslogPrint("Location data shared", "success");
             }
-        });    
+        });
     };
 }
 
@@ -690,11 +690,11 @@ function locationEvents() {
         // hide all
         $("#main-dock span").removeClass("dock-item-active");
         $(".panel-container").css({display: "none"});
-        
+
         // show location
         $("#main-dock-location").addClass("dock-item-active");
         $("#panel-location").css({display: "block"});
-        mainMap.invalidateSize(); // fix for map display        
+        mainMap.invalidateSize(); // fix for map display
     });
 }
 

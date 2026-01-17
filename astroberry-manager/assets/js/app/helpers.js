@@ -98,10 +98,10 @@ function appEvents() {
     $("#main-dock-handle").on("click", function() {
         if($("#main-dock").hasClass("dock-active")) {
             $("#main-dock").animate({left: '-50px'}); // hide main dock
-            $("#main-dock").removeClass("dock-active");    
+            $("#main-dock").removeClass("dock-active");
         } else {
             $("#main-dock").animate({left: '0px'}); // hide main dock
-            $("#main-dock").addClass("dock-active");    
+            $("#main-dock").addClass("dock-active");
         }
     })
     $("#main-dock span").on("click", function() {
@@ -116,7 +116,7 @@ function appEvents() {
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-search").addClass("dock-item-active");
-                    $("#panel-search").css({display: "block"});    
+                    $("#panel-search").css({display: "block"});
                 }
                 break;
             case 1: // Almanac
@@ -140,7 +140,7 @@ function appEvents() {
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-equipment").addClass("dock-item-active");
-                    $("#panel-equipment").css({display: "block"});    
+                    $("#panel-equipment").css({display: "block"});
                 }
                 break;
             case 3: // Location
@@ -153,7 +153,7 @@ function appEvents() {
 
                     $("#main-dock-location").addClass("dock-item-active");
                     $("#panel-location").css({display: "block"});
-                    mainMap.invalidateSize(); // fix for map display    
+                    mainMap.invalidateSize(); // fix for map display
                 }
                 break;
             case 4: // Weather
@@ -165,19 +165,19 @@ function appEvents() {
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-weather").addClass("dock-item-active");
-                    $("#panel-weather").css({display: "block"});    
+                    $("#panel-weather").css({display: "block"});
                 }
                 break;
             case 5: // System
                 if ($("#main-dock-system").hasClass("dock-item-active")) {
                     $("#main-dock-system").removeClass("dock-item-active");
-                    $("#panel-system").css({display: "none"});    
+                    $("#panel-system").css({display: "none"});
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-system").addClass("dock-item-active");
-                    $("#panel-system").css({display: "block"});    
+                    $("#panel-system").css({display: "block"});
                 }
                 break;
             case 6: // Terminal
@@ -191,7 +191,7 @@ function appEvents() {
                 break;
 
             case 7: // Star Chart
-                $(".panel-container").hide(); // hide all                
+                $(".panel-container").hide(); // hide all
                 $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                 $("#main-dock-chart").addClass("dock-item-active");
@@ -215,7 +215,7 @@ function appEvents() {
                 $("#reticle-telescope").hide();
                 $("#desktop-container").show();
                 // $("#main-dock").animate({width: 'toggle'}, 200); // hide main dock
-                
+
                 // switch main dock item
                 $("#main-dock-chart").show();
                 $("#main-dock-screen").hide();
@@ -273,7 +273,7 @@ function syslogPrint(msg, level, popup = false) {
     }
     console.log(msg);
     $("#syslog").html(stream);
-    
+
     if(popup)
         $("#notify_message").html('<div class="alert ' + alert_level + '">' + msg + '</div>').fadeIn().delay(3000).fadeOut("slow");
 
@@ -285,13 +285,13 @@ function syslogPrint(msg, level, popup = false) {
 /* ================================================================== */
 
 /* Global Cookie */
-function setCookie(name, value) {    
+function setCookie(name, value) {
     if(getCookie(name)) {
        var _value =  JSON.parse(getCookie(name));
     } else {
         var _value = {};
     }
-    
+
     for (const [key, val] of Object.entries(JSON.parse(value))) {
         if (key in Object.entries(_value)) {
             _value[key] = val;

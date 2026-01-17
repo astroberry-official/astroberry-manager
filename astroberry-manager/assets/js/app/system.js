@@ -180,7 +180,7 @@ function systemEvents() {
         } else {
             $("#celestial-map-telescope-coords").hide();
             setCookie("config", JSON.stringify({"telescope_coords": false }));
-        }    
+        }
     });
 
     $("#starchart_coordinates_enable").on("change", function() {
@@ -190,7 +190,7 @@ function systemEvents() {
         } else {
             $("#celestial-map-coords").hide();
             setCookie("config", JSON.stringify({"chart_coords": false }));
-        }    
+        }
     });
 
     $("#timeloc_enable").on("change", function() {
@@ -200,7 +200,7 @@ function systemEvents() {
         } else {
             $("#celestial-map-timeloc").hide();
             setCookie("config", JSON.stringify({"timeloc": false }));
-        }    
+        }
     });
 
     $("#target_enable").on("change", function() {
@@ -212,7 +212,7 @@ function systemEvents() {
             $("#celestial-map-target").hide();
             $("#target_autohide").attr('disabled', true);
             setCookie("config", JSON.stringify({"target_coords": false }));
-        }    
+        }
     });
 
     $("#target_autohide").on("change", function() {
@@ -221,7 +221,7 @@ function systemEvents() {
             setCookie("config", JSON.stringify({"target_autohide": true }));
         } else {
             setCookie("config", JSON.stringify({"target_autohide": false }));
-        }    
+        }
     });
 
     $("#system_timeloc").on("change", function() {
@@ -231,7 +231,7 @@ function systemEvents() {
         } else {
             systemLocationTime(false);
             setCookie("config", JSON.stringify({"use_system_loctime": false }));
-        }    
+        }
     });
 }
 

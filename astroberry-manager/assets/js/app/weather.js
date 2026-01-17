@@ -112,7 +112,7 @@ function updateWeatherMetno(data) {
     var forecastHour = $('input[name="weather_forecast_time"]:checked').val() ?  $('input[name="weather_forecast_time"]:checked').val() : "00";
     var scope = [];
 
-    // Find dates for days covered by forecast 
+    // Find dates for days covered by forecast
     for (var day = 0; day <= 5; day++) {
         var nextDay = new Date(Date.UTC(thisDay.getUTCFullYear(), thisDay.getUTCMonth(), thisDay.getUTCDate() + day, forecastHour, "00", "00"));
 
@@ -154,7 +154,7 @@ function getForecast(data, scope) { // Forecast - get weather summary and detail
             //console.log(details);
 
             // Set weather icon and legend
-            weatherIcon.setAttribute('src', path + summary + '.svg'); // // Set weather icon
+            weatherIcon.setAttribute('src', path + summary + '.svg'); // Set weather icon
             $("#weather_legend").html(getWeatherSummary(summary)); // Display weather text legend
 
             if ($('input[name="weather_units"]:checked').val() == "C") {
@@ -235,7 +235,7 @@ function getForecast(data, scope) { // Forecast - get weather summary and detail
 
 function getWeatherSummary(code) {
     var weatherSummary;
-    
+
     $.each(legend, function(index, data) {
         if (data["Symbol ID"] == code.split("_")[0])
             weatherSummary = data["English"];

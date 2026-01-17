@@ -54,7 +54,7 @@ function getLocalNames(names) {
     if (names === undefined) {
         $.getJSON(datapath+database, function(data) {
             //console.log("Search engine starting");
-            var names = []; 
+            var names = [];
             var result = $.each(data.features, function(index, element) {
                 names.push(element.id);
                 if ( ! names.includes(element.properties.desig))
@@ -118,7 +118,7 @@ function searchSimbad(query) {
         success: function(data)
         {
             //console.log(data);
-            
+
             // object not found
             if (data.split("\n").length < 4) {
                 showResults();
@@ -186,7 +186,7 @@ function showResults(data, online = false) {
     var results = "<h2>"+id;
     if (online) results += "<span class=\"fa fa-plug\" data-tooltip=\"tooltip\" title=\"Data retrieved from online SIMBAD astronomical database.\"></span>";
     results += "</h2>";
-    if (type) results += "<span>Type:        " + dsoType[type] + "</span>";    
+    if (type) results += "<span>Type:        " + dsoType[type] + "</span>";
     if (desig) results += "<span>Designation: " + desig + "</span>";
     if (dim) results += "<span>Dimentions:  " + dim + " arcmin</span>";
     if (mag) results += "<span>Magnitude:   " + mag + "</span>";
@@ -202,7 +202,7 @@ function showResults(data, online = false) {
     var fov = dim ? parseInt(dim.split("x")[0]) * 1.5/60 : 2;
     if (fov < 1)
         fov = 1;
-    
+
     // add details button
     var simbad = 'http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' + id + '&NbIdent=1&Radius=' + fov + '&Radius.unit=deg';
     results += '<a href="' + simbad + '" target="_blank" data-tooltip="tooltip" title="Look up object in SIMBAD Astronomical Database">Details</a>';
@@ -241,7 +241,7 @@ function showResults(data, online = false) {
         var alt = azalt[1] * 180 / Math.PI;
 
         results += "<span>AZ: " + deg2dms(az) + "</span>";
-        results += "<span> | ALT: " + deg2dms(alt) + "</span>";        
+        results += "<span> | ALT: " + deg2dms(alt) + "</span>";
     }
 
     // show object coordinates
@@ -261,7 +261,7 @@ function showResults(data, online = false) {
     var results = '<a href="' + aladin + '" target="_blank" data-tooltip="tooltip" title="Look up object in Aladin Sky Atlas">';
     results += '<img src='+image+' width="178" />';
     results += '</a>';
-    
+
     $("#search-results-image").html(results); // render image
 
     // TODO Get image thumnail from SIMBAD: http://alasky.u-strasbg.fr/cgi/simbad-thumbnails/get-thumbnail.py?oid=434630&size=200&legend=true
@@ -315,7 +315,7 @@ function showResults(data, online = false) {
 //             break;
 //         case 'oc':
 //             type = "Open cluster";
-//             break;        
+//             break;
 //         case 'gc':
 //             type = "Globular cluster";
 //             break;

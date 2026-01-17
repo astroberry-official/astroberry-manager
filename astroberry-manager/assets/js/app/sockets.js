@@ -108,7 +108,7 @@ function setSockets() {
             updateSystemInfo(data);
         }
     });
-    
+
     syslogPrint("Sockets loaded", "success");
 }
 

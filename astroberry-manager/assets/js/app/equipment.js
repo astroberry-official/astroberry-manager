@@ -42,7 +42,7 @@ function updateEquipment(data) {
     if ('equipment' in data) { // active devices emited by backend
         data = data['equipment'];
         if (!data) return;
-        activeEquipment.devices = Object.keys(data); 
+        activeEquipment.devices = Object.keys(data);
         markActiveDrivers(activeEquipment.devices);
     }
 
@@ -79,7 +79,7 @@ function markActiveDriver(device, status) {
     if (device === undefined || device == null ) return;
 
     equipmentImage = document.getElementById("setup_status").contentDocument;
-    
+
     if (equipmentImage === undefined || equipmentImage == null) return;
 
     device = device.toLowerCase();
@@ -102,7 +102,7 @@ function markActiveDriver(device, status) {
     var item = equipmentImage.getElementById(device);
 
     if (item === undefined || item == null) return;
-    
+
     // Set active device color
     if ($.inArray(device, ["dome", "weather", "gps", "ao", "detector", "aux"]) !== -1) {
         item.style.stroke = color;

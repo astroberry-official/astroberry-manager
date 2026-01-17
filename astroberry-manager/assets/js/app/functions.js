@@ -20,7 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
-function hour2degree(ra) { 
+function hour2degree(ra) {
   return ra > 12 ? (ra - 24) * 15 : ra * 15;
 }
 
@@ -36,7 +36,7 @@ function dms2deg (dms) {
 
 function deg2hms (deg) {
     if (deg === null || isNaN(parseFloat(deg))) return;
-    var ra = deg < 0 ? (deg + 360) / 15 : deg / 15, 
+    var ra = deg < 0 ? (deg + 360) / 15 : deg / 15,
        h = Math.floor (ra),
        rest1 = (ra - h) * 60,
        m = Math.floor(rest1),
@@ -80,7 +80,7 @@ function raDecToAltAz(ra, dec, lat, lon, jd_ut) {
     //Meeus 13.5 and 13.6, modified so West longitudes are negative and 0 is North
     const gmst = greenwichMeanSiderealTime(jd_ut);
     let localSiderealTime = (gmst + lon) % (2 * Math.PI);
-    
+
     let H = (localSiderealTime - ra);
     if (H < 0) {H += 2 * Math.PI;}
     if (H > Math.PI) { H = H - 2 * Math.PI;}
@@ -92,7 +92,7 @@ function raDecToAltAz(ra, dec, lat, lon, jd_ut) {
     if (az < 0) {az += 2 * Math.PI;}
     return [az, alt, localSiderealTime, H];
 }
-    
+
 function greenwichMeanSiderealTime(jd){
     //"Expressions for IAU 2000 precession quantities" N. Capitaine1,P.T.Wallace2, and J. Chapront
     const t = ((jd - 2451545.0)) / 36525.0;

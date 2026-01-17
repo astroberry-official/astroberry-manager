@@ -56,11 +56,11 @@ function requestTerminal() {
   term.writeln("Welcome to Astroberry OS");
   term.writeln("https://astroberry.io/");
   term.writeln(" ");
-  
+
   term.onData((data) => {
     //console.log("new input received from browser:", data);
     socket.timeout(5000).emit("pty-input", { input: data });
-  });  
+  });
 
   socket.on("pty-output", function (data) {
     //console.log("new output received from server:", data.output);
