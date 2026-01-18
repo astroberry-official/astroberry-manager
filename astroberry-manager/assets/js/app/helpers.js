@@ -29,6 +29,7 @@ import { equipmentEvents } from './equipment.js';
 import { indiwebEvents } from './indiserver.js';
 import { requestAlmanac } from './almanac.js';
 import { requestWeather } from './weather.js';
+import { requestDesktop, closeDesktop } from './desktop.js';
 import { systemEvents } from './system.js';
 import { searchEvents } from './search.js';
 
@@ -119,6 +120,7 @@ function appEvents() {
                     $("#panel-search").css({display: "block"});
                 }
                 break;
+
             case 1: // Almanac
                 if ($("#main-dock-almanac").hasClass("dock-item-active")) {
                     $("#main-dock-almanac").removeClass("dock-item-active");
@@ -131,6 +133,7 @@ function appEvents() {
                     $("#panel-almanac").css({display: "block"});
                 }
                 break;
+
             case 2: // Equipment
                 if ($("#main-dock-equipment").hasClass("dock-item-active")) {
                     $("#main-dock-equipment").removeClass("dock-item-active");
@@ -143,6 +146,7 @@ function appEvents() {
                     $("#panel-equipment").css({display: "block"});
                 }
                 break;
+
             case 3: // Location
                 if ($("#main-dock-location").hasClass("dock-item-active")) {
                     $("#main-dock-location").removeClass("dock-item-active");
@@ -156,6 +160,7 @@ function appEvents() {
                     mainMap.invalidateSize(); // fix for map display
                 }
                 break;
+
             case 4: // Weather
                 if ($("#main-dock-weather").hasClass("dock-item-active")) {
                     $("#main-dock-weather").removeClass("dock-item-active");
@@ -168,6 +173,7 @@ function appEvents() {
                     $("#panel-weather").css({display: "block"});
                 }
                 break;
+
             case 5: // System
                 if ($("#main-dock-system").hasClass("dock-item-active")) {
                     $("#main-dock-system").removeClass("dock-item-active");
@@ -180,6 +186,7 @@ function appEvents() {
                     $("#panel-system").css({display: "block"});
                 }
                 break;
+
             case 6: // Terminal
                 if ($("#main-dock-terminal").hasClass("dock-item-active")) {
                     $("#main-dock-terminal").removeClass("dock-item-active");
@@ -200,15 +207,18 @@ function appEvents() {
                 $("#reticle-chart").show();
                 $("#reticle-telescope").show();
                 Celestial.reload();
+                closeDesktop();
 
                 // switch main dock item
                 $("#main-dock-chart").hide();
                 $("#main-dock-screen").show();
                 break;
+
             case 8: // Desktop
                 $(".panel-container").hide(); // hide all
                 $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
+                requestDesktop();
                 $("#main-dock-screen").addClass("dock-item-active");
                 $(".celestial-map-container").hide();
                 $("#reticle-chart").hide();
@@ -219,11 +229,12 @@ function appEvents() {
                 // switch main dock item
                 $("#main-dock-chart").show();
                 $("#main-dock-screen").hide();
-
                 break;
+
             case 9: // Fullscreen
                 toggleFullScreen();
                 break;
+
             default:
                 $("#main-dock span").removeClass("dock-item-active");
                 $(".panel-container").hide();
