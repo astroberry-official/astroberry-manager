@@ -31,13 +31,6 @@ function requestDesktop() {
     //document.getElementById('sendCtrlAltDelButton')
     //    .onclick = sendCtrlAltDel;
 
-    status("Connecting");
-
-    // Ignore when rfb already exists
-    if (typeof rfb !== 'undefined') {
-        return;
-    }
-
     // Use local websockify instance
     let url = 'ws://' + location.hostname + ':8070/websockify';
 
@@ -72,15 +65,15 @@ function closeDesktop() {
 // When this function is called we have
 // successfully connected to a server
 function connectedToServer(e) {
-    status("Connected to " + desktopName);
+    console.log("Desktop connected")
 }
 
 // This function is called when we are disconnected
 function disconnectedFromServer(e) {
     if (e.detail.clean) {
-        status("Disconnected");
+        console.log("Desktop disconnected")
     } else {
-        status("Something went wrong, connection is closed");
+        console.log("Lost connection to desktop!")
     }
 }
 
@@ -104,11 +97,6 @@ function updateDesktopName(e) {
 function sendCtrlAltDel() {
     rfb.sendCtrlAltDel();
     return false;
-}
-
-// Show a status text in the top bar
-function status(text) {
-    //document.getElementById('status').textContent = text;
 }
 
 // This function extracts the value of one variable from the
