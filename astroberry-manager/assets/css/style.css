@@ -164,7 +164,7 @@ div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display:
 #m-show { margin:0 6px 6px 0;  background: #1c1c1c; border: 1px solid #333; border-radius:3px;  }
 #m-show:hover { background-color:#eee; }
 
-#celestial-form { display: none; font-size: 0.8em; position: absolute; top: 150px; right: 30px; 
+#celestial-form { display: none; font-size: 0.8em; position: absolute; top: 20%; right: 30px; 
 	background: #1c1c1ccc; padding: 20px 10px; border: 1px solid #e1e1e11f; border-radius: 5px; overflow: hidden; z-index: 100;}
 #celestial-form input[type=number] { margin: 0 6px; text-align: right; }
 #celestial-form input[type=checkbox] { margin: 0 5px; accent-color: #ccc;cursor: pointer; }
@@ -225,7 +225,7 @@ div#general.col :nth-child(3) { display: none; }
 /*************************************/
 /*          MAIN DOCK
 /*************************************/
-#main-dock { display: block; position: absolute; top: 30%; left: 0; z-index: 500; width: 50px;
+#main-dock { display: block; position: absolute; top: 35%; left: 0; z-index: 500; width: 50px;
 	background-color:#1c1c1ccc; border: 1px solid #e1e1e11f; border-radius: 0 10px 10px 0; padding: 5px; box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);}
 
 #main-dock-handle { display: block; position: absolute; left: 48px; top: 40px; width: 15px; height: 50px; cursor: pointer; background: #1c1c1c;
