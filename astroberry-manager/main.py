@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
 https://github.com/rkaczorek/astroberry-os
@@ -45,6 +45,8 @@ __copyright__ = 'Copyright 2024, Radek Kaczorek'
 __license__ = 'GPL-3'
 __version__ = '1.0.0'
 
+os.chdir('/home/astroberry')
+
 app = Flask(__name__, static_folder='assets')
 app.secret_key = os.getenv('APP_KEY', 'secret_key!')
 socketio = SocketIO(app)
@@ -78,7 +80,7 @@ def login():
                 session.permanent = True
             else:
                 session.permanent = False
-            session['username'] = request.form['username']
+            session['username'] = username
             return redirect(url_for('index'))
         else:
             print("User %s login failed" % username)
@@ -215,13 +217,13 @@ def main():
             cmd = shutil.which("indi-web")
             if cmd and not process_status("indi-web"):
                 print("Starting INDI API")
-                indiAPIThread = subprocess.Popen([cmd, "--cors", "['http://localhost:8080']"])
+                indiAPIThread = subprocess.Popen([cmd, "--cors", "http://astroberry:8080"])
 
         if vncServerThread is None: # https://wiki.archlinux.org/title/X11vnc
             cmd = shutil.which("x11vnc")
             if cmd and not process_status("x11vnc"):
                 print("Starting remote desktop")
-                vncServerThread = subprocess.Popen([cmd, "-display", ":0", "-auth", "guess", "-forever", "-loop"])
+                vncServerThread = subprocess.Popen([cmd, "-display", ":0", "-auth", "guess", "-forever", "-loop", "-noxdamage", "-nowf", "-no6", "-noipv6", "-listen", "localhost", "-avahi"])
 
         if vncSocketThread is None:
             cmd = shutil.which("websockify")
