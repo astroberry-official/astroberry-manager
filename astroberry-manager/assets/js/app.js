@@ -28,7 +28,6 @@ import { requestStarChart, updateStarChartLocation } from './app/celestial.js';
 import { getINDIServerAPI } from './app/indiserver.js';
 import { initTimer, eventHandlers } from './app/helpers.js';
 import { requestTerminal } from './app/terminal.js';
-import { requestDesktop } from './app/desktop.js';
 
 /* ================================================================== */
 /*                           MAIN APP ROUTINE
@@ -63,9 +62,6 @@ $(document).ready(function() {
     // Load terminal
     requestTerminal();
 
-    // Load noVNC
-    requestDesktop();
-    
     // Update from INDI server API
     setTimeout(function() {
       getINDIServerAPI();
