@@ -470,7 +470,10 @@ function telescopeStatusIcon(status) {
     $("#celestial-map-telescope-coords").show();
     $("#starchart_center").prop('disabled', false);
     $("#starchart_lock").prop('disabled', false);
-    $("#reticle-telescope").show();
+    if ( ! $("#main-dock-screen").hasClass("dock-item-active") ) {
+        $("#reticle-telescope").show();
+    }
+
   } else {
     $("#celestial-map-telescope-icon").css({"background-image": "url(assets/images/telescope.png)"});
     $("#celestial-map-telescope-coords").hide();
