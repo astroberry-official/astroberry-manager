@@ -24,51 +24,54 @@
 <html lang="en">
 <head>
 	<!-- Title -->
-    <title>Astroberry OS | Login</title>
+	<title>Astroberry OS</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta http-equiv="Content-Language" content="en,en-us"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- favicon -->
 	<link rel="icon" sizes="16x16" type="image/png" href="assets/icons/astroberry-16x16.png">
 
 	<!-- CSS Styles -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="assets/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="assets/css/style.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="assets/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css">
 
-    <!-- Background particles -->
-    <script src="assets/js/misc/particles.js"></script>
+	<!-- Background particles -->
+	<script src="assets/js/misc/particles.js"></script>
 </head>
 
-<body background="assets/images/milkyway.jpg">
-    <div id="particles-js"></div>
-    <div id="login-form-container">
-        <img src="assets/icons/astroberry-icon-white.svg" width="50" />
-        <h1>Astroberry OS</h1>
-        <form id="login-form" method="POST">
-            <input id="username" name="username" class="form-control" type="text" placeholder="Username">
-            <input id="password" name="password" class="form-control" type="password" placeholder="Password">
-            <input id="remember" name="remember" type="checkbox"><label for="remember">Remember me</label>
-        </form>
-        <button id="login" class="btn">Login</button>
-    </div>
+<body background="assets/images/milkyway-galaxy-center-and-its-companions_1920x1080.jpg">
+	<div id="particles-js"></div>
+	<div id="login-form-container">
+		<img src="assets/icons/astroberry-icon-white.svg" width="50" />
+		<h1>Astroberry OS</h1>
+		<form id="login-form" method="POST">
+			<input id="username" name="username" class="form-control" type="text" placeholder="Username">
+			<input id="password" name="password" class="form-control" type="password" placeholder="Password">
+			<input id="remember" name="remember" type="checkbox"><label for="remember">Remember me</label>
+		</form>
+		<button id="login" class="btn">Login</button>
+	</div>
 </body>
+
 <script>
-    particlesJS.load('particles-js', 'assets/js/misc/particles.json', function() {});
+particlesJS.load('particles-js', 'assets/js/misc/particles.json', function() {});
 </script>
+
 <script>
-    document.getElementById("login").addEventListener("click", function() {
-        document.getElementById("login-form").submit();
-    })
-    document.getElementById("username").addEventListener("keypress", function(event) {
-        if (event.key == "Enter")
-            document.getElementById("password").focus();
-    })
-    document.getElementById("password").addEventListener("keypress", function(event) {
-        if (event.key == "Enter")
-            document.getElementById("login-form").submit();
-    })
+document.getElementById("login").addEventListener("click", function() {
+	document.getElementById("login-form").submit();
+});
+document.getElementById("username").addEventListener("keypress", function(event) {
+	if (event.key == "Enter")
+		document.getElementById("password").focus();
+});
+document.getElementById("password").addEventListener("keypress", function(event) {
+	if (event.key == "Enter")
+		document.getElementById("login-form").submit();
+});
 </script>
+
 </html>
