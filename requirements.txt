@@ -5,6 +5,7 @@ flask-login>=0.6.3
 python-pam>=2.0.2
 gevent>=24.2.1
 gevent-websocket>=0.10.1
+legacy-cgi>=2.6.4
 ephem>=4.1.5
 numpy>=2.1.1
 pillow>=10.4.0
