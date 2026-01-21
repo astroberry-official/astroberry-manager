@@ -5,8 +5,8 @@
 Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
-https://github.com/rkaczorek/astroberry-os
-https://github.com/rkaczorek/astroberry-manager
+https://github.com/astroberry-official/astroberry-os
+https://github.com/astroberry-official/astroberry-manager
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
@@ -41,12 +41,15 @@ from equipment import getINDIServer, telescopeControl
 from system import getSystemReports, getSystemReportOnce, runSystemUpdate, runSystemBackup, runSystemRestore, runSystemRestart, runSystemShutdown, process_status
 
 __author__ = 'Radek Kaczorek'
-__copyright__ = 'Copyright 2024, Radek Kaczorek'
+__copyright__ = 'Copyright 2026, Radek Kaczorek'
 __license__ = 'GPL-3'
 __version__ = '1.0.0'
 
-os.chdir('/home/astroberry')
+# working directory
+wdir = os.getenv('HOME', '/')
+os.chdir(wdir)
 
+# main app
 app = Flask(__name__, static_folder='assets')
 app.secret_key = os.getenv('APP_KEY', 'secret_key!')
 socketio = SocketIO(app)
@@ -76,11 +79,11 @@ def login():
         login = pam.authenticate(username, password)
         if login:
             print("User %s login successful" % username)
+            session['username'] = username
             if remember:
                 session.permanent = True
             else:
                 session.permanent = False
-            session['username'] = username
             return redirect(url_for('index'))
         else:
             print("User %s login failed" % username)
@@ -100,10 +103,12 @@ def index():
 
 @socketio.on('connect')
 def connect():
-    print("Socket connected")
-
-    # update system info once at start for user experience
-    getSystemReportOnce(socketio)
+    if 'username' in session:
+        print("Socket connected")
+        getSystemReportOnce(socketio)
+    else:
+        print("Socket connection rejected")
+        return False
 
 @socketio.on('disconnect')
 def disconnect():
@@ -121,12 +126,12 @@ def almanac(data):
 def equipment(data):
     global equipmentThread, equipmentThreadEvent
 
-    if 'connect' in data.keys() and data['connect']:
+    if 'username' in session and 'connect' in data.keys() and data['connect']:
         print("Connecting to INDI server")
         equipmentThreadEvent.set()
         equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
 
-    if 'disconnect' in data.keys() and data['disconnect']:
+    if 'username' in session and 'disconnect' in data.keys() and data['disconnect']:
         print("Disconnecting from INDI server")
         equipmentThreadEvent.clear()
         equipmentThread = None
@@ -195,45 +200,52 @@ def shut_down():
 def main():
     global fd, child_pid, terminalThread, locationThread, indiAPIThread, sysmonThread, vncSocketThread, vncServerThread
     try: # Start main app
-        print("Astroberry Manager v"+__version__)
+        print("Astroberry Manager v"+__version__+"\n")
+
+#        External services should be generally managed outside of this application
+#        and only interfaced via network. Such approach does not make this application
+#        a single point of failure. In an case you can independently start, stop, reload
+#        any of these services (indiwebmanager, Xtigervnc, websockify). Therefore
+#        you should start these services using systemd or any other service management
+#        system. If for whatever reason you need to start entire stack from this script,
+#        just uncomment the following section of code.
+#
+#        if indiAPIThread is None:
+#            cmd = shutil.which("indi-web")
+#            if cmd and not process_status("indi-web"):
+#                print(" ^|^s Starting INDI API")
+#                indiAPIThread = subprocess.Popen([cmd, "--host", "0.0.0.0",  "--cors", "http://astroberry:8080"])
+#
+#        if vncServerThread is None:
+#            cmd = shutil.which("Xtigervnc")
+#            if cmd and not process_status("Xtigervnc"):
+#                print(" ^|^s Starting remote desktop")
+#                vncServerThread = subprocess.Popen([cmd, "-display :70", "-desktop astroberry", "-SecurityTypes None", "-NeverShared", "-DisconnectClients", "-localhost yes", "-UseIPv6 no">
+#
+#        if vncSocketThread is None:
+#            cmd = shutil.which("websockify")
+#            if cmd and not process_status("websockify"):
+#                print(" ^|^s Starting desktop websocket")
+#                vncSocketThread = subprocess.Popen([cmd, ":8070", "127.0.0.1:5970"])
+
+        if locationThread is None:
+            print("✓ Starting geolocation")
+            locationThread = socketio.start_background_task(getLocation, socketio)
 
         if terminalThread is None:
-            print("Starting terminal")
+            print("✓ Starting terminal")
             terminalThread = socketio.start_background_task(read_and_forward_pty_output)
-
-            # create child process attached to a pty
-            (child_pid, fd) = pty.fork()
+            (child_pid, fd) = pty.fork() # create child process attached to a pty
             if child_pid == 0:
-                # this is the child process fork
                 cmd = shutil.which("bash") # run bash shell as default
                 while True: # always respawn
                     subprocess.run([cmd])
 
-        if locationThread is None:
-            print("Starting geolocation")
-            locationThread = socketio.start_background_task(getLocation, socketio)
-
-        if indiAPIThread is None:
-            cmd = shutil.which("indi-web")
-            if cmd and not process_status("indi-web"):
-                print("Starting INDI API")
-                indiAPIThread = subprocess.Popen([cmd, "--cors", "http://astroberry:8080"])
-
-        if vncServerThread is None: # https://wiki.archlinux.org/title/X11vnc
-            cmd = shutil.which("x11vnc")
-            if cmd and not process_status("x11vnc"):
-                print("Starting remote desktop")
-                vncServerThread = subprocess.Popen([cmd, "-display", ":0", "-auth", "guess", "-forever", "-loop", "-noxdamage", "-nowf", "-no6", "-noipv6", "-listen", "localhost", "-avahi"])
-
-        if vncSocketThread is None:
-            cmd = shutil.which("websockify")
-            if cmd and not process_status("websockify"):
-                print("Starting desktop socket")
-                vncSocketThread = subprocess.Popen([cmd, ":8070", "127.0.0.1:5900"])
-
         if sysmonThread is None:
-            print("Starting system monitoring")
+            print("✓ Starting system monitoring")
             sysmonThread = socketio.start_background_task(getSystemReports, socketio)
+
+        print("\nApplication startup complete.\n")
 
         # start main app
         socketio.run(app, host='0.0.0.0', port = 8080, debug=False)

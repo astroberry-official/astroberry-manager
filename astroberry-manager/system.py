@@ -5,8 +5,8 @@
 Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
-https://github.com/rkaczorek/astroberry-os
-https://github.com/rkaczorek/astroberry-manager
+https://github.com/astroberry-official/astroberry-os
+https://github.com/astroberry-official/astroberry-manager
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
@@ -31,7 +31,13 @@ def get_release_info():
     from main import __version__
     ui_version = __version__
 
-    os_version = os.popen("grep PRETTY_NAME /etc/os-release | cut -d= -f2").read().replace("\"","").strip()
+    path = '/etc/astroberry/version'
+    if os.path.exists(path):
+        with open(path) as f:
+            osv = f.read()
+
+    os_version = "Astroberry OS " + osv
+    #os_version = os.popen("grep PRETTY_NAME /etc/os-release | cut -d= -f2").read().replace("\"","").strip()
     if os.popen("dpkg -l | grep libindi1").read():
         indi_version = os.popen("dpkg -s libindi1|grep Version: | cut -d' '  -f2 | cut -d+ -f1").read().strip()
     else:

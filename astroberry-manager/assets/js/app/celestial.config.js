@@ -2,8 +2,8 @@
  Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
- https://github.com/rkaczorek/astroberry-os
- https://github.com/rkaczorek/astroberry-manager
+ https://github.com/astroberry-official/astroberry-os
+ https://github.com/astroberry-official/astroberry-manager
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Library General Public
@@ -20,9 +20,9 @@
  Boston, MA 02110-1301, USA.
 */
 
-export var celestialConfig = { //https://github.com/ofrohn/d3-celestial
-      width: 0,     // Default width, 0 = full parent width; height is determined by projection
-      projection: "aitoff",   // Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs,
+export var celestialConfig = {	//https://github.com/ofrohn/d3-celestial
+      width: 0,			// Default width, 0 = full parent width; height is determined by projection
+      projection: "aitoff",	// Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs,
                                 // bonne, bromley, collignon, craig, craster, cylindricalEqualArea, cylindricalStereographic, eckert1,
                                 // eckert2, eckert3, eckert4, eckert5, eckert6, eisenlohr, equirectangular, fahey, foucaut,
                                 // ginzburg4, ginzburg5, ginzburg6, ginzburg8, ginzburg9, gringorten, hammer, hatano, healpix, hill,
@@ -33,18 +33,18 @@ export var celestialConfig = { //https://github.com/ofrohn/d3-celestial
                                 // wagner4, wagner6, wagner7, wiechel, winkel3
       //projectionRatio: 2,     // Optional override for default projection ratio
       transform: "equatorial",  // Coordinate transformation: equatorial (default), ecliptic, galactic, supergalactic
-      //center: [20, 0, 0],      // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
+      //center: [20, 0, 0],     // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
                                 // otherwise [degrees, degrees, degrees], 3rd parameter is orientation, null = default center
-      orientationfixed: false,   // Keep orientation angle the same as center[2]
+      orientationfixed: false,  // Keep orientation angle the same as center[2]
       background: { fill: "#000000", stroke: "#000000", opacity: 0.5 }, // Background style
       follow: "center",         // on which coordinates to center the map, default: zenith, if location enabled, otherwise center
-      //zoomlevel: 1.25,          // initial zoom level 0...zoomextend; 0|null = default, 1 = 100%, 0 < x <= zoomextend
+      //zoomlevel: 1.25,        // initial zoom level 0...zoomextend; 0|null = default, 1 = 100%, 0 < x <= zoomextend
       zoomlevel: 1,
       zoomextend: 50,           // maximum zoom level
       adaptable: true,          // Sizes are increased with higher zoom-levels
       interactive: true,        // Enable zooming and rotation with mousewheel and dragging
       disableAnimations: false, // Disable all animations
-      form: false,               // Display settings form
+      form: false,              // Display settings form
       controls: true,           // Display zoom controls
       formFields: {"location": true,  // Set visiblity for each group of fields with the respective id
                    "general": true,
@@ -185,7 +185,7 @@ export var celestialConfig = { //https://github.com/ofrohn/d3-celestial
         stroke: "#990000",  // Line
         width: 0.4,
         fill: "#000000",    // Area below horizon
-        opacity: 0.8
+        opacity: 0.6
       },
       daylight: {  //Show day sky as a gradient, if location is set and map projection is hemispheric
         show: false

@@ -2,8 +2,8 @@
  Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
- https://github.com/rkaczorek/astroberry-os
- https://github.com/rkaczorek/astroberry-manager
+ https://github.com/astroberry-official/astroberry-os
+ https://github.com/astroberry-official/astroberry-manager
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Library General Public
@@ -40,7 +40,7 @@ function getINDIServerAPI() { // helper function for module init
     getProfileDrivers() // Select drivers for active profile
     getDriverDetails(); // Load details of active drivers
 
-    syslogPrint("Active profile loaded: " + activeEquipment.profile, "success");
+    //syslogPrint("Profile " + activeEquipment.profile + " loaded", "success");
 }
 
 function connectINDIServer() {
@@ -186,7 +186,7 @@ function getActiveDrivers() {
 
         // check if all profile drivers are running
         if (counter < $("#drivers_list :selected").length) {
-            syslogPrint("Not all profile drivers are running. Make sure all devices are powered and connected", "warning", true);
+            syslogPrint("Waiting for devices. Make sure all devices are powered and connected", "warning", true);
             return;
         }
     });
@@ -207,7 +207,7 @@ function getProfileDrivers() {
 
     if (! name) return;
 
-    syslogPrint("Profile selected: " + name, "success", true);
+    //syslogPrint("Profile " + name + " selected", "success", true);
 
     // Get local drivers
     var url = indiwebUrl + "/api/profiles/" + name + "/labels";
@@ -261,10 +261,10 @@ function startProfile() {
             setActiveProfile(profile);
             getIndiStatus();
             connectINDIServer();
-            syslogPrint("Profile started: " + activeEquipment.profile, "success", true);
+            syslogPrint("Profile " + activeEquipment.profile + " started", "success", true);
         },
         error: function() {
-            syslogPrint("Error starting profile", "danger", true);
+            syslogPrint("Error starting " + profile + " profile", "danger", true);
         }
     });
 }
@@ -282,10 +282,10 @@ function stopProfile() {
                 getIndiStatus();
             }, 1000);
 
-            syslogPrint("Profile stopped: " + activeEquipment.profile, "success", true);
+            syslogPrint("Profile " + activeEquipment.profile + " stopped", "success", true);
         },
         error: function() {
-            syslogPrint("Error stopping profile", "danger", true);
+            syslogPrint("Error stopping " + profile + " profile", "danger", true);
         }
     });
 }
@@ -451,7 +451,7 @@ function addProfile() {
 
     // finally add new profile
     if (profile_name) {
-        syslogPrint("Adding profile: " + profile_name, "success", true);
+        syslogPrint("Profile " + profile_name + " added", "success", true);
         $("#profiles").append("<option id='" + profile_name + "' selected>" + profile_name + "</option>");
         clearDriverSelection();
         saveProfile();
@@ -474,10 +474,10 @@ function deleteProfile() {
             $("#profiles option:selected").remove();
             getProfiles();
             $('#profiles').change(); // getProfileDrivers()
-            syslogPrint("Profile deleted: " + name, "success", true);
+            syslogPrint("Profile " + name + " deleted", "success", true);
         },
         error: function() {
-            syslogPrint("Error deleting profile: " + name, "danger", true);
+            syslogPrint("Error deleting profile " + name, "danger", true);
         }
     });
 }
@@ -495,7 +495,7 @@ function saveProfile() {
         url: encodeURI(url),
         success: function() {
             saveProfileDrivers(name);
-            syslogPrint("Profile updated", "success", true);
+            //syslogPrint("Profile updated", "success", true);
         },
         error: function() {
             syslogPrint("Error updating profile", "danger", true);
@@ -525,7 +525,7 @@ function saveProfileOptions() {
         data: profileInfo,
         contentType: "application/json; charset=utf-8",
         success: function() {
-            syslogPrint("Profile options updated", "success", true);
+            //syslogPrint("Profile options updated", "success", true);
 
         },
         error: function() {
@@ -564,7 +564,7 @@ function saveProfileDrivers(profile) {
         data: drivers,
         contentType: "application/json; charset=utf-8",
         success: function() {
-            syslogPrint("Profile drivers updated", "success", true);
+            //syslogPrint("Profile drivers updated", "success", true);
         },
         error: function() {
             syslogPrint("Error updating profile drivers", "danger", true)
@@ -578,10 +578,10 @@ function restartDriver(label) {
             url: indiwebUrl + "/api/drivers/restart/" + label,
             success: function() {
                 getIndiStatus();
-                syslogPrint("Driver restarted: " + label, "success", true);
+                syslogPrint("Driver " + label + " restarted", "success", true);
             },
             error: function() {
-                syslogPrint("Error restarting driver: " + label, "danger", true);
+                syslogPrint("Error restarting driver " + label, "danger", true);
             }
         });
 }

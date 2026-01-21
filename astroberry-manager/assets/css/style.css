@@ -2,8 +2,8 @@
  Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
- https://github.com/rkaczorek/astroberry-os
- https://github.com/rkaczorek/astroberry-manager
+ https://github.com/astroberry-official/astroberry-os
+ https://github.com/astroberry-official/astroberry-manager
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Library General Public
@@ -531,6 +531,7 @@ fieldset#weather_alerts .checkbox-inline:nth-child(6) { color: #f08c00; } */
 #system-status h2 { font-size: 1em; }
 #system-status span { margin-bottom: 3px; }
 #system-status .sysinfo { display: inline-block; margin-left: 10px; font-size: 0.9em; }
+#system-status #sysmon-resource-model { width: 100px; }
 #system-status #sysmon { display: block; width:100%; height: 50%; margin-top: 10px; }
 #sysmon .sysmon-resource { float: left; margin-bottom: 5px; width: 49%; vertical-align: top; background: #111; padding: 10px; 
 	border-radius: 5px; }

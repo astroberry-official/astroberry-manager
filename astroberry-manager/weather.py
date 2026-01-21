@@ -5,8 +5,8 @@
 Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
-https://github.com/rkaczorek/astroberry-os
-https://github.com/rkaczorek/astroberry-manager
+https://github.com/astroberry-official/astroberry-os
+https://github.com/astroberry-official/astroberry-manager
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
@@ -26,7 +26,7 @@ Boston, MA 02110-1301, USA.
 import json
 import yr_weather
 
-USER_AGENT = "astroberry-os/1.0 https://github.com/rkaczorek/astroberry-os"
+USER_AGENT = "astroberry-os/1.0 https://github.com/astroberry-official/astroberry-os"
 headers = {"User-Agent": USER_AGENT}
 
 weather = yr_weather.Locationforecast(headers=headers, use_cache=False)
