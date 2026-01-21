@@ -7,7 +7,7 @@ packages = ["astroberrymanager"]
 include-package-data = true
 
 [project]
-name = "astroberrymanager"
+name = "astroberry-manager"
 version = "1.0.0" # Also update __version__ in main.py
 authors = [
   { name="Radek Kaczorek", email="rkaczorek@gmail.com" }
@@ -15,9 +15,8 @@ authors = [
 description = "Web frontend for Astroberry OS"
 readme = "README.md"
 requires-python = ">=3.7"
-license = {text = "GPL-3"}
+license = "GPL-3.0-or-later"
 classifiers = [
-    'License :: OSI Approved :: License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Natural Language :: English',
     'Programming Language :: Python',
     'Operating System :: OS Independent',
