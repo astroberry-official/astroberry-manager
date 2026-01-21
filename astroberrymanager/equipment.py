@@ -106,16 +106,14 @@ def getINDIServer(socketio, event):
 		while not indiClient.isServerConnected():
 			try:
 				indiClient.connectServer()
-				if indiClient.isServerConnected():
-					time.sleep(1) # Wait after connecting to INDI server
-				else:
+				time.sleep(1) # Wait after connecting to INDI server
+				if not indiClient.isServerConnected():
 					indiClient.logger.info(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
 					time.sleep(TIMEOUT)
 			except Exception as err:
 				indiClient.logger.info(f"Error connecting to INDI server: {err}")
 
-		if POLLING: 
-			# We are connected! Let's eat some devices ;-)
+		if POLLING:
 			devices = indiClient.getDevices() # Get all devices from INDI server
 			equipment = {'equipment': getJSON(devices)} # Get properties and their associated values for all devices in JSON format
 			try: # get ALL data in time interval = POLLING
@@ -130,21 +128,19 @@ def getINDIServer(socketio, event):
 def getProperty(property): # pushed by indiserver
 	"""
 	Return RFC 8259 compliant JSON assembled from properties of devices connected to INDI server
+	{ device_type:
+		{ device_name:
+		  {	property_name: [value, label],
+				'GROUP': group,
+				'LABEL':label,
+				'TYPE': type,
+				'STATE': state,
+				'PERM': perm
+		  }
+		} 
+	}
 	"""
-	# { device_type:
-	# 	{ device_name: 
-	#	  {	property_name: [value, label],
-	# 			'GROUP': group,
-	# 			'LABEL':label,
-	# 			'TYPE': type,
-	# 			'STATE': state,
-	# 			'PERM': perm
-	# 	  }
-	# 	} 
-	# }
-	#
 
-	#print(property.__dir__())
 	device_type = getDeviceType(property.getBaseDevice().getDriverInterface())
 	device_name = property.getDeviceName()
 	name = property.getName()
@@ -153,7 +149,7 @@ def getProperty(property): # pushed by indiserver
 	type = property.getTypeAsString()
 	state = property.getStateAsString()
 	perm = property.getPermission()
-	# print(device_type, device_name, name, label, group, type, state, perm)
+
 	if device_type is None or device_name is None or name is None:
 		return
 
@@ -194,19 +190,18 @@ def getProperty(property): # pushed by indiserver
 def getJSON(devices):
 	"""
 	Return RFC 8259 compliant JSON assembled from properties of devices connected to INDI server
-	"""
-	# { device_type:
-	# 	{ device_name: 
-	#	  {	property_name: [value, label],
-	# 			'GROUP': group,
-	# 			'LABEL':label,
-	# 			'TYPE': type,
-	# 			'STATE': state,
-	# 			'PERM': perm
-	# 	  }
-	# 	} 
-	# }
-	#
+	{ device_type:
+		{ device_name:
+		  {	property_name: [value, label],
+				'GROUP': group,
+				'LABEL':label,
+				'TYPE': type,
+				'STATE': state,
+				'PERM': perm
+		  }
+		}
+	}
+        """
 
 	if not devices:
 		return
@@ -351,11 +346,11 @@ def telescopeControl(data):
 					break # use first seen telescope
 
 			device = indiClient.getDevice(telescope)
-			
+
 			if not (device) or not (device.isConnected()):
 				print("Setting telescope location aborted. No telescope device found")
 				return
-			
+
 			if data['params']['lat'] < -90 or data['params']['lat'] > 90 or data['params']['lon'] < 0 or data['params']['lon'] > 360:
 				print("Setting telescope location aborted. Invalid location requested")
 				return

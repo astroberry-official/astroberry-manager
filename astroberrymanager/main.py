@@ -25,7 +25,7 @@ Boston, MA 02110-1301, USA.
 
 import sys, os, shutil, subprocess
 import pty, fcntl, termios, struct, select
-import pam
+import pam, socket
 
 from gevent import monkey
 monkey.patch_all()
@@ -50,8 +50,9 @@ wdir = os.getenv('HOME', '/')
 os.chdir(wdir)
 
 # networking
-app_host="0.0.0.0"
-app_port=8080
+app_addr = '0.0.0.0'
+app_port = 8080
+app_host = socket.gethostname()
 
 # main app
 app = Flask(__name__, static_folder='assets')
@@ -63,13 +64,10 @@ fd = None
 child_pid = None
 
 # background threads
-#vncServerThread = None
-#vncSocketThread = None
-#indiAPIThread = None
-terminalThread = None
-equipmentThread = None
 locationThread = None
+terminalThread = None
 sysmonThread = None
+equipmentThread = None
 
 # start/stop event for INDI client
 equipmentThreadEvent = Event()
@@ -200,38 +198,12 @@ def shut_down():
     sys.exit()
 
 def main():
-    global app_host, app_port
+    global app_addr, app_port
     global fd, child_pid
-    global terminalThread, locationThread, indiAPIThread, sysmonThread, vncSocketThread, vncServerThread
+    global terminalThread, locationThread, sysmonThread
 
     try:
         print("Astroberry Manager v"+__version__+"\n")
-
-#        External services should be generally managed outside of this application
-#        and only interfaced via network. Such approach does not make this application
-#        a single point of failure. In an case you can independently start, stop, reload
-#        any of these services (indiwebmanager, Xtigervnc, websockify). Therefore
-#        you should start these services using systemd or any other service management
-#        system. If for whatever reason you need to start entire stack from this script,
-#        just uncomment the following section of code.
-#
-#        if indiAPIThread is None:
-#            cmd = shutil.which("indi-web")
-#            if cmd and not process_status("indi-web"):
-#                print(" ^|^s Starting INDI API")
-#                indiAPIThread = subprocess.Popen([cmd, "--host", "0.0.0.0",  "--cors", "http://astroberry:8080"])
-#
-#        if vncServerThread is None:
-#            cmd = shutil.which("Xtigervnc")
-#            if cmd and not process_status("Xtigervnc"):
-#                print(" ^|^s Starting remote desktop")
-#                vncServerThread = subprocess.Popen([cmd, "-display :70", "-desktop astroberry", "-SecurityTypes None", "-NeverShared", "-DisconnectClients", "-localhost yes", "-UseIPv6 no">
-#
-#        if vncSocketThread is None:
-#            cmd = shutil.which("websockify")
-#            if cmd and not process_status("websockify"):
-#                print(" ^|^s Starting desktop websocket")
-#                vncSocketThread = subprocess.Popen([cmd, ":8070", "127.0.0.1:5970"])
 
         if locationThread is None:
             print("✓ Starting geolocation services")
@@ -240,10 +212,10 @@ def main():
         if terminalThread is None:
             print("✓ Starting terminal services")
             terminalThread = socketio.start_background_task(read_and_forward_pty_output)
-            (child_pid, fd) = pty.fork() # create child process attached to a pty
+            (child_pid, fd) = pty.fork()
             if child_pid == 0:
-                cmd = shutil.which("bash") # run bash shell as default
-                while True: # always respawn
+                cmd = shutil.which("bash")
+                while True:
                     subprocess.run([cmd])
 
         if sysmonThread is None:
@@ -252,14 +224,15 @@ def main():
 
         print("✓ Starting main application\n")
 
+        print("Point your browser to http://%s:%d/\n" % (app_host, app_port))
+
         # start main app
-        socketio.run(app, host=app_host, port = app_port, debug=False)
+        socketio.run(app, host=app_addr, port = app_port, debug=False)
         print("Application exited")
         shut_down()
 
     except KeyboardInterrupt:
         shut_down()
-
 
 if __name__ == "__main__":
     main()
