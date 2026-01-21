@@ -2,5 +2,8 @@ __pycache__
 .@__thumb
 .venv
 dist
+build
 *.egg-info
 *.swp
+*.pyc
+*~

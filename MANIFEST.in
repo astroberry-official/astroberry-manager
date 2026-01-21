@@ -1,3 +1,4 @@
-include AUTHORS LICENSE README.md requirements.txt
-recursive-include astroberry-manager/assets *
-recursive-include astroberry-manager/templates *
+include AUTHORS LICENSE README.md requirements.txt dependencies.sh
+recursive-include astroberrymanager/assets *
+recursive-include astroberrymanager/templates *
+include *.service

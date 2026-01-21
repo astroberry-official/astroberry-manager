@@ -34,11 +34,11 @@ from threading import Event
 from flask import Flask, render_template, redirect, url_for, request, session
 from flask_socketio import SocketIO
 
-from location import getLocation
-from weather import getWeather
-from almanac import getAlmanac
-from equipment import getINDIServer, telescopeControl
-from system import getSystemReports, getSystemReportOnce, runSystemUpdate, runSystemBackup, runSystemRestore, runSystemRestart, runSystemShutdown, process_status
+from .location import getLocation
+from .weather import getWeather
+from .almanac import getAlmanac
+from .equipment import getINDIServer, telescopeControl
+from .system import getSystemReports, getSystemReportOnce, runSystemUpdate, runSystemBackup, runSystemRestore, runSystemRestart, runSystemShutdown, process_status
 
 __author__ = 'Radek Kaczorek'
 __copyright__ = 'Copyright 2026, Radek Kaczorek'
@@ -49,20 +49,24 @@ __version__ = '1.0.0'
 wdir = os.getenv('HOME', '/')
 os.chdir(wdir)
 
+# networking
+app_host="0.0.0.0"
+app_port=8080
+
 # main app
 app = Flask(__name__, static_folder='assets')
-app.secret_key = os.getenv('APP_KEY', 'secret_key!')
+app.secret_key = os.getenv('APP_KEY', 'e55325c30acadadaae4006cf80c6439502043408f792afe57f501c2db4a0fc22')
 socketio = SocketIO(app)
 
-# terminal file descriptor & process
+# web terminal file descriptor & process
 fd = None
 child_pid = None
 
 # background threads
+#vncServerThread = None
+#vncSocketThread = None
+#indiAPIThread = None
 terminalThread = None
-vncServerThread = None
-vncSocketThread = None
-indiAPIThread = None
 equipmentThread = None
 locationThread = None
 sysmonThread = None
@@ -178,12 +182,10 @@ def set_terminal_winsize(row, col, xpix=0, ypix=0):
     fcntl.ioctl(fd, termios.TIOCSWINSZ, winsize)
 
 def read_and_forward_pty_output():
-    #print("Running terminal background thread")
     global fd
     max_read_bytes = 1024 * 20
     while True:
         socketio.sleep(0.01)
-        #time.sleep(0.01)
         if fd:
             timeout_sec = 0
             (data_ready, _, _) = select.select([fd], [], [], timeout_sec)
@@ -198,8 +200,11 @@ def shut_down():
     sys.exit()
 
 def main():
-    global fd, child_pid, terminalThread, locationThread, indiAPIThread, sysmonThread, vncSocketThread, vncServerThread
-    try: # Start main app
+    global app_host, app_port
+    global fd, child_pid
+    global terminalThread, locationThread, indiAPIThread, sysmonThread, vncSocketThread, vncServerThread
+
+    try:
         print("Astroberry Manager v"+__version__+"\n")
 
 #        External services should be generally managed outside of this application
@@ -229,11 +234,11 @@ def main():
 #                vncSocketThread = subprocess.Popen([cmd, ":8070", "127.0.0.1:5970"])
 
         if locationThread is None:
-            print("✓ Starting geolocation")
+            print("✓ Starting geolocation services")
             locationThread = socketio.start_background_task(getLocation, socketio)
 
         if terminalThread is None:
-            print("✓ Starting terminal")
+            print("✓ Starting terminal services")
             terminalThread = socketio.start_background_task(read_and_forward_pty_output)
             (child_pid, fd) = pty.fork() # create child process attached to a pty
             if child_pid == 0:
@@ -242,13 +247,14 @@ def main():
                     subprocess.run([cmd])
 
         if sysmonThread is None:
-            print("✓ Starting system monitoring")
+            print("✓ Starting system services")
             sysmonThread = socketio.start_background_task(getSystemReports, socketio)
 
-        print("\nApplication startup complete.\n")
+        print("✓ Starting main application\n")
 
         # start main app
-        socketio.run(app, host='0.0.0.0', port = 8080, debug=False)
+        socketio.run(app, host=app_host, port = app_port, debug=False)
+        print("Application exited")
         shut_down()
 
     except KeyboardInterrupt:

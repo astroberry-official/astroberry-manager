@@ -1,13 +1,13 @@
 [build-system]
-requires = ["setuptools >= 45.2.0", "wheel != 0.1"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["astroberry-manager"]
+packages = ["astroberrymanager"]
 include-package-data = true
 
 [project]
-name = "astroberry-manager"
+name = "astroberrymanager"
 version = "1.0.0" # Also update __version__ in main.py
 authors = [
   { name="Radek Kaczorek", email="rkaczorek@gmail.com" }
@@ -47,5 +47,8 @@ dependencies = [
     "uvicorn>=0.35.0",
 ]
 
+[project.scripts]
+astroberry-manager = "astroberrymanager.main:main"
+
 [project.urls]
-"Homepage" = "http://www.astroberry.io/"
+"Homepage" = "https://www.astroberry.io/"

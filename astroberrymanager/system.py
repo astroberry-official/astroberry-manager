@@ -28,16 +28,17 @@ import os, psutil, shutil, time, subprocess
 POLLING = 60
 
 def get_release_info():
-    from main import __version__
+    from .main import __version__
     ui_version = __version__
 
     path = '/etc/astroberry/version'
     if os.path.exists(path):
         with open(path) as f:
             osv = f.read()
+            os_version = "Astroberry OS " + osv
+    else:
+        os_version = os.popen("grep PRETTY_NAME /etc/os-release | cut -d= -f2").read().replace("\"","").strip()
 
-    os_version = "Astroberry OS " + osv
-    #os_version = os.popen("grep PRETTY_NAME /etc/os-release | cut -d= -f2").read().replace("\"","").strip()
     if os.popen("dpkg -l | grep libindi1").read():
         indi_version = os.popen("dpkg -s libindi1|grep Version: | cut -d' '  -f2 | cut -d+ -f1").read().strip()
     else:
