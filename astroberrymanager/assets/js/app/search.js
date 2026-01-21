@@ -1,5 +1,5 @@
 /*
- Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
  https://github.com/astroberry-official/astroberry-os
@@ -281,74 +281,6 @@ function showResults(data, online = false) {
     });
 }
 
-// function getDsoType(t) {
-//     if (t===undefined)
-//         return;
-
-//     if (t.length > 3)
-//         return t;
-
-//     var type = null;
-
-//     // based on celestial.config.js
-//     switch(t) {
-//         case 'gg':
-//             type = "Galaxy cluster";
-//             break;
-//         case 'g':
-//             type = "Generic galaxy";
-//             break;
-//         case 's':
-//             type = "Spiral galaxy";
-//             break;
-//         case 's0':
-//             type = "Lenticular galaxy";
-//             break;
-//         case 'sd':
-//             type = "Dwarf galaxy";
-//             break;
-//         case 'e':
-//             type = "Elliptical galaxy";
-//             break;
-//         case 'i':
-//             type = "Irregular galaxy";
-//             break;
-//         case 'oc':
-//             type = "Open cluster";
-//             break;
-//         case 'gc':
-//             type = "Globular cluster";
-//             break;
-//         case 'en':
-//             type = "Emission nebula";
-//             break;
-//         case 'bn':
-//             type = "Generic bright nebula";
-//             break;
-//         case 'sfr':
-//             type = "Star forming region";
-//             break;
-//         case 'rn':
-//             type = "Reflection nebula";
-//             break;
-//         case 'pn':
-//             type = "Planetary nebula";
-//             break;
-//         case 'snr':
-//             type = "Supernova remnant";
-//             break;
-//         case 'dn':
-//             type = "Dark nebula grey";
-//             break;
-//         case 'pos':
-//             type = "Generic";
-//             break;
-//         default:
-//             type = "Generic";
-//     }
-//     return type;
-// }
-
 function searchEvents() {
     $("#toggle-search").on("click", function() {
         var query = $("#search-text").val();
@@ -363,24 +295,6 @@ function searchEvents() {
     $("#toggle-lucky").on("click", function() {
         searchLucky();
     })
-
-    // $("#search-results-image").on("mousemove", function(data) {
-    //     var x = 0.5 * 256 * data.offsetX / 180 - (256 - 180);
-    //     var y = 0.5 * 256 * data.offsetY / 180 - (256 - 180);
-
-    //     if (x > 0)
-    //         x = 0;
-
-    //     if (y > 0)
-    //         y = 0;
-
-    //     //console.log(x, y);
-    //     $("#search-results-image").css({'background-size': '256px 256px', 'background-position': x+'px '+y+'px' });
-    // });
-
-    // $("#search-results-image").on("mouseout", function() {
-    //     $("#search-results-image").css({'background-size': '180px 180px', 'background-position': '0 0' });
-    // });
 }
 
 export { searchEvents }

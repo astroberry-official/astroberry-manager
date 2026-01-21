@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
 https://github.com/astroberry-official/astroberry-os
@@ -160,7 +160,6 @@ def get_system_uptime():
     uptime_minutes = uptime_seconds // 60
     uptime_hours = uptime_minutes // 60
     uptime_days = uptime_hours // 24
-    #uptime_str = f"{int(uptime_days)} days, {int(uptime_hours % 24)} hours, {int(uptime_minutes % 60)} minutes, {int(uptime_seconds % 60)} seconds"
     uptime_str = f"{int(uptime_days)}d {int(uptime_hours % 24)}h {int(uptime_minutes % 60)}m"
     return {"uptime": uptime_str}
 

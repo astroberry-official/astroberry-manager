@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
 https://github.com/astroberry-official/astroberry-os
@@ -30,7 +30,6 @@ USER_AGENT = "astroberry-os/1.0 https://github.com/astroberry-official/astroberr
 headers = {"User-Agent": USER_AGENT}
 
 weather = yr_weather.Locationforecast(headers=headers, use_cache=False)
-#geosat = yr_weather.Geosatellite()
 
 def getWeather(socketio, latitude, longitude):
 	forecast = weather.get_forecast(latitude, longitude)
@@ -40,5 +39,5 @@ def getWeather(socketio, latitude, longitude):
 def emitWeather(socketio, data):
 	if socketio and data:
 		socketio.emit('weather', data)
-	else:		
+	else:
 		print(data)

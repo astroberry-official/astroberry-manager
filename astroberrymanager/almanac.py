@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
 https://github.com/astroberry-official/astroberry-os
@@ -220,7 +220,7 @@ def getSunTwilights(observer):
     # remember entry observer horizon
     observer_horizon = observer.horizon
 
-    # Twilights, their horizons and whether to use the centre of the Sun or not
+    # twilights, their horizons and whether to use the centre of the Sun or not
     twilights = [('-6', True), ('-12', True), ('-18', True)]
 
     for twi in twilights:
@@ -259,10 +259,10 @@ def getPolarisData(observer):
 
     polaris = ephem.readdb("Polaris,f|M|F7,2:31:49.095,89:15:50.79,2.02,2000")
     polaris.compute()
-    
+
     polaris_ra_deg = numpy.rad2deg(float(polaris._ra))
 
-    # Polaris Hour Angle = LST - RA Polaris [expressed in degrees or 15*(h+m/60+s/3600)]
+    # polaris Hour Angle = LST - RA Polaris [expressed in degrees or 15*(h+m/60+s/3600)]
     pha = lst - polaris_ra_deg
 
     # normalize

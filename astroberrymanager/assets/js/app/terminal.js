@@ -1,5 +1,5 @@
 /*
- Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
  https://github.com/astroberry-official/astroberry-os
@@ -23,14 +23,14 @@
 import { socket } from "./sockets.js";
 
 const logo = "\
-               _             _                          \
-     /\       | |           | |                         \
-    /  \   ___| |_ _ __ ___ | |__   ___ _ __ _ __ _   _ \
-   / /\ \ / __| __| '__/ _ \| '_ \ / _ \ '__| '__| | | |\
-  / ____ \\__ \ |_| | | (_) | |_) |  __/ |  | |  | |_| |\
- /_/    \_\___/\__|_|  \___/|_.__/ \___|_|  |_|   \__, |\
-                                                   __/ |\
-                                                  |___/ ";
+               _             _                            \
+     /\       | |           | |                           \
+    /  \   ___| |_ _ __ ___ | |__   ___ _ __ _ __ _   _   \
+   / /\ \ / __| __| '__/ _ \| '_ \ / _ \ '__| '__| | | |  \
+  / ____ \\__ \ |_| | | (_) | |_) |  __/ |  | |  | |_| |  \
+ /_/    \_\___/\__|_|  \___/|_.__/ \___|_|  |_|   \__, |  \
+                                                   __/ |  \
+                                                  |___/   ";
 
 
 const term = new Terminal({

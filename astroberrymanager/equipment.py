@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
 https://github.com/astroberry-official/astroberry-os
@@ -29,13 +29,8 @@ from datetime import datetime, timezone
 # Local INDI server
 INDI_HOST = '127.0.0.1'
 INDI_PORT = 7624
+TIMEOUT = 5
 
-# Time vars
-POLLING = 0 # INDI server polling time in seconds
-TIMEOUT = 5 # INDI server connection timeout
-
-# IndiClient class inherits from the module PyIndi.BaseClient class
-# All INDI constants are accessible from the module as PyIndi.CONSTANTNAME
 class IndiClient(PyIndi.BaseClient):
 	def __init__(self):
 		super(IndiClient, self).__init__()
@@ -53,20 +48,18 @@ class IndiClient(PyIndi.BaseClient):
 	def newProperty(self, p):
 		'''Emmited when a new property is created for an INDI driver.'''
 		self.logger.debug(f"New property: {p.getName()} as {p.getTypeAsString()} for device {p.getDeviceName()}")
-		if not POLLING:
-			property = getProperty(p)
-			if property:
-				data = {'equipment': property}
-				emitEquipment(self.socketio, data)
+		property = getProperty(p)
+		if property:
+			data = {'equipment': property}
+			emitEquipment(self.socketio, data)
 
 	def updateProperty(self, p):
 		'''Emmited when a new property value arrives from INDI server.'''
 		self.logger.debug(f"Update property: {p.getName()} as {p.getTypeAsString()} for device {p.getDeviceName()}")
-		if not POLLING:
-			property = getProperty(p)
-			if property:
-				data = {'_equipment': property}
-				emitEquipment(self.socketio, data)
+		property = getProperty(p)
+		if property:
+			data = {'_equipment': property}
+			emitEquipment(self.socketio, data)
 
 	def removeProperty(self, p):
 		'''Emmited when a property is deleted for an INDI driver.'''
@@ -95,37 +88,26 @@ def getINDIServer(socketio, event):
 	#logging.basicConfig(format = '%(asctime)s %(message)s', level = logging.INFO)
 	logging.basicConfig(format = '%(message)s', level = logging.INFO)
 
-	indiClient.socketio = socketio # share socket access with indiclient
+	indiClient.socketio = socketio # use main socket
 
 	while True:
-		if not event.is_set(): # exit on request from main thread
+		if not event.is_set():
 			print("Closing INDI server connection")
-			break
+			break # exit on request from main thread
 
-		# Connect to INDI server or loop forever until INDI server available
 		while not indiClient.isServerConnected():
 			try:
 				indiClient.connectServer()
-				time.sleep(1) # Wait after connecting to INDI server
+				time.sleep(1)
 				if not indiClient.isServerConnected():
 					indiClient.logger.info(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
 					time.sleep(TIMEOUT)
 			except Exception as err:
 				indiClient.logger.info(f"Error connecting to INDI server: {err}")
 
-		if POLLING:
-			devices = indiClient.getDevices() # Get all devices from INDI server
-			equipment = {'equipment': getJSON(devices)} # Get properties and their associated values for all devices in JSON format
-			try: # get ALL data in time interval = POLLING
-				emitEquipment(socketio, equipment)
-				time.sleep(POLLING) # loop every n seconds
-			except Exception as err:
-				indiClient.logger.info("Error processing INDI server data: {err}")
-				pass
+		time.sleep(1)
 
-		time.sleep(1) # loop every second
-
-def getProperty(property): # pushed by indiserver
+def getProperty(property):
 	"""
 	Return RFC 8259 compliant JSON assembled from properties of devices connected to INDI server
 	{ device_type:
@@ -184,7 +166,6 @@ def getProperty(property): # pushed by indiserver
 
 	device_data.update({device_type: { device_name: device_properties }})
 
-	# print(json.dumps(device_data))
 	return device_data
 
 def getJSON(devices):
@@ -252,34 +233,14 @@ def getJSON(devices):
 		else:
 			equipment.update({device_type: device_data})
 
-	# print(json.dumps(device_data))
 	return equipment
-
-# def getEquipment(devices): # polling every n seconds (configurable with POLLING)
-# 	data = json.loads("{}")
-# 	for device in devices:
-# 		group = getDeviceType(device.getDriverInterface())
-# 		name = device.getDeviceName()
-# 		if group in data.keys():
-# 			data[group].append({'name': name})
-# 		else:
-# 			data.update({group: [{'name': name}]})
-
-# 	# Return RFC 8259 compliant JSON
-# 	# {
-# 	#   device_type:    { 'name': device_name },
-# 	# }
-# 	print(json.dump(data))
-# 	return data
 
 def emitEquipment(socketio, data):
 	if socketio and data:
 		socketio.emit('indiserver', data )
 	else:
-		#print(json.dumps(equipment, indent=4, sort_keys=False))
 		print(data)
 
-# INDI states
 def strISState(s):
 	if (s == PyIndi.ISS_ON):
 		return "ON"
@@ -339,7 +300,7 @@ def getDeviceType(s):
 def telescopeControl(data):
 	if 'action' in data and data['action'] == 'setlocation':
 		try:
-			devices = indiClient.getDevices() # Search for telescope
+			devices = indiClient.getDevices()
 			for device in devices:
 				if getDeviceType(device.getDriverInterface()) == "TELESCOPE":
 					telescope = device.getDeviceName()
@@ -355,8 +316,7 @@ def telescopeControl(data):
 				print("Setting telescope location aborted. Invalid location requested")
 				return
 
-			# Get telescope location
-			observer = device.getNumber("GEOGRAPHIC_COORD")
+			observer = device.getNumber("GEOGRAPHIC_COORD") # Get telescope location
 			# latitude = observer[0].getValue()
 			# longitude = observer[1].getValue()
 			# elevation = observer[2].getValue()
@@ -365,6 +325,7 @@ def telescopeControl(data):
 			observer[0].setValue(data['params']['lat'])
 			observer[1].setValue(data['params']['lon'])
 			observer[2].setValue(data['params']['alt'])
+
 			indiClient.sendNewProperty(observer)
 			print("%s location set to LAT %s LONG %s" % (telescope, target["ra"], target["dec"]))
 		except Exception as e:

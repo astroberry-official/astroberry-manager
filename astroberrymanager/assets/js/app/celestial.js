@@ -1,5 +1,5 @@
 /*
- Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
  https://github.com/astroberry-official/astroberry-os
@@ -124,30 +124,32 @@ function updateTelescopeCoords(data) {
       starchartStatusIcon(false);
     }
 
-    // If chart locked on telescope and coordinates of telescope and chart are different, center chart
+    // If chart locked on telescope, follow the telescope
     var updateThreshold = 15 * 60 / 3600;
     if (telescopeCoords.chartlock && (!telescopeCoords || Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) > updateThreshold  || Math.abs(telescopeCoords.DEC - starchartCoords[1]) > updateThreshold)) {
       centerOnTelescope();
     }
   }
 
-  // if (data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']) {
-  //   // get location from telescope
-  //   var scopeLocation = {
-  //     LAT: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LAT[0],
-  //     LONG: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] > 180 ? 180 - data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG : data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG,
-  //     ELEV: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].ELEV[0]
-  //   };
+  /*
+  if (data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']) {
+     // get location from telescope
+     var scopeLocation = {
+       LAT: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LAT[0],
+       LONG: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] > 180 ? 180 - data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG : data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG,
+       ELEV: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].ELEV[0]
+     };
 
-  //   // Display warning if telescope location does not match system location
-  //   if (scopeLocation['LAT'].toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation['LONG'].toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
-  //     locationStatusIcon(true);
-  //   } else {
-  //     locationStatusIcon(false);
-  //     syslogPrint("Telescope location is different than system location", "danger", true);
-  //     console.log(scopeLocation['LAT'], scopeLocation['LONG']);
-  //   }
-  // }
+     // Display warning if telescope location does not match system location
+     if (scopeLocation['LAT'].toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation['LONG'].toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
+       locationStatusIcon(true);
+     } else {
+       locationStatusIcon(false);
+       syslogPrint("Telescope location is different than system location", "danger", true);
+       console.log(scopeLocation['LAT'], scopeLocation['LONG']);
+     }
+   }
+  */
 }
 
 function setTelescopeLocation(data) {
@@ -264,7 +266,6 @@ function updateStarChartCoords() {
   $("#celestial-map-datetime").html(dt);
   $("#celestial-map-latitude").html(deg2dms(timeloc.location[0]));
   $("#celestial-map-longitude").html(deg2dms(timeloc.location[1]));
-  //$("#celestial-map-timezone").html(timeloc.timezone);
 
   // show center of the star chart
   getChartReticle(); // update reticle
@@ -539,93 +540,6 @@ function clearWorkspace() {
   // $("#main-dock").animate({width: 'toggle'}, 200); // hide main dock
   $("#main-dock-handle").trigger("click");
 }
-
-// function drawReticleOnCanvas(ra, dec) {
-//   //console.log([ra, dec]);
-//   // Celestial.Canvas.symbol().type("circle").position(Celestial.getPoint([ra,dec], "equatorial" ))();
-//   // Celestial.display();
-//   // return;
-
-//   if (typeof ra !== 'number' || !isFinite(ra)) return;
-//   if (typeof dec !== 'number' || !isFinite(dec)) return;
-
-//   if (ra < 0 || ra > 360) return;
-//   if (dec < -90 || dec > 90) return;
-
-//   // Convert ra from 0...360 to -180...180
-//   if (ra > 180)
-//     ra -= 360;
-
-//   // Style properties for lines and text
-//   var lineStyle = {
-//     width: 0.8,
-//     stroke: "rgba(255, 0, 0, 1)",
-//     fill: "rgba(255, 0, 0, 0.1)"
-//   };
-
-//   var textStyle = {
-//       fill: "rgba(255, 0, 0, 1)",
-//       font: "normal 11px 'Roboto Regular', Arial, sans-serif",
-//       align: "left",
-//       baseline: "top"
-//   };
-
-//   var jsonLine = {
-//     "type": "FeatureCollection",
-//     "features": [ // this is an array, add as many objects as you want
-//       {
-//         "type": "Feature",
-//         "id": "Telescope",
-//         "properties": {
-//           "name": "Telescope",
-//         },
-//         "geometry": {
-//           "type": "Point",
-//           "coordinates": [ra, dec]
-//         }
-//       }
-//     ]
-//   };
-
-//   Celestial.clear();
-//   Celestial.add({
-//     type: "line",
-//     callback: function (error, json) {
-//       if (error) return console.warn(error);
-//       // Load the geoJSON file and transform to correct coordinate system, if necessary
-//       var reticle = Celestial.getData(jsonLine, celestialConfig.transform);
-//       Celestial.container.selectAll(".asterisms").data(reticle.features).enter().append("path").attr("class", "ast");
-//       Celestial.redraw();
-//     },
-
-//       redraw: function() {
-//         // Select the added objects by class name as given previously
-//         Celestial.container.selectAll(".ast").each(function(d) {
-//           // If point is visible (this doesn't work automatically for points)
-//           if (Celestial.clip(d.geometry.coordinates)) {
-//             // get point coordinates
-//             var pt = Celestial.mapProjection(d.geometry.coordinates);
-//             // object radius in pixel, could be varable depending on e.g. dimension or magnitude
-//             //var r = Math.pow(20 - prop.mag, 0.7); // replace 20 with dimmest magnitude in the data
-//             var r = 10;
-
-//             // draw reticle
-//             Celestial.setStyle(lineStyle);
-//             Celestial.context.beginPath();
-//             Celestial.context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
-//             Celestial.context.closePath();
-//             Celestial.context.stroke();
-//             //Celestial.context.fill();
-
-//             // draw name
-//             Celestial.setTextStyle(textStyle);
-//             Celestial.context.fillText(d.properties.name, pt[0] + r - 1, pt[1] - r + 1);
-//           }
-//         });
-//     }
-//   });
-//   Celestial.display(celestialConfig);
-// }
 
 
 /* ================================================================== */

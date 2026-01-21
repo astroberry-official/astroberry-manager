@@ -1,5 +1,5 @@
 /*
- Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
  This library is part of Astroberry OS and Astroberry Manager
  https://github.com/astroberry-official/astroberry-os

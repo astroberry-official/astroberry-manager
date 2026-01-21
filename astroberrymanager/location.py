@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-Copyright(c) 2025 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
 
 This library is part of Astroberry OS and Astroberry Manager
 https://github.com/astroberry-official/astroberry-os
@@ -28,26 +28,19 @@ from gpsdclient import GPSDClient
 def getLocation(socketio):
     with GPSDClient() as client:
         for gps in client.dict_stream(convert_datetime=False, filter=["TPV", "SKY"]):
-            #print(gps)
             if gps["class"] == "TPV":
-                #print("TPV data received")
                 try:
                     if gps["mode"] > 1:
                         emitGPSData(socketio, gps["mode"], gps["time"], gps["lat"], gps["lon"], gps["alt"])
                     else:
                         emitTimeData(socketio, gps["mode"], gps["time"])
                 except Exception as e:
-                    #print("Error processing GPS TPV data", e)
-                    #print(gps)
                     pass
 
             if gps["class"] == "SKY":
-                #print("SKY data received")
                 try:
                     emitSatData(socketio, gps["hdop"], gps["vdop"], gps["satellites"])
                 except Exception as e:
-                    #print("Error processing GPS SKY data.", type(e), e)
-                    #print(gps)
                     pass
 
 def emitTimeData(socketio, mode, time):
