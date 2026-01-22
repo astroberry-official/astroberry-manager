@@ -39,23 +39,16 @@ function updateEquipment(data) {
         return;
     }
 
-    if ('equipment' in data) { // active devices emited by backend
+    if ('equipment' in data) {
         data = data['equipment'];
-        if (!data) return;
+        if (data === undefined || data == null) return;
         activeEquipment.devices = Object.keys(data);
         markActiveDrivers(activeEquipment.devices);
     }
 
-    if ('device' in data) { // default mode if polling mode DISABLED in backend - light approach
-        data = data['device'];
-        if (!data) return;
-        activeEquipment.devices = Object.keys(data);
-        markActiveDrivers(activeEquipment.devices);
-    }
-
-    if ('msg' in data) { // messages from INDI server
+    if ('msg' in data) {
         data = data['msg'];
-        if (!data) return;
+        if (data === undefined || data == null) return;
     }
 }
 

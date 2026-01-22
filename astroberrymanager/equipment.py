@@ -58,7 +58,7 @@ class IndiClient(PyIndi.BaseClient):
 		self.logger.debug(f"Update property: {p.getName()} as {p.getTypeAsString()} for device {p.getDeviceName()}")
 		property = getProperty(p)
 		if property:
-			data = {'_equipment': property}
+			data = {'equipment': property}
 			emitEquipment(self.socketio, data)
 
 	def removeProperty(self, p):
@@ -119,7 +119,7 @@ def getProperty(property):
 				'STATE': state,
 				'PERM': perm
 		  }
-		} 
+		}
 	}
 	"""
 
