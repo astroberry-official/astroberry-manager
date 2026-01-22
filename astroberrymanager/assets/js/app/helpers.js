@@ -206,7 +206,7 @@ function appEvents() {
                 $(".celestial-map-container").show();
                 $("#reticle-chart").show();
                 $("#reticle-telescope").show();
-                Celestial.reload();
+                Celestial.resize(0);
                 closeDesktop();
 
                 // switch main dock item
