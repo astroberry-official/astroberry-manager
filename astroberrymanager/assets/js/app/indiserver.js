@@ -29,16 +29,16 @@ const indiwebUrl = location.protocol + '//' + location.hostname + ':8624';
 
 const deviceFamilies = ["Adaptive Optics", "Agent", "Auxiliary", "CCDs", "Domes", "Filter Wheels", "FilterWheels", "Focusers", "Spectrographs", "Telescopes", "Weather"];
 
-function getINDIServerAPI() { // helper function for module init
+function getINDIServerAPI() {	// helper function for module init
     // Update profiles
-    getIndiStatus(); // this must go first as it runs getActiveProfile
-    getProfiles(); // this must follow as it gets all profiles and selects active profile
+    getIndiStatus();		// this must go first as it runs getActiveProfile
+    getProfiles();		// this must follow as it gets all profiles and selects active profile
 
     // Update profile drivers
-    getGroups(); // Get driver types/groups
-    getAllDrivers(); // Get all supported drivers and assign them to groups
-    getProfileDrivers() // Select drivers for active profile
-    getDriverDetails(); // Load details of active drivers
+    getGroups();		// Get driver types/groups
+    getAllDrivers();		// Get all supported drivers and assign them to groups
+    getProfileDrivers();	// Select drivers for active profile
+    getDriverDetails();		// Load details of active drivers
 
     //syslogPrint("Profile " + activeEquipment.profile + " loaded", "success");
 }
