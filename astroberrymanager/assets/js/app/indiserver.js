@@ -186,7 +186,7 @@ function getActiveDrivers() {
 
         // check if all profile drivers are running
         if (counter < $("#drivers_list :selected").length) {
-            syslogPrint("Waiting for devices. Make sure all devices are powered and connected", "warning", true);
+            syslogPrint("Waiting for devices", "warning", true);
             return;
         }
     });
