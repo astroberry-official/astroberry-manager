@@ -205,7 +205,6 @@ function appEvents() {
                 $("#desktop-container").hide();
                 $(".celestial-map-container").show();
                 $("#reticle-chart").show();
-                $("#reticle-telescope").show();
                 Celestial.resize(0);
                 closeDesktop();
 
@@ -222,7 +221,6 @@ function appEvents() {
                 $("#main-dock-screen").addClass("dock-item-active");
                 $(".celestial-map-container").hide();
                 $("#reticle-chart").hide();
-                $("#reticle-telescope").hide();
                 $("#desktop-container").show();
                 // $("#main-dock").animate({width: 'toggle'}, 200); // hide main dock
 

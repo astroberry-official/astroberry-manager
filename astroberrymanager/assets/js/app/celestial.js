@@ -92,6 +92,7 @@ function updateTelescopeCoords(data) {
     return;
 
   var telescopeNames = Object.keys(data.TELESCOPE); // get all active telescopes
+
   const telescopeId = 0; // use the first telescope ONLY
 
   if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
@@ -105,7 +106,7 @@ function updateTelescopeCoords(data) {
     telescopeCoords.DEC = _telescopeCoords.DEC[0];
 
     // Update position of telescope reticle
-    getTelescopeReticle();
+    getTelescopeReticle(telescopeCoords);
 
     // get equatorial coordinates from star chart
     var starchartCoords = Celestial.rotate()
@@ -367,16 +368,16 @@ function getChartReticle(enabled = true) {
   reticleChart.style({left: px(pt[0]-reticleRadius/2+2), top:px(pt[1]-reticleRadius/2+2), opacity:0.8});
 }
 
-function getTelescopeReticle() {
-  if (!telescopeCoords) {
+function getTelescopeReticle(data) {
+  if (data === undefined || data === null) {
     $("#reticle-telescope").hide();
     return;
   }
 
-  $("#reticle-telescope").hide();
+  $("#reticle-telescope").show();
 
-  var ra = telescopeCoords.RA * 15; // converting ra from hours to degrees
-  var dec = telescopeCoords.DEC;
+  var ra = data.RA * 15; // converting ra from hours to degrees
+  var dec = data.DEC;
 
   var coordinates = [ra, dec];
   var pt = Celestial.mapProjection(coordinates);
@@ -473,8 +474,9 @@ function telescopeStatusIcon(status) {
     $("#starchart_lock").prop('disabled', false);
     if ( ! $("#main-dock-screen").hasClass("dock-item-active") ) {
         $("#reticle-telescope").show();
+    } else {
+        $("#reticle-telescope").hide();
     }
-
   } else {
     $("#celestial-map-telescope-icon").css({"background-image": "url(assets/images/telescope.png)"});
     $("#celestial-map-telescope-coords").hide();
@@ -630,7 +632,6 @@ export {
   requestStarChart,
   updateStarChartLocation,
   updateTelescopeCoords,
-  getTelescopeReticle,
   setTelescopeLocation,
   loadStarChartLock,
   updateTelecopeCoords,
