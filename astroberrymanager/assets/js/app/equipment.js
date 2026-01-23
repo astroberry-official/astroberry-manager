@@ -35,9 +35,8 @@ var activeEquipment = {'profile': "Simulators", 'devices': []};
 
 function updateEquipment(data) {
     // don't process incomplete data
-    if (data === undefined || data == null) {
+    if (data === undefined || data === null)
         return;
-    }
 
     if ('equipment' in data) {
         data = data['equipment'];
@@ -49,7 +48,7 @@ function updateEquipment(data) {
     if ('msg' in data) {
         data = data['msg'];
         if (data === undefined || data == null) return;
-        console.log(data);
+        syslogPrint(data, "success");
     }
 }
 

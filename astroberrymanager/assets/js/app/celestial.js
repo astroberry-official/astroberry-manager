@@ -64,6 +64,8 @@ function requestStarChart() {
 }
 
 function getPointCoordinates(data) {
+  if (data === undefined || data === null)
+    return;
   var x = data.offsetX;
   var y = data.offsetY;
   var coordinates = Celestial.mapProjection.invert([x, y]);
@@ -86,7 +88,10 @@ function updateStarChartLocation() { // update star chart geo location based on 
   }
 }
 
-function updateTelescopeCoords(data) {
+function updateTelescope(data) {
+  if (data === undefined || data === null)
+    return;
+
   data = data['equipment']; // strip header
   if (data === undefined || data.TELESCOPE === undefined)
     return;
@@ -105,11 +110,14 @@ function updateTelescopeCoords(data) {
     telescopeCoords.RA = _telescopeCoords.RA[0];
     telescopeCoords.DEC = _telescopeCoords.DEC[0];
 
+    // update telescope status
+    updateTelescopeStatusIcon(true);
+
     // update position of telescope reticle
-    getTelescopeReticle(telescopeCoords);
+    updateTelescopeReticle(telescopeCoords);
     /*
     if ( $("#main-dock-chart").hasClass("dock-item-active") ) {
-      getTelescopeReticle(telescopeCoords);
+      updateTelescopeReticle(telescopeCoords);
     }
     */
 
@@ -125,9 +133,9 @@ function updateTelescopeCoords(data) {
     // If star chart coords equal telescope coords ~30 arsec, set icon status
     var coordsPrecision = 30/3600;
     if (Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) < coordsPrecision && Math.abs(telescopeCoords.DEC - starchartCoords[1]) < coordsPrecision) {
-      starchartStatusIcon(true);
+      updateStarchartStatusIcon(true);
     } else {
-      starchartStatusIcon(false);
+      updateStarchartStatusIcon(false);
     }
 
     // If chart locked on telescope, follow the telescope
@@ -159,8 +167,11 @@ function updateTelescopeCoords(data) {
 }
 
 function setTelescopeLocation(data) {
-  if (data === undefined || data[0] === undefined || data[1] === undefined)
-      return;
+  if (data === undefined || data === null)
+    return;
+
+  if (data[0] === undefined || data[1] === undefined)
+    return;
 
   var lat = data[0];
   var lon = data[1];
@@ -373,7 +384,7 @@ function getChartReticle(enabled = true) {
   reticleChart.style({left: px(pt[0]-reticleRadius/2+2), top:px(pt[1]-reticleRadius/2+2), opacity:0.8});
 }
 
-function getTelescopeReticle(data) {
+function updateTelescopeReticle(data) {
   if (data === undefined || data === null) {
     return;
   }
@@ -468,7 +479,7 @@ function getRegionOfInterest(coordinates, fov = 5) {
 
 }
 
-function telescopeStatusIcon(status) {
+function updateTelescopeStatusIcon(status) {
   if (status) {
     $("#celestial-map-telescope-icon").css({"background-image": "url(assets/images/telescope-active.png)"});
     $("#celestial-map-telescope-coords").show();
@@ -482,7 +493,7 @@ function telescopeStatusIcon(status) {
   }
 }
 
-function starchartStatusIcon(status) {
+function updateStarchartStatusIcon(status) {
   return; // function disabled
   if (status === undefined) {
       var color = "#ffffff";
@@ -564,16 +575,21 @@ function starchartEvents() {
 
   $("#celestial-map")
   .on("click", function (data) {
-      //clearWorkspace(); // hide dock, panels, terminal etc
+    if (data === undefined || data === null)
+      return;
+    //clearWorkspace(); // hide dock, panels, terminal etc
   })
   .on("dblclick", function (data) { // Get cursor celestial coordinates
-    if (data === undefined)
+    if (data === undefined || data === null)
       return;
 
     var coordinates = getPointCoordinates(data);
     getRegionOfInterest(coordinates);
   })
   .on("mousemove", function (data) { // Get cursor celestial coordinates
+    if (data === undefined || data === null)
+      return;
+
     clearTimeout(targetTimeout);
 
     if ($("#target_enable").is(':checked'))
@@ -621,7 +637,7 @@ export {
   dsoType,
   requestStarChart,
   updateStarChartLocation,
-  updateTelescopeCoords,
+  updateTelescope,
   setTelescopeLocation,
   loadStarChartLock,
   updateTelecopeCoords,
@@ -629,8 +645,8 @@ export {
   centerOnTelescope,
   centerOnCoords,
   centerOnSolarObject,
-  telescopeStatusIcon,
-  starchartStatusIcon,
+  updateTelescopeStatusIcon,
+  updateStarchartStatusIcon,
   locationStatusIcon,
   systemLocationTime,
   starchartEvents

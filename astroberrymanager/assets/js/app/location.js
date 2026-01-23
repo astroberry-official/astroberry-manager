@@ -120,7 +120,7 @@ function loadGeoloc() {
     $("#gps_longitude").html(geoLocation.longitude);
     $("#gps_altitude").html(geoLocation.altitude);
 
-    syslogPrint("Location loaded", "success")
+    console.log("Location loaded")
 }
 
 function updateGeoloc(data = {}) {
@@ -300,7 +300,8 @@ function networkLocation() {
 }
 
 function shareLocation(data) {
-    if (!data) return;
+    if (data === undefined || data === null)
+        return;
 
     // check if location sharing is enabled bu user
     if ($('#geoloc_share').is(':checked')) {

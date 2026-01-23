@@ -106,15 +106,17 @@ def index():
 @socketio.on('connect')
 def connect():
     if 'username' in session:
-        print("Socket connected")
+        #print("Socket connected")
         getSystemReportOnce(socketio)
+        return True
     else:
-        print("Socket connection rejected")
+        #print("Socket connection rejected")
         return False
 
 @socketio.on('disconnect')
 def disconnect():
-    print("Socket disconnected")
+    #print("Socket disconnected")
+    return True
 
 @socketio.on('weather')
 def weather(data):

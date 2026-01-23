@@ -44,7 +44,7 @@ setTimeout(function() { // wait for autocomplete database is loaded
         }
     });
     //console.log(localNames);
-    syslogPrint("Search engine loaded", "success");
+    console.log("Search engine loaded");
 }, 1000)
 
 // TODO:
@@ -53,6 +53,9 @@ setTimeout(function() { // wait for autocomplete database is loaded
 function getLocalNames(names) {
     if (names === undefined) {
         $.getJSON(datapath+database, function(data) {
+            if (data === undefined || data === null)
+                return;
+
             //console.log("Search engine starting");
             var names = [];
             var result = $.each(data.features, function(index, element) {
@@ -72,6 +75,9 @@ function searchObject(query) {
     query = query.toLowerCase(); // change to lower case
 
     $.getJSON( datapath+database, function(data) {
+        if (data === undefined || data === null)
+            return;
+
         //console.log(data.features);
         var result = $.grep(data.features, function(element, index) {
             return (element.id.toLowerCase() === query || element.properties.desig.toLowerCase() === query);
@@ -87,6 +93,9 @@ function searchObject(query) {
 
 function searchLucky() {
     $.getJSON( datapath+database, function(data) {
+        if (data === undefined || data === null)
+            return;
+
         var min = 0;
         var max = data.features.length;
         var i = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -117,6 +126,9 @@ function searchSimbad(query) {
         url: url,
         success: function(data)
         {
+            if (data === undefined || data === null)
+                return;
+
             //console.log(data);
 
             // object not found
@@ -288,6 +300,9 @@ function searchEvents() {
     });
 
     $("#search-text").on("keypress", function(data) {
+        if (data === undefined || data === null)
+            return;
+
         if (data.which == 13)
             $("#toggle-search").trigger("click");
     })

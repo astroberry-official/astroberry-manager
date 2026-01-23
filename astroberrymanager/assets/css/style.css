@@ -51,9 +51,8 @@ tr { height: 1.6em; }
 @keyframes blinker { 50% { opacity: 0; } }
 
 #particles-js { position:absolute; left:0; top:0; width:100%; height: 99%; z-index:-100; }
-#notify_message { display: block; position: absolute; width: 20%; left: 40%; top: 20px; 
-	z-index: 500; }
-/* .alert-success { background-color: #1c1c1c; } */
+#notify_message { display: block; position: absolute; width: 20%; left: 40%; top: 30%; z-index: 500; }
+.alert { text-align: center; }
 
 /*************************************/
 /*              Login
@@ -159,8 +158,9 @@ div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display:
 #region-of-interest .label { min-width: 30px; margin-top: 5px; }
 #region-of-interest .starchart-coords { margin-right: 15px; }
 #region-of-interest-image { width:256px; height:256px; border: 1px solid #333; cursor: pointer; }
-/* #region-of-interest .title { }
-#region-of-interest .data { } */
+#region-of-interest .title { }
+#region-of-interest .data { }
+
 #m-show { margin:0 6px 6px 0;  background: #1c1c1c; border: 1px solid #333; border-radius:3px;  }
 #m-show:hover { background-color:#eee; }
 
@@ -272,8 +272,6 @@ img.panel-title { margin-bottom: 7px; }
 
 #panel-search h1 { margin-left: 10px; margin-top: 5px;}
 
-/* #logo { display: inline-block; height: 100%; padding-left: 42px; margin: 2px 20px 0px 5px; background-image: url("../icons/astroberry-icon-white.svg"); background-repeat: no-repeat; background-size: 32px 32px; background-position: 5px 5px; } */
-/* #logo a { display: none; font-size: 24px; color: #fff; text-decoration: none; padding-top: 4px; margin-right: 50px; } */
 #logo { float: left; }
 
 #menu { display: none; float: right; font-size: 24px; margin-right: 5px; }
@@ -291,7 +289,6 @@ img.panel-title { margin-bottom: 7px; }
 #search-results-text { display: inline-block; width: 150px; height: 170px; vertical-align: top; line-height: 1.6em; margin-right: 20px;}
 #search-results-text span { display: block; }
 #search-results-text span.fa { display: inline-block; margin-left: 10px; margin-bottom: 2px; font-size: 0.9em; color: #009933; cursor: pointer; }
-/* #search-object-details { display: block; margin-top: 10px; } */
 
 #search-results-image { display: inline-block; width: 180px; height: 180px; border: 1px solid #333;}
 	
@@ -310,7 +307,6 @@ img.panel-title { margin-bottom: 7px; }
 /*         LOCATION PANEL
 /*************************************/
 #coordtime { width: 95% }
-/* #coordtime.container-footer div:nth-child(odd) { margin-right: 15px;} */
 #coordtime.container-footer div:nth-child(even) { float: right; }
 #coordtime.container-footer span.label { min-width: 50px; }
 
@@ -372,7 +368,7 @@ img.panel-title { margin-bottom: 7px; }
 /*************************************/
 /*       WEATHER PANEL
 /*************************************/
-/* #panel-weather { } */
+#panel-weather { }
 
 #weather_update { float: right; margin-right: 20px; font-size: 1.5em; }
 #weather_update:hover { color: #009933; cursor: pointer; }
@@ -416,10 +412,6 @@ img.panel-title { margin-bottom: 7px; }
 #weather_settings input[type=radio] { margin-right: 10px; }
 #weather_settings input[type=checkbox] { margin-right: 10px; }
 #weather_settings fieldset { margin-bottom: 20px; }
-
-/* fieldset#weather_alerts .checkbox-inline:nth-child(2) { color: #009933; }
-fieldset#weather_alerts .checkbox-inline:nth-child(4) { color: #f08c00; }
-fieldset#weather_alerts .checkbox-inline:nth-child(6) { color: #f08c00; } */
 
 /*************************************/
 /*           ALMANAC PANEL
@@ -523,7 +515,6 @@ fieldset#weather_alerts .checkbox-inline:nth-child(6) { color: #f08c00; } */
 /*            SYSTEM PANEL
 /*************************************/
 
-/* #panel-system div:nth-child(n) { display: none; } */
 #system-status,
 #system-events,
 #system-settings { display: none; width:100%; height: 85%; font-size: 0.75em; }

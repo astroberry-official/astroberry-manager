@@ -28,7 +28,8 @@ import { deg2dms, deg2hms } from './functions.js';
 import { socket } from './sockets.js';
 
 function updateAlmanac(data) {
-    if (!data) return;
+    if (data === undefined || data === null)
+      return;
 
     // Moon
     $("#moon_phase_name").html(data.moon_phase);

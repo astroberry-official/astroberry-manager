@@ -24,8 +24,8 @@ import { updateGeoloc } from './location.js';
 import { updateWeather } from './weather.js';
 import { updateAlmanac } from './almanac.js';
 import { updateEquipment } from './equipment.js';
-import { updateTelescopeCoords, telescopeStatusIcon } from './celestial.js';
-import { updateSystemInfo } from './system.js';
+import { updateTelescope } from './celestial.js';
+import { updateSystem } from './system.js';
 import { syslogPrint } from './helpers.js';
 
 /* Main Socket */
@@ -38,7 +38,7 @@ function setSockets() {
     });
 
     socket.on('connect', function () {
-        syslogPrint("Socket connected", "success");
+        console.log("Socket connected");
     });
 
     socket.on("connect_error", (err) => {
@@ -46,7 +46,7 @@ function setSockets() {
     });
 
     socket.on('disconnect', function () {
-        syslogPrint("Socket disconnected", "danger");
+        console.log("Socket disconnected");
     });
 
     socket.on('location', function (data) { // location
@@ -69,8 +69,7 @@ function setSockets() {
     socket.on('indiserver', function (data) { // equipment
         // console.log(data);
         updateEquipment(data);
-        updateTelescopeCoords(data);
-        telescopeStatusIcon(true);
+        updateTelescope(data);
     });
 
     socket.on('system', function (data) { // equipment
@@ -105,11 +104,11 @@ function setSockets() {
                 syslogPrint("System shutdown failure!", "danger", true);
             }
         } else {
-            updateSystemInfo(data);
+            updateSystem(data);
         }
     });
 
-    syslogPrint("Sockets loaded", "success");
+    console.log("Sockets loaded");
 }
 
 export {

@@ -94,6 +94,9 @@ function loadWeather() {
 }
 
 function updateWeather(data) {
+    if (data === undefined || data === null)
+        return;
+
     updateWeatherMetno(data); // Weather forecast from met.no, delivered by the Norwegian Meteorological Institute
     //console.log("Weather updated");
 }
@@ -101,6 +104,9 @@ function updateWeather(data) {
 function updateWeatherMetno(data) {
     /* https://github.com/metno/weatherapi-docs/blob/master/doc/locationforecast/HowTO.md */
     /* apiurl = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=" + lat + "&lon=" + lon; */
+
+    if (data === undefined || data === null)
+        return;
 
     var _data = JSON.parse(data)
 

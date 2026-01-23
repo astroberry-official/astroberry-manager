@@ -20,7 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
-import { telescopeStatusIcon, starchartStatusIcon, locationStatusIcon } from './celestial.js';
+import { updateTelescopeStatusIcon, updateStarchartStatusIcon, locationStatusIcon } from './celestial.js';
 import { activeEquipment, markActiveDriver, markAllDrivers } from './equipment.js';
 import { getCookie, setCookie, syslogPrint } from './helpers.js';
 import { socket } from './sockets.js';
@@ -40,7 +40,7 @@ function getINDIServerAPI() {	// helper function for module init
     getProfileDrivers();	// Select drivers for active profile
     getDriverDetails();		// Load details of active drivers
 
-    //syslogPrint("Profile " + activeEquipment.profile + " loaded", "success");
+    console.log("Profile " + activeEquipment.profile + " loaded");
 }
 
 function connectINDIServer() {
@@ -52,6 +52,7 @@ function connectINDIServer() {
             syslogPrint("INDI server request timed out", "danger");
         } else {
             //syslogPrint("Equipment data requested");
+            $("#reticle-telescope").show();
         }
     });
 }
@@ -65,17 +66,17 @@ function disconnectINDIServer() {
             syslogPrint("INDI server request timed out", "danger");
         } else {
             //syslogPrint("Equipment data requested");
-            $("#reticle-telescope").hide();
-            telescopeStatusIcon(false);
-            starchartStatusIcon();
+            updateTelescopeStatusIcon(false);
+            updateStarchartStatusIcon();
             locationStatusIcon();
+            $("#reticle-telescope").hide();
         }
     });
 }
 
 function getIndiStatus() { // Update status using API provided by indi-web
      $.getJSON(indiwebUrl + "/api/server/status", function(data) {
-        if (data[0].status === undefined)
+        if (data === undefined || data === null || data[0].status === undefined || data[0].status === null)
             return;
 
         if (data[0].status == "True") {
@@ -177,6 +178,9 @@ function getAllDrivers() {
 
 function getActiveDrivers() {
     $.getJSON(indiwebUrl + "/api/server/drivers", function(data) {
+        if (data === undefined || data === null)
+            return;
+
         var counter = 0;
 
         // count running drivers
@@ -225,11 +229,10 @@ function getProfileDrivers() {
     url = encodeURI(indiwebUrl + "/api/profiles/" + name + "/remote");
 
     $.getJSON(url, function(data) {
-        if (data && data.drivers !== undefined) {
-            $("#remote_drivers").val(data.drivers);
-        }
-        else {
+        if (data === undefined || data === null || data.drivers === undefined || data.drivers === null) {
             $("#remote_drivers").val("");
+        } else {
+            $("#remote_drivers").val(data.drivers);
         }
     });
 
@@ -292,7 +295,8 @@ function stopProfile() {
 }
 
 function getDriverDetails(data) {
-    if (data === undefined) return;
+    if (data === undefined || data === null)
+        return;
 
     var device = data.target.id;
     if (!device) return;

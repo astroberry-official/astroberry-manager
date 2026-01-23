@@ -212,6 +212,9 @@ function appEvents() {
                 // switch main dock item
                 $("#main-dock-chart").hide();
                 $("#main-dock-screen").show();
+
+                // hide main dock
+                $("#main-dock-handle").trigger("click");
                 break;
 
             case 8: // Desktop
@@ -224,11 +227,13 @@ function appEvents() {
                 $("#reticle-chart").hide();
                 $("#reticle-telescope").hide();
                 $("#desktop-container").show();
-                // $("#main-dock").animate({width: 'toggle'}, 200); // hide main dock
 
                 // switch main dock item
                 $("#main-dock-chart").show();
                 $("#main-dock-screen").hide();
+
+                // hide main dock
+                $("#main-dock-handle").trigger("click");
                 break;
 
             case 9: // Fullscreen
@@ -257,25 +262,35 @@ function appEvents() {
 /* ================================================================== */
 
 function syslogPrint(msg, level, popup = false) {
+    //var datetime = new Date().format("yyyy-MM-ddThh:mm:ss");
+    var datetime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0, 19);
     var alert_level = "alert-warning";
+    var msg_level = "INFO";
     var color = "#eeeeee";
 
     if (level !== undefined && ['success', 'danger', 'warning'].includes(level) ) {
         alert_level = "alert-" + level;
         switch(level) {
             case "success":
+                msg_level = "INFO";
                 color = "#009933";
                 break;
             case "danger":
+                msg_level = "ERROR";
                 color = "#ff3300";
                 break;
             case "warning":
+                msg_level = "WARN";
                 color = "#f08c00";
                 break;
             default:
+                msg_level = "INFO";
                 color = "#eeeeee"
         }
     }
+
+    // format message if without date/time/level header
+    // msg = datetime + ": [" + msg_level + "] " + msg;
 
     if (stream) {
         stream = stream + "<br>" + "<font color=" + color + ">" + msg + "</font>";

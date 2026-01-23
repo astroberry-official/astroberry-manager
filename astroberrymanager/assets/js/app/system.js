@@ -24,7 +24,10 @@ import { systemLocationTime } from "./celestial.js";
 import { getCookie, setCookie, syslogPrint } from "./helpers.js";
 import { socket } from "./sockets.js";
 
-function updateSystemInfo(data) {
+function updateSystem(data) {
+    if (data === undefined || data === null)
+        return;
+
     $("#sysmon-resource-ui_version").html(data.release_info.ui_version);
     $("#sysmon-resource-os_version").html(data.release_info.os_version);
     $("#sysmon-resource-indi_version").html(data.release_info.indi_version);
@@ -357,6 +360,6 @@ function systemUpdateInfo() {
 }
 
 export {
-    updateSystemInfo,
+    updateSystem,
     systemEvents
 }
