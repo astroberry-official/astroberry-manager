@@ -65,6 +65,7 @@ function disconnectINDIServer() {
             syslogPrint("INDI server request timed out", "danger");
         } else {
             //syslogPrint("Equipment data requested");
+            $("#reticle-telescope").hide();
             telescopeStatusIcon(false);
             starchartStatusIcon();
             locationStatusIcon();
@@ -186,7 +187,7 @@ function getActiveDrivers() {
 
         // check if all profile drivers are running
         if (counter < $("#drivers_list :selected").length) {
-            syslogPrint("Waiting for devices", "warning", true);
+            syslogPrint("Connecting devices", "warning", true);
             return;
         }
     });
@@ -261,10 +262,10 @@ function startProfile() {
             setActiveProfile(profile);
             getIndiStatus();
             connectINDIServer();
-            syslogPrint("Profile " + activeEquipment.profile + " started", "success", true);
+            syslogPrint("Starting " + activeEquipment.profile, "success", true);
         },
         error: function() {
-            syslogPrint("Error starting " + profile + " profile", "danger", true);
+            syslogPrint("Error starting " + profile, "danger", true);
         }
     });
 }
@@ -282,10 +283,10 @@ function stopProfile() {
                 getIndiStatus();
             }, 1000);
 
-            syslogPrint("Profile " + activeEquipment.profile + " stopped", "success", true);
+            syslogPrint("Stopping " + activeEquipment.profile, "success", true);
         },
         error: function() {
-            syslogPrint("Error stopping " + profile + " profile", "danger", true);
+            syslogPrint("Error stopping " + profile, "danger", true);
         }
     });
 }
@@ -451,7 +452,7 @@ function addProfile() {
 
     // finally add new profile
     if (profile_name) {
-        syslogPrint("Profile " + profile_name + " added", "success", true);
+        syslogPrint("Adding " + profile_name, "success", true);
         $("#profiles").append("<option id='" + profile_name + "' selected>" + profile_name + "</option>");
         clearDriverSelection();
         saveProfile();
@@ -474,10 +475,10 @@ function deleteProfile() {
             $("#profiles option:selected").remove();
             getProfiles();
             $('#profiles').change(); // getProfileDrivers()
-            syslogPrint("Profile " + name + " deleted", "success", true);
+            syslogPrint("Deleting " + name, "success", true);
         },
         error: function() {
-            syslogPrint("Error deleting profile " + name, "danger", true);
+            syslogPrint("Error deleting " + name, "danger", true);
         }
     });
 }
@@ -578,10 +579,10 @@ function restartDriver(label) {
             url: indiwebUrl + "/api/drivers/restart/" + label,
             success: function() {
                 getIndiStatus();
-                syslogPrint("Driver " + label + " restarted", "success", true);
+                syslogPrint("Restarting " + label, "success", true);
             },
             error: function() {
-                syslogPrint("Error restarting driver " + label, "danger", true);
+                syslogPrint("Error restarting " + label, "danger", true);
             }
         });
 }

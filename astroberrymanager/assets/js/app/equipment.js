@@ -49,6 +49,7 @@ function updateEquipment(data) {
     if ('msg' in data) {
         data = data['msg'];
         if (data === undefined || data == null) return;
+        console.log(data);
     }
 }
 

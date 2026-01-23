@@ -96,17 +96,22 @@ function updateTelescopeCoords(data) {
   const telescopeId = 0; // use the first telescope ONLY
 
   if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
-    // Get last coordinates
+    // remember last coordinates
     var lastRA = telescopeCoords.RA ? telescopeCoords.RA : 0;
     var lastDEC = telescopeCoords.DEC ? telescopeCoords.DEC : 0;
 
-    // get equatorial coordinates from telescope
+    // get coordinates from telescope
     var _telescopeCoords = data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD'];
     telescopeCoords.RA = _telescopeCoords.RA[0];
     telescopeCoords.DEC = _telescopeCoords.DEC[0];
 
-    // Update position of telescope reticle
+    // update position of telescope reticle
     getTelescopeReticle(telescopeCoords);
+    /*
+    if ( $("#main-dock-chart").hasClass("dock-item-active") ) {
+      getTelescopeReticle(telescopeCoords);
+    }
+    */
 
     // get equatorial coordinates from star chart
     var starchartCoords = Celestial.rotate()
@@ -370,11 +375,8 @@ function getChartReticle(enabled = true) {
 
 function getTelescopeReticle(data) {
   if (data === undefined || data === null) {
-    $("#reticle-telescope").hide();
     return;
   }
-
-  $("#reticle-telescope").show();
 
   var ra = data.RA * 15; // converting ra from hours to degrees
   var dec = data.DEC;
@@ -472,17 +474,11 @@ function telescopeStatusIcon(status) {
     $("#celestial-map-telescope-coords").show();
     $("#starchart_center").prop('disabled', false);
     $("#starchart_lock").prop('disabled', false);
-    if ( ! $("#main-dock-screen").hasClass("dock-item-active") ) {
-        $("#reticle-telescope").show();
-    } else {
-        $("#reticle-telescope").hide();
-    }
   } else {
     $("#celestial-map-telescope-icon").css({"background-image": "url(assets/images/telescope.png)"});
     $("#celestial-map-telescope-coords").hide();
     $("#starchart_center").prop('disabled', true);
     $("#starchart_lock").prop('disabled', true);
-    $("#reticle-telescope").hide();
   }
 }
 
@@ -563,13 +559,7 @@ function starchartEvents() {
   });
 
   $("#celestial-map-telescope-icon").on("click", function() {
-    // hide all
-    $("#main-dock span").removeClass("dock-item-active");
-    $(".panel-container").css({display: "none"});
-
-    // show equipment
-    $("#main-dock-equipment").addClass("dock-item-active");
-    $("#panel-equipment").css({display: "block"});
+    $("#main-dock-equipment").trigger("click");
   });
 
   $("#celestial-map")

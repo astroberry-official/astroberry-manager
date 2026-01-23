@@ -68,9 +68,9 @@ function setSockets() {
 
     socket.on('indiserver', function (data) { // equipment
         // console.log(data);
-        telescopeStatusIcon(true);
         updateEquipment(data);
         updateTelescopeCoords(data);
+        telescopeStatusIcon(true);
     });
 
     socket.on('system', function (data) { // equipment
