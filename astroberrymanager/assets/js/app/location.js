@@ -166,7 +166,7 @@ function updateGeoloc(data = {}) {
     // Abort processing if no data available
     // Triggers only if no gps data available and mode is set to gps (not manual)
     if (Object.keys(data).length == 0) {
-        syslogPrint("Waiting for location data...", "warning");
+        console.log("Waiting for location data...");
         return;
     }
 
@@ -294,7 +294,7 @@ function networkLocation() {
             updateGeoloc(data);
         });
     } else {
-        syslogPrint("Error getting location from network", "danger");
+        syslogPrint("Error updating location from network", "danger");
         return;
     }
 }
@@ -307,9 +307,9 @@ function shareLocation(data) {
     if ($('#geoloc_share').is(':checked')) {
         socket.timeout(5000).emit("publish", data, (err) => {
             if (err) {
-                syslogPrint("Location data sharing timed out", "danger");
+                console.log("Location data sharing timed out");
             } else {
-                syslogPrint("Location data shared", "success");
+                console.log("Location data shared");
             }
         });
     };
@@ -660,28 +660,28 @@ function locationEvents() {
             $("#geoloc_latitude").prop( "disabled", true );
             $("#geoloc_longitude").prop( "disabled", true );
             $("#geoloc_altitude").prop( "disabled", true );
-            syslogPrint("Location source changed to GPS", "success", true);
+            syslogPrint("Location source changed to GPS", "success");
         } else if ($('input[name="geoloc_mode"]:checked').val() == "network") {
             $("#geoloc_latitude").prop( "disabled", true );
             $("#geoloc_longitude").prop( "disabled", true );
             $("#geoloc_altitude").prop( "disabled", true );
-            syslogPrint("Location source changed to network", "success", true);
+            syslogPrint("Location source changed to network", "success");
         } else {
             $("#geoloc_latitude").prop( "disabled", false );
             $("#geoloc_longitude").prop( "disabled", false );
             $("#geoloc_altitude").prop( "disabled", false );
-            syslogPrint("Location source changed to custom", "success", true);
+            syslogPrint("Location source changed to custom", "success");
         }
         updateGeoloc();
     });
 
     $("#geoloc_share").change(function () {
         if ($('#geoloc_share').is(':checked')) {
-            syslogPrint("Location sharing enabled", "success", true);
+            syslogPrint("Location sharing enabled", "success");
             geoLocation.share = true;
             setCookie("config", JSON.stringify({"location": geoLocation}));
         } else {
-            syslogPrint("Location sharing disabled", "success", true);
+            syslogPrint("Location sharing disabled", "success");
             geoLocation.share = false;
             setCookie("config", JSON.stringify({"location": geoLocation}));
         }

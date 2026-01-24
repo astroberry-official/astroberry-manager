@@ -68,7 +68,11 @@ class IndiClient(PyIndi.BaseClient):
 	def newMessage(self, d, m):
 		'''Emmited when a new message arrives from INDI server.'''
 		self.logger.debug(f"New Message: {d.messageQueue(m)}")
-		data = {'msg': d.messageQueue(m)}
+		# msg = "2026-01-23T17:47:34: [INFO] Telescope
+		msg = d.messageQueue(m).split(":")
+		msg = msg[3].strip().split("]")
+		msg = msg[1].strip()
+		data = {'msg': msg }
 		emitEquipment(self.socketio, data)
 
 	def serverConnected(self):

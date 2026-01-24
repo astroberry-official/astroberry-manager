@@ -21,7 +21,7 @@
 */
 
 import { geoLocation } from "./location.js";
-import { getCookie, setCookie, syslogPrint } from "./helpers.js";
+import { getCookie, setCookie } from "./helpers.js";
 import { socket } from "./sockets.js";
 
 var path = "../assets/images/weather/";
@@ -39,9 +39,9 @@ function requestWeather() {
 
   socket.timeout(5000).emit("weather", data, (err) => {
       if (err) {
-          syslogPrint("Weather data request timed out", "danger");
+          console.log("Weather data request timed out");
       } else {
-          //syslogPrint("Weather data requested");
+          //console.log("Weather data requested");
       }
   });
 }

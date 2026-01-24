@@ -171,7 +171,6 @@ function systemEvents() {
 
     $("#apikey").on("keypress", function(data) {
         if (data.which == 13) {
-            syslogPrint("API key entered");
             systemAPIkey();
         }
     })
@@ -277,9 +276,9 @@ function systemUpdate() {
     var data = {'action': "update"};
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            //syslogPrint("System update request timed out", "danger");
+            console.log("System update request timed out");
         } else {
-            // syslogPrint("System update requested");
+            //console.log("System update requested");
         }
     });
 }
@@ -293,9 +292,9 @@ function systemBackup() {
     var data = {'action': "backup"};
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            //syslogPrint("System backup request timed out", "danger");
+            console.log("System backup request timed out");
         } else {
-            // syslogPrint("System backup requested");
+            //console.log("System backup requested");
         }
     });
 }
@@ -309,9 +308,9 @@ function systemRestore() {
     var data = {'action': "restore"};
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            //syslogPrint("System restore request timed out", "danger");
+            console.log("System restore request timed out");
         } else {
-            // syslogPrint("System restore requested");
+            //console.log("System restore requested");
         }
     });
 }
@@ -325,9 +324,9 @@ function systemRestart() {
     var data = {'action': "restart"};
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            //syslogPrint("System restart request timed out", "danger");
+            console.log("System restart request timed out");
         } else {
-            // syslogPrint("System restart requested");
+            //console.log("System restart requested");
         }
     });
 }
@@ -341,9 +340,9 @@ function systemShutdown() {
     var data = {'action': "shutdown"};
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            //syslogPrint("System shutdown request timed out", "danger");
+            console.log("System shutdown request timed out");
         } else {
-            // syslogPrint("System shudown requested");
+            //console.log("System shudown requested");
         }
     });
 }
@@ -352,9 +351,9 @@ function systemUpdateInfo() {
     var data = {'action': "info"};
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            //syslogPrint("System info request timed out", "danger");
+            console.log("System info request timed out");
         } else {
-            // syslogPrint("System info update requested");
+            //console.log("System info update requested");
         }
     });
 }

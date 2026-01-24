@@ -23,7 +23,6 @@
 import { geoLocation } from './location.js';
 import { centerOnSolarObject } from './celestial.js';
 import { updateMoon } from './moon.js';
-import { syslogPrint } from './helpers.js';
 import { deg2dms, deg2hms } from './functions.js';
 import { socket } from './sockets.js';
 
@@ -403,9 +402,9 @@ function requestAlmanac() {
 
     socket.timeout(5000).emit("almanac", data, (err) => {
         if (err) {
-            syslogPrint("Almanac data request timed out", "danger");
+            console.log("Almanac data request timed out");
         } else {
-            //syslogPrint("Almanac data requested");
+            //console.log("Almanac data requested");
         }
     });
 }

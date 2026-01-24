@@ -23,7 +23,6 @@
 import { geoLocation } from "./location.js";
 import { deg2dms, deg2hms, JulianDateFromUnixTime, raDecToAltAz } from "./functions.js";
 import { dsoType, centerOnCoords } from "./celestial.js";
-import { syslogPrint } from "./helpers.js";
 
 const datapath = "assets/js/d3-celestial/data/";
 const database = "dsos.14.json";
@@ -289,7 +288,7 @@ function showResults(data, online = false) {
 
     $("#search-results-center").on("click", function() {
         centerOnCoords(ra, dec);
-        syslogPrint("Centering on RA: " + deg2hms(ra) + " DEC: " + deg2dms(dec), "success");
+        console.log("Centering on RA: " + deg2hms(ra) + " DEC: " + deg2dms(dec));
     });
 }
 

@@ -67,7 +67,7 @@ function setSockets() {
     });
 
     socket.on('indiserver', function (data) { // equipment
-        // console.log(data);
+        //console.log(data);
         updateEquipment(data);
         updateTelescope(data);
     });

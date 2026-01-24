@@ -115,11 +115,6 @@ function updateTelescope(data) {
 
     // update position of telescope reticle
     updateTelescopeReticle(telescopeCoords);
-    /*
-    if ( $("#main-dock-chart").hasClass("dock-item-active") ) {
-      updateTelescopeReticle(telescopeCoords);
-    }
-    */
 
     // get equatorial coordinates from star chart
     var starchartCoords = Celestial.rotate()
@@ -192,9 +187,9 @@ function setTelescopeLocation(data) {
   _data['params']['alt'] = alt;
   socket.timeout(5000).emit("telescope", _data, (err) => {
       if (err) {
-          syslogPrint("Telescope request timed out", "danger");
+          console.log("Telescope request timed out");
       } else {
-          //syslogPrint("Telescope location requested");
+          //console.log("Telescope location requested");
       }
   });
 }
@@ -285,7 +280,8 @@ function updateStarChartCoords() {
   $("#celestial-map-longitude").html(deg2dms(timeloc.location[1]));
 
   // show center of the star chart
-  getChartReticle(); // update reticle
+  getChartReticle(); // update starchart reticle
+  updateTelescopeReticle(telescopeCoords); // update telescope reticle
 }
 
 function updateTelecopeCoords() {
@@ -410,24 +406,22 @@ function getRegionOfInterest(coordinates, fov = 5) {
 
   var width = 256;
   $("#region-of-interest").remove(); // clear
-  var box = d3.select("body").append("div").attr("id", "region-of-interest").style("z-index", 100);//.style("width", px(width+2));
+  var box = d3.select("body").append("div").attr("id", "region-of-interest").style("z-index", 100);
   var pt = Celestial.mapProjection(coordinates);
   // var properties = {'name': 'NGC 224', 'desig': 'M31', 'alt': 'Andromeda Galaxy', 'cl': 'Spiral Galaxy', 'mag': 5, 'dim': 10};
   var properties = {}; // TODO: show data for a major object in the region
-
   var imageUrl = 'http://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + coordinates[0]/15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
-  var detailsUrl = 'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&Radius=' + fov + '&Radius.unit=deg&output.max=10'
+  var detailsUrl = 'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&Radius=' + fov * 16 + '&Radius.unit=deg&output.max=10'
 
   box.style({left:px(ra + pt[0] - width/2), top:px(dec + pt[1]), opacity:1, border: "solid 1px #e1e1e11f"});
 
   box.selectAll("*").remove();
 
-  box.append("h2").text("Region of Interest");
   if (properties.name || properties.desig || properties.alt || properties.cl || dsoType[properties.type]) {
     box.append("span").classed("data", true).text("Names: ");
     if (properties.name) box.append("span").classed("title", true).text(properties.name+", ")
     if (properties.desig) box.append("span").text(properties.desig  + ", ");
-    if (properties.alt) box.append("span").text(properties.alt).append("br"); 
+    if (properties.alt) box.append("span").text(properties.alt).append("br");
     if (dsoType[properties.type]) box.append("span").text(dsoType[properties.type]).append("br");
     if (properties.cl) {
       box.append("span").classed("data", true).text("Class: ");
@@ -445,12 +439,21 @@ function getRegionOfInterest(coordinates, fov = 5) {
       box.append("span").text(properties.dim + "'");
     }
   }
-  if (imageUrl) box.append("div").attr("id", "region-of-interest-image").style({background: "url("+imageUrl+")", "margin-top": "10px" });
+  if (imageUrl) box.append("div").attr("id", "region-of-interest-image").style({background: "url("+imageUrl+")"});
+
+  box.append("span").attr({"id": "region-of-interest-fav", "class": "fa fa-star", "data-tooltip": "tooltip", title: "Add this region to favorities"})
+    .style({position: "absolute", top: "15px", left: "15px"});
+
+  box.append("span").text("Region of Interest").style({position: "absolute", top: "14px", left: "45px", color: "#aaa"});
+
+  if (fov) box.append("span").text("FOV: " + fov + "  ").style({position: "absolute", top: "14px", right: "50px", color: "#aaa"});
+
+  box.append("span").attr({"id": "region-of-interest-close", "class": "fa fa-times", "data-tooltip": "tooltip", title: "Close region of interest"})
+    .style({position: "absolute", top: "12px", right: "12px"});
 
   box.append("button").attr("id", "region-of-interest-center").attr("class", "btn").attr("data-tooltip", "tooltip").attr("title", "Center object in star chart").text("Center");
 
   if (detailsUrl) box.append("a").attr({href: detailsUrl, target: "_blank", "data-tooltip": "tooltip", title: "Look up the region in SIMBAD online database"}).text("Details");
-  if (fov) box.append("span").text("FOV: " + fov + "°").style({position: "absolute", bottom: "280px", right: "20px", color: "#aaa"});
 
   box.append("span").classed("label", true).text("RA");
   box.append("span").classed("starchart-coords", true).text(deg2hms(ra));
@@ -469,14 +472,23 @@ function getRegionOfInterest(coordinates, fov = 5) {
   box.append("span").classed("starchart-coords", true).text(alt);
 
   // register events
+  $("#region-of-interest").draggable();
+
+  d3.select("#region-of-interest-fav").on("click", function() {
+    addROItoFavorites();
+  });
+
   d3.select("#region-of-interest-image").on("click", function() {
-    $("#region-of-interest").remove(); // hide ROI
+    //$("#region-of-interest").hide();
   });
 
   d3.select("#region-of-interest-center").on("click", function() {
     centerOnCoords(ra, dec);
   });
 
+  d3.select("#region-of-interest-close").on("click", function() {
+    $("#region-of-interest").hide();
+  });
 }
 
 function updateTelescopeStatusIcon(status) {
@@ -550,6 +562,10 @@ function clearWorkspace() {
   $("#main-dock-handle").trigger("click");
 }
 
+function addROItoFavorites(data) {
+  console.log(data);
+}
+
 
 /* ================================================================== */
 /*                             EVENTS
@@ -584,7 +600,7 @@ function starchartEvents() {
       return;
 
     var coordinates = getPointCoordinates(data);
-    getRegionOfInterest(coordinates);
+    centerOnCoords(coordinates[0], coordinates[1]);
   })
   .on("mousemove", function (data) { // Get cursor celestial coordinates
     if (data === undefined || data === null)

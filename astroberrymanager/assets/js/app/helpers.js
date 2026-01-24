@@ -33,7 +33,6 @@ import { requestDesktop, closeDesktop } from './desktop.js';
 import { systemEvents } from './system.js';
 import { searchEvents } from './search.js';
 
-var stream = "Astroberry OS";
 var mainLoopInterval = 1000; // main loop interval = 1 second
 var mainTimer;
 var hourCounter = 0;
@@ -267,6 +266,7 @@ function syslogPrint(msg, level, popup = false) {
     var alert_level = "alert-warning";
     var msg_level = "INFO";
     var color = "#eeeeee";
+    var stream = "Astroberry OS";
 
     if (level !== undefined && ['success', 'danger', 'warning'].includes(level) ) {
         alert_level = "alert-" + level;
@@ -291,14 +291,19 @@ function syslogPrint(msg, level, popup = false) {
 
     // format message if without date/time/level header
     // msg = datetime + ": [" + msg_level + "] " + msg;
-
+/*
     if (stream) {
         stream = stream + "<br>" + "<font color=" + color + ">" + msg + "</font>";
     } else {
         stream = "<font color=" + color + ">" + msg + "</font>";
     }
-    console.log(msg);
+
     $("#syslog").html(stream);
+*/
+    stream = "<font color=" + color + ">" + msg + "</font><br>";
+    $("#syslog").append(stream);
+
+    console.log(msg);
 
     if(popup)
         $("#notify_message").html('<div class="alert ' + alert_level + '">' + msg + '</div>').fadeIn().delay(3000).fadeOut("slow");

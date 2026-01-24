@@ -66,17 +66,17 @@ export var celestialConfig = {	//https://github.com/ofrohn/d3-celestial
         limit: 6,               // Show only stars brighter than limit magnitude
         colors: true,           // Show stars in spectral colors, if not use "color"
         style: { fill: "#ffffff", opacity: 1 }, // Default style for stars
-        designation: true,      // Show star names (Bayer, Flamsteed, Variable star, Gliese or designation,
+        designation: false,      // Show star names (Bayer, Flamsteed, Variable star, Gliese or designation,
                                 // i.e. whichever of the previous applies first); may vary with culture setting
         designationType: "desig",  // Which kind of name is displayed as designation (fieldname in starnames.json)
-        designationStyle: { fill: "#ddddbb", font: "10px 'Roboto Regular', Arial, sans-serif", align: "left", baseline: "top" },
+        designationStyle: { fill: "#ddddbb", font: "9px 'Roboto Regular', Arial, sans-serif", align: "left", baseline: "top" },
         designationLimit: 3,    // Show only names for stars brighter than nameLimit
         propername: true,       // Show proper name (if present)
         propernameType: "name", // Languge for proper name, default IAU name; may vary with culture setting
                                 // (see list below of languages codes available for stars)
         propernameStyle: { fill: "#ddddbb", font: "12px 'Roboto Regular', Arial, sans-serif", align: "right", baseline: "bottom" },
         propernameLimit: 2,     // Show proper names for stars brighter than propernameLimit
-        size: 8,                // Maximum size (radius) of star circle in pixels
+        size: 6,                // Maximum size (radius) of star circle in pixels
         exponent: -0.3,         // Scale exponent for star size, larger = more linear
         data: 'stars.6.json'  // Data source for stellar data
         //data: 'stars.8.json'    // Alternative deeper data source for stellar data

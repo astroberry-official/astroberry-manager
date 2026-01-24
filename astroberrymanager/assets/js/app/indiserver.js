@@ -49,9 +49,9 @@ function connectINDIServer() {
 
     socket.timeout(5000).emit("equipment", data, (err) => {
         if (err) {
-            syslogPrint("INDI server request timed out", "danger");
+            console.log("INDI server request timed out");
         } else {
-            //syslogPrint("Equipment data requested");
+            //console.log("Equipment data requested");
             $("#reticle-telescope").show();
         }
     });
@@ -63,9 +63,9 @@ function disconnectINDIServer() {
 
     socket.timeout(5000).emit("equipment", data, (err) => {
         if (err) {
-            syslogPrint("INDI server request timed out", "danger");
+            console.log("INDI server request timed out");
         } else {
-            //syslogPrint("Equipment data requested");
+            //console.log("Equipment data requested");
             updateTelescopeStatusIcon(false);
             updateStarchartStatusIcon();
             locationStatusIcon();
@@ -439,7 +439,7 @@ function addProfile() {
 
     // check if new name is entered
     if (!profile_name) {
-        syslogPrint("Cannot add profile. Profile name missing", "danger", true);
+        syslogPrint("Profile name missing", "danger", true);
         $("#profile_name").focus();
         return;
     }
@@ -448,7 +448,7 @@ function addProfile() {
     $.each( options, function (index, option) {
         var name = options[index].value;
         if (profile_name == name) {
-            syslogPrint("Cannot add profile. Profile name already exists", "danger", true);
+            syslogPrint("Profile name already exists", "danger", true);
             $("#profile_name").focus();
             profile_name = null;
         }

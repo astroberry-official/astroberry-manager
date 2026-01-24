@@ -26,7 +26,7 @@ import { requestAlmanac } from './app/almanac.js';
 import { loadWeather } from './app/weather.js';
 import { requestStarChart, updateStarChartLocation } from './app/celestial.js';
 import { getINDIServerAPI } from './app/indiserver.js';
-import { initTimer, eventHandlers } from './app/helpers.js';
+import { initTimer, eventHandlers, syslogPrint } from './app/helpers.js';
 import { requestTerminal } from './app/terminal.js';
 
 /* ================================================================== */
@@ -35,7 +35,7 @@ import { requestTerminal } from './app/terminal.js';
 
 $(document).ready(function() {
     // Init
-    console.log("Astroberry OS");
+    syslogPrint("Astroberry OS");
 
     // Init sockets
     setSockets();
