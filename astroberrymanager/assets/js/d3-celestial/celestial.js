@@ -1032,6 +1032,7 @@ Celestial.projection = function(projection) {
   forward.invert = function(x, y) {
     try {
       var coords = raw.invert(x, y);
+      if (coords === undefined || coords === null) return;
       coords[0] = coords && -coords[0];
       return coords;
     } catch(e) { console.log(e); }
