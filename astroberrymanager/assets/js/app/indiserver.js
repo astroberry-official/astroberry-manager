@@ -20,32 +20,19 @@
  Boston, MA 02110-1301, USA.
 */
 
-import { updateTelescopeStatusIcon, updateStarchartStatusIcon, locationStatusIcon } from './celestial.js';
-import { activeEquipment, markActiveDriver, markAllDrivers } from './equipment.js';
-import { getCookie, setCookie, syslogPrint } from './helpers.js';
+import { updateTelescopeStatusIcon, updateStarchartStatusIcon, updateLocationStatusIcon } from './celestial.js';
+import { markActiveDevice, markAllDevices } from './equipment.js';
+import { syslogPrint } from './helpers.js';
 import { socket } from './sockets.js';
 
 const indiwebUrl = location.protocol + '//' + location.hostname + ':8624';
 
-const deviceFamilies = ["Adaptive Optics", "Agent", "Auxiliary", "CCDs", "Domes", "Filter Wheels", "FilterWheels", "Focusers", "Spectrographs", "Telescopes", "Weather"];
+//const deviceFamilies = ["Adaptive Optics", "Agent", "Auxiliary", "CCDs", "Domes", "Filter Wheels", "FilterWheels", "Focusers", "Spectrographs", "Telescopes", "Weather"];
 
-function getINDIServerAPI() {	// helper function for module init
-    // Update profiles
-    getIndiStatus();		// this must go first as it runs getActiveProfile
-    getProfiles();		// this must follow as it gets all profiles and selects active profile
-
-    // Update profile drivers
-    getGroups();		// Get driver types/groups
-    getAllDrivers();		// Get all supported drivers and assign them to groups
-    getProfileDrivers();	// Select drivers for active profile
-    getDriverDetails();		// Load details of active drivers
-
-    console.log("Profile " + activeEquipment.profile + " loaded");
-}
 
 function connectINDIServer() {
     var data = {};
-    data['connect'] = true;
+    data.connect = true;
 
     socket.timeout(5000).emit("equipment", data, (err) => {
         if (err) {
@@ -59,7 +46,7 @@ function connectINDIServer() {
 
 function disconnectINDIServer() {
     var data = {};
-    data['disconnect'] = true;
+    data.disconnect = true;
 
     socket.timeout(5000).emit("equipment", data, (err) => {
         if (err) {
@@ -68,105 +55,76 @@ function disconnectINDIServer() {
             //console.log("Equipment data requested");
             updateTelescopeStatusIcon(false);
             updateStarchartStatusIcon();
-            locationStatusIcon();
+            updateLocationStatusIcon();
             $("#reticle-telescope").hide();
         }
     });
 }
 
-function getIndiStatus() { // Update status using API provided by indi-web
-     $.getJSON(indiwebUrl + "/api/server/status", function(data) {
-        if (data === undefined || data === null || data[0].status === undefined || data[0].status === null)
-            return;
 
-        if (data[0].status == "True") {
-            $("#profiles").prop('disabled', true);
-            $("#profile_name").prop('disabled', true);
-            $("#drivers_list").prop('disabled', true);
-            $("#remote_drivers").prop('disabled', true);
-            $("#profile_auto_start").prop('disabled', true);
-            $("#profile_auto_connect").prop('disabled', true);
-            $("#profile_add").prop('disabled', true);
-            $("#profile_remove").prop('disabled', true);
-            $("#profile_save").prop('disabled', true);
-            $("#profile_cancel").prop('disabled', false);
+function updateINDI() { // Update from API
+    getGroups();        	// populate drivers list with groups
+    getDrivers();       	// populate drivers list with drivers
+    getProfiles();		// get profiles from API and select active profile
+    getProfileDrivers();        // select drivers for active profile
 
-            $("#profile_start").css({display: "none"});
-            $("#profile_stop").css({display: "block"});
+    var url = encodeURI(indiwebUrl + "/api/server/status");
 
-            getActiveProfile(data[0].active_profile); //  get active profile from INDI server
-            getActiveDrivers();
-        } else {
-            $("#profiles").prop('disabled', false);
-            $("#profile_name").prop('disabled', false);
-            $("#drivers_list").prop('disabled', false);
-            $("#remote_drivers").prop('disabled', false);
-            $("#profile_auto_start").prop('disabled', false);
-            $("#profile_auto_connect").prop('disabled', false);
-            $("#profile_add").prop('disabled', false);
-            $("#profile_remove").prop('disabled', false);
-            $("#profile_save").prop('disabled', false);
-            $("#profile_cancel").prop('disabled', false);
+    $.getJSON(url, function(data) {
+       if (data === undefined || data === null || data[0].status === undefined || data[0].status === null)
+           return;
 
-            $("#profile_start").css({display: "block"});
-            $("#profile_stop").css({display: "none"});
+       if (data[0].status == "True") {
+           $("#profiles").prop('disabled', true);
+           $("#profile_name").prop('disabled', true);
+           $("#drivers_list").prop('disabled', true);
+           $("#remote_drivers").prop('disabled', true);
+           $("#profile_auto_start").prop('disabled', true);
+           $("#profile_auto_connect").prop('disabled', true);
+           $("#profile_add").prop('disabled', true);
+           $("#profile_remove").prop('disabled', true);
+           $("#profile_save").prop('disabled', true);
+           $("#profile_cancel").prop('disabled', false);
 
-            getActiveProfile(); // get active profile from cookie or fallback to Simulators
-        }
-    });
-}
+           $("#profile_start").css({display: "none"});
+           $("#profile_stop").css({display: "block"});
 
-function getProfiles() {
-    var options = "";
-    var url = indiwebUrl + "/api/profiles";
+           markActiveDevices(); // mark selected drivers in the equipment image
+       } else {
+           $("#profiles").prop('disabled', false);
+           $("#profile_name").prop('disabled', false);
+           $("#drivers_list").prop('disabled', false);
+           $("#remote_drivers").prop('disabled', false);
+           $("#profile_auto_start").prop('disabled', false);
+           $("#profile_auto_connect").prop('disabled', false);
+           $("#profile_add").prop('disabled', false);
+           $("#profile_remove").prop('disabled', false);
+           $("#profile_save").prop('disabled', false);
+           $("#profile_cancel").prop('disabled', false);
 
-    $.getJSON(url, function(profiles) {
-        $.each(profiles, function(i, profile) {
-            if (profile.name == activeEquipment.profile) {
-                options += "<option value='" + profile.name + "' selected>" + profile.name + "</option>";
-            } else {
-                options += "<option>" + profile.name + "</option>";
-            }
-        });
-        $("#profiles").html(options);
-    });
+           $("#profile_start").css({display: "block"});
+           $("#profile_stop").css({display: "none"});
 
-    $('#profiles').change(); // getProfileDrivers()
-}
-
-function getActiveProfile(profile) {
-    activeEquipment.profile = profile ? profile : null; // first, get active profile from INDI server
-
-    if (activeEquipment.profile === null) { // second, get saved profile if no INDI server is running
-        if (getCookie("config")) {
-            var config = JSON.parse(getCookie("config"));
-            activeEquipment.profile = config.profile;
-        } else {
-            activeEquipment.profile = "Simulators"; // finaly, use default profile if no saved profile
-        }
-    }
-}
-
-function setActiveProfile(profile) {
-    activeEquipment.profile = profile;
-    setCookie("config", JSON.stringify(activeEquipment));
+           markAllDevices(false); // reset status of all devices in the equipment image
+       }
+   });
 }
 
 function getGroups() {
-    var groups = "";
-    var url = indiwebUrl + "/api/drivers/groups";
+    var select_groups = "";
+    var url = encodeURI(indiwebUrl + "/api/drivers/groups");
 
     $.getJSON(url, function(groups) {
         $.each(groups, function(i, group) {
-            groups += "<optgroup label='" + group + "'></optgroup>";
+            select_groups += "<optgroup label='" + group + "'></optgroup>";
         });
-        $("#drivers_list").html(groups);
+        $("#drivers_list").html(select_groups);
     });
 }
 
-function getAllDrivers() {
+function getDrivers() {
     var driver = "";
-    var url = indiwebUrl + "/api/drivers";
+    var url = encodeURI(indiwebUrl + "/api/drivers");
 
     $.getJSON(url, function(drivers) {
         $.each(drivers, function(i, item) {
@@ -176,46 +134,43 @@ function getAllDrivers() {
     });
 }
 
-function getActiveDrivers() {
-    $.getJSON(indiwebUrl + "/api/server/drivers", function(data) {
-        if (data === undefined || data === null)
-            return;
+function getProfiles() {
+    var active_profile = $("#profiles option:selected").text();
+    var url = encodeURI(indiwebUrl + "/api/server/status");
 
-        var counter = 0;
+    $.getJSON(url, function(data) { // get status from API
+        if (data === undefined || data === null || data[0].status === undefined || data[0].status === null)
+            active_profile = "Simulators"; // Set default if none
 
-        // count running drivers
-        $.each(data, function(i, field) {
-            markActiveDriver(getDevice(field.family), true);
-            counter++;
+        if (data[0].status == "True" && data[0].active_profile !== undefined && data[0].active_profile !== null )
+            active_profile = data[0].active_profile;
+
+        var options = "";
+        var url = encodeURI(indiwebUrl + "/api/profiles");
+
+        $.getJSON(url, function(profiles) { // get available profiles from API & mark active profile
+            $.each(profiles, function(i, profile) {
+                if (profile.name == active_profile) {
+                    options += "<option value='" + profile.name + "' selected>" + profile.name + "</option>";
+                } else {
+                    options += "<option>" + profile.name + "</option>";
+                }
+            });
+            $("#profiles").html(options);
         });
-
-        // check if all profile drivers are running
-        if (counter < $("#drivers_list :selected").length) {
-            syslogPrint("Connecting devices", "warning", true);
-            return;
-        }
     });
 }
 
-function clearDriverSelection() {
-    $("#drivers_list option").prop('selected', false); // Uncheck drivers
-    $("#drivers_list").selectpicker('refresh');
-
-    $("#profile_auto_start").prop("checked", false); // Uncheck Auto Start
-    $("#profile_auto_connect").prop("checked", false); // Uncheck Auto Start
-}
-
 function getProfileDrivers() {
+    var name = $("#profiles option:selected").text();
+    if (name === undefined || name === null || name == "") return;
+
+    //console.log("Profile selected: " + name);
+
     clearDriverSelection();
 
-    var name = $("#profiles option:selected").text();
-
-    if (! name) return;
-
-    //syslogPrint("Profile " + name + " selected", "success", true);
-
     // Get local drivers
-    var url = indiwebUrl + "/api/profiles/" + name + "/labels";
+    var url = encodeURI(indiwebUrl + "/api/profiles/" + name + "/labels");
 
     $.getJSON(url, function(drivers) {
         $.each(drivers, function(i, driver) {
@@ -226,7 +181,7 @@ function getProfileDrivers() {
     });
 
     // Get remote drivers
-    url = encodeURI(indiwebUrl + "/api/profiles/" + name + "/remote");
+    var url = encodeURI(indiwebUrl + "/api/profiles/" + name + "/remote");
 
     $.getJSON(url, function(data) {
         if (data === undefined || data === null || data.drivers === undefined || data.drivers === null) {
@@ -254,18 +209,49 @@ function getProfileDrivers() {
     });
 }
 
+function clearDriverSelection() {
+    $("#drivers_list option").prop('selected', false);
+    $("#drivers_list").selectpicker('refresh');
+
+    $("#profile_auto_start").prop("checked", false);
+    $("#profile_auto_connect").prop("checked", false);
+}
+
+function markActiveDevices() {
+    var url = encodeURI(indiwebUrl + "/api/server/drivers");
+
+    $.getJSON(url, function(data) {
+        if (data === undefined || data === null)
+            return;
+
+        var counter = 0;
+
+        // count running drivers & mark device in the equipment image
+        $.each(data, function(i, field) {
+            markActiveDevice(getDevice(field.family), true);
+            counter++;
+        });
+
+        // check if all profile drivers are running
+        if (counter < $("#drivers_list :selected").length) {
+            syslogPrint("Waiting for devices...", "warning", true);
+        }
+    });
+}
+
 function startProfile() {
     var profile = $("#profiles option:selected").text();
-    var url = indiwebUrl + "/api/server/start/" + profile;
+    var url = encodeURI(indiwebUrl + "/api/server/start/" + profile);
 
     $.ajax({
         type: 'POST',
-        url: encodeURI(url),
+        url: url,
         success: function() {
-            setActiveProfile(profile);
-            getIndiStatus();
             connectINDIServer();
-            syslogPrint("Starting " + activeEquipment.profile, "success", true);
+            syslogPrint("Starting " + profile, "success", true);
+            setTimeout(function() { // wait a second to refresh status
+                updateINDI();
+            }, 200);
         },
         error: function() {
             syslogPrint("Error starting " + profile, "danger", true);
@@ -274,19 +260,18 @@ function startProfile() {
 }
 
 function stopProfile() {
+    var profile = $("#profiles option:selected").text();
+    var url = encodeURI(indiwebUrl + "/api/server/stop");
+
     $.ajax({
         type: 'POST',
-        url: indiwebUrl + "/api/server/stop",
+        url: url,
         success: function() {
-            markAllDrivers(false);
             disconnectINDIServer();
-
-            // wait a second to refresh status
-            setTimeout(function() {
-                getIndiStatus();
-            }, 1000);
-
-            syslogPrint("Stopping " + activeEquipment.profile, "success", true);
+            syslogPrint("Stopping " + profile, "success", true);
+            setTimeout(function() { // wait a second to refresh status
+                updateINDI();
+            }, 200);
         },
         error: function() {
             syslogPrint("Error stopping " + profile, "danger", true);
@@ -295,8 +280,7 @@ function stopProfile() {
 }
 
 function getDriverDetails(data) {
-    if (data === undefined || data === null)
-        return;
+    if (data === undefined || data === null) return;
 
     var device = data.target.id;
     if (!device) return;
@@ -305,7 +289,9 @@ function getDriverDetails(data) {
     var family = getFamily(device);
 
     // setup driver details
-    $.getJSON(indiwebUrl + "/api/server/drivers", function(drivers) {
+    var url = encodeURI(indiwebUrl + "/api/server/drivers");
+
+    $.getJSON(url, function(drivers) {
         var details = "";
         var count = 0;
 
@@ -465,7 +451,7 @@ function addProfile() {
 
 function deleteProfile() {
     var name = $("#profiles option:selected").text();
-    var url = indiwebUrl + "/api/profiles/" + name;
+    var url = encodeURI(indiwebUrl + "/api/profiles/" + name);
 
     if ($("#profiles option").size == 1 || name == "Simulators") {
         syslogPrint("Cannot delete default profile", "warning", true);
@@ -474,12 +460,11 @@ function deleteProfile() {
 
     $.ajax({
         type: 'DELETE',
-        url: encodeURI(url),
+        url: url,
         success: function() {
             $("#profiles option:selected").remove();
-            getProfiles();
-            $('#profiles').change(); // getProfileDrivers()
             syslogPrint("Deleting " + name, "success", true);
+            getProfiles(); // reload profiles from API
         },
         error: function() {
             syslogPrint("Error deleting " + name, "danger", true);
@@ -493,14 +478,14 @@ function saveProfile() {
     // Remove any extra spaces
     name = name.trim();
 
-    var url = indiwebUrl + "/api/profiles/" + name;
+    var url = encodeURI(indiwebUrl + "/api/profiles/" + name);
 
     $.ajax({
         type: 'POST',
-        url: encodeURI(url),
+        url: url,
         success: function() {
             saveProfileDrivers(name);
-            //syslogPrint("Profile updated", "success", true);
+            syslogPrint("Profile updated", "success");
         },
         error: function() {
             syslogPrint("Error updating profile", "danger", true);
@@ -514,7 +499,7 @@ function saveProfileOptions() {
 
     var autostart = ($('#profile_auto_start').is(':checked')) ? 1 : 0;
     var autoconnect = ($('#profile_auto_connect').is(':checked')) ? 1 : 0;
-    var url = indiwebUrl + "/api/profiles/" + name;
+    var url = encodeURI(indiwebUrl + "/api/profiles/" + name);
 
     var profileInfo = {
         "autostart": autostart,
@@ -526,12 +511,11 @@ function saveProfileOptions() {
 
     $.ajax({
         type: 'PUT',
-        url: encodeURI(url),
+        url: url,
         data: profileInfo,
         contentType: "application/json; charset=utf-8",
         success: function() {
-            //syslogPrint("Profile options updated", "success", true);
-
+            syslogPrint("Profile options updated", "success");
         },
         error: function() {
             syslogPrint("Error updating profile options", "danger", true);
@@ -543,7 +527,7 @@ function saveProfileDrivers(profile) {
 
     if (typeof(profile) === 'undefined') return;
 
-    var url = indiwebUrl + "/api/profiles/" + profile + "/drivers";
+    var url = encodeURI(indiwebUrl + "/api/profiles/" + profile + "/drivers");
     var drivers = [];
 
     $("#drivers_list :selected").each(function(i, sel) {
@@ -565,11 +549,11 @@ function saveProfileDrivers(profile) {
 
     $.ajax({
         type: 'POST',
-        url: encodeURI(url),
+        url: url,
         data: drivers,
         contentType: "application/json; charset=utf-8",
         success: function() {
-            //syslogPrint("Profile drivers updated", "success", true);
+            syslogPrint("Profile drivers updated", "success");
         },
         error: function() {
             syslogPrint("Error updating profile drivers", "danger", true)
@@ -578,17 +562,19 @@ function saveProfileDrivers(profile) {
 }
 
 function restartDriver(label) {
-        $.ajax({
-            type: 'POST',
-            url: indiwebUrl + "/api/drivers/restart/" + label,
-            success: function() {
-                getIndiStatus();
-                syslogPrint("Restarting " + label, "success", true);
-            },
-            error: function() {
-                syslogPrint("Error restarting " + label, "danger", true);
-            }
-        });
+    var url = encodeURI(indiwebUrl + "/api/drivers/restart/" + label);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        success: function() {
+            updateINDI();
+            syslogPrint("Restarting " + label, "success", true);
+        },
+        error: function() {
+            syslogPrint("Error restarting " + label, "danger", true);
+        }
+    });
 }
 
 /* ================================================================== */
@@ -596,6 +582,10 @@ function restartDriver(label) {
 /* ================================================================== */
 
 function indiwebEvents() {
+    $(document).on("click", ".driver_details button" , function() {
+        restartDriver($(this)[0].dataset.driver);
+    });
+
     $("#profile_start").on("click", function () {
         startProfile();
     });
@@ -619,10 +609,6 @@ function indiwebEvents() {
     $("#profile_cancel").on("click", function () {
         $("#profile_name").val("");
         toggleProfile();
-    });
-
-    $(document).on("click", ".driver_details button" , function() {
-        restartDriver($(this)[0].dataset.driver);
     });
 
     $("#profiles").change(function () {
@@ -653,8 +639,7 @@ function indiwebEvents() {
 }
 
 export {
-    getIndiStatus,
-    getINDIServerAPI,
+    updateINDI,
     getProfileDrivers,
     startProfile,
     stopProfile,
@@ -665,6 +650,5 @@ export {
     saveProfileDrivers,
     getDriverDetails,
     restartDriver,
-    indiwebEvents,
-    activeEquipment /* Active profile and drivers */
+    indiwebEvents
 };

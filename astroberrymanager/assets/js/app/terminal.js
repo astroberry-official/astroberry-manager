@@ -66,6 +66,8 @@ function requestTerminal() {
     //console.log("new output received from server:", data.output);
     term.write(data.output);
   });
+
+  $("#terminal-container").draggable();
 }
 
 function fitToscreen() {

@@ -226,7 +226,7 @@ def main():
 
         print("✓ Starting main application\n")
 
-        print("Point your browser to http://%s:%d/\n" % (app_host, app_port))
+        print("Point your browser to http://%s.local:%d/\n" % (app_host, app_port))
 
         # start main app
         socketio.run(app, host=app_addr, port = app_port, debug=False)

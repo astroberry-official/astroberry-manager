@@ -77,7 +77,7 @@ tr { height: 1.6em; }
 /*             TERMINAL
 /*************************************/
 #terminal-container { display: none; position: absolute; top:20%; left: 25%; z-index: 500; 
-	background: #000; border: 1px solid #ff330066; opacity: 0.8; padding: 10px; }
+	background: #000; border: 5px solid #ff330066; opacity: 0.8; padding: 10px; }
 #terminal { overflow: hidden;}
 div.xterm-viewport { overflow-x: hidden; overflow-y: auto !important; }
 
@@ -98,7 +98,7 @@ div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display:
 #d3-celestial-footer { text-align:center; color:#666; font:10pt/1 'Roboto Medium', Arial, Helvetica, sans-serif; }
 #d3-celestial-footer a { text-decoration:none; color:#99f; }
 
-#celestial-map { display: block; width: 100%; height: 100%; margin: 0; padding: 0; position: relative; overflow: hidden; cursor: crosshair !important; }
+#celestial-map { display: block; width: 100%; height: 100%; margin: 0; padding: 50px 10px; position: relative; overflow: hidden; cursor: crosshair !important; }
 #celestial-map input[type=button] { background: #333; color: #fff; }
 #celestial-map input[type=button]:hover { background: #009933; }
 

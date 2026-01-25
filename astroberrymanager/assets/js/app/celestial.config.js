@@ -38,8 +38,7 @@ export var celestialConfig = {	//https://github.com/ofrohn/d3-celestial
       orientationfixed: false,  // Keep orientation angle the same as center[2]
       background: { fill: "#000000", stroke: "#000000", opacity: 0.5 }, // Background style
       follow: "center",         // on which coordinates to center the map, default: zenith, if location enabled, otherwise center
-      //zoomlevel: 1.25,        // initial zoom level 0...zoomextend; 0|null = default, 1 = 100%, 0 < x <= zoomextend
-      zoomlevel: 1,
+      zoomlevel: 1.0,           // initial zoom level 0...zoomextend; 0|null = default, 1 = 100%, 0 < x <= zoomextend
       zoomextend: 50,           // maximum zoom level
       adaptable: true,          // Sizes are increased with higher zoom-levels
       interactive: true,        // Enable zooming and rotation with mousewheel and dragging
@@ -158,7 +157,7 @@ export var celestialConfig = {	//https://github.com/ofrohn/d3-celestial
                             "10px 'Roboto Regular', Arial, sans-serif"]}, // ranked constellations
         lines: true,            // Show constellation lines, style below
         lineStyle: { stroke: "#cccccc", width: 0.8, opacity: 0.3 },
-        bounds: true,          // Show constellation boundaries, style below
+        bounds: false,          // Show constellation boundaries, style below
         boundStyle: { stroke: "#cccc00", width: 0.5, opacity: 0.8, dash: [2, 4] }
       },
       mw: { // Milky Way

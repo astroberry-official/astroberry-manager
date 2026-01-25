@@ -77,11 +77,6 @@ function updateSystem(data) {
     }
 }
 
-function systemAPIkey() {
-    var key = $("#apikey").val();
-    setCookie("config", JSON.stringify({"api": key }));
-}
-
 /* ================================================================== */
 /*                             EVENTS
 /* ================================================================== */
@@ -90,40 +85,21 @@ function systemEvents() {
     // load config from cookies
     if (getCookie("config")) {
         var config = JSON.parse(getCookie("config"));
-        if (config["api"])
-            $('#apikey').val(config["api"]);
-        if (config["telescope_coords"]) {
-            $('#telescope_coordinates_enable').prop("checked", true);
-        } else {
-            $('#telescope_coordinates_enable').prop("checked", false);
+
+        if (config.telescope_coords !== undefined && config.telescope_coords !== null)
+            $('#telescope_coordinates_enable').prop("checked", config.telescope_coords);
+        if (config.chart_coords !== undefined && config.chart_coords !== null)
+            $('#starchart_coordinates_enable').prop("checked", config.chart_coords);
+        if (config.timeloc !== undefined && config.timeloc !== null)
+            $('#timeloc_enable').prop("checked", config.timeloc);
+        if (config.target_coords !== undefined && config.target_coords !== null) {
+            $('#target_enable').prop("checked", config.target_coords);
+            $('#target_autohide').attr("disabled", !config.target_coords);
         }
-        if (config["chart_coords"]) {
-            $('#starchart_coordinates_enable').prop("checked", true);
-        } else {
-            $('#starchart_coordinates_enable').prop("checked", false);
-        }
-        if (config["timeloc"]) {
-            $('#timeloc_enable').prop("checked", true);
-        } else {
-            $('#timeloc_enable').prop("checked", false);
-        }
-        if (config["target_coords"]) {
-            $('#target_enable').prop("checked", true);
-            $('#target_autohide').attr("disabled", false);
-        } else {
-            $('#target_enable').prop("checked", false);
-            $('#target_autohide').attr("disabled", true);
-        }
-        if (config["target_autohide"]) {
-            $('#target_autohide').prop("checked", true);
-        } else {
-            $('#target_autohide').prop("checked", false);
-        }
-        if (config["use_system_loctime"]) {
-            $('#system_timeloc').prop("checked", true);
-        } else {
-            $('#system_timeloc').prop("checked", false);
-        }
+        if (config.target_autohide !== undefined && config.target_autohide !== null)
+            $('#target_autohide').prop("checked", config.target_autohide);
+        if (config.use_system_loctime !== undefined && config.use_system_loctime !== null)
+            $('#system_timeloc').prop("checked", config.use_system_loctime);
     } else { // defaults
         $('#telescope_coordinates_enable').prop("checked", true);
         $('#starchart_coordinates_enable').prop("checked", true);
@@ -168,12 +144,6 @@ function systemEvents() {
     $("#system-shutdown").on("click", function() {
         systemShutdown();
     });
-
-    $("#apikey").on("keypress", function(data) {
-        if (data.which == 13) {
-            systemAPIkey();
-        }
-    })
 
     $("#telescope_coordinates_enable").on("change", function() {
         if ($('#telescope_coordinates_enable').is(':checked')) {

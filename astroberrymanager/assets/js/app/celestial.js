@@ -151,9 +151,9 @@ function updateTelescope(data) {
 
      // Display warning if telescope location does not match system location
      if (scopeLocation['LAT'].toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation['LONG'].toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
-       locationStatusIcon(true);
+       updateLocationStatusIcon(true);
      } else {
-       locationStatusIcon(false);
+       updateLocationStatusIcon(false);
        syslogPrint("Telescope location is different than system location", "danger", true);
        console.log(scopeLocation['LAT'], scopeLocation['LONG']);
      }
@@ -518,7 +518,7 @@ function updateStarchartStatusIcon(status) {
   $("#celestial-map-icon").css({color: color});
 }
 
-function locationStatusIcon(status) {
+function updateLocationStatusIcon(status) {
   return; // function disabled
   if (status === undefined) {
       var color = "#ffffff";
@@ -663,7 +663,7 @@ export {
   centerOnSolarObject,
   updateTelescopeStatusIcon,
   updateStarchartStatusIcon,
-  locationStatusIcon,
+  updateLocationStatusIcon,
   systemLocationTime,
   starchartEvents
 };

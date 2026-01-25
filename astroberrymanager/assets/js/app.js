@@ -25,7 +25,7 @@ import { loadGeoloc, updateGeoloc, loadMap } from './app/location.js';
 import { requestAlmanac } from './app/almanac.js';
 import { loadWeather } from './app/weather.js';
 import { requestStarChart, updateStarChartLocation } from './app/celestial.js';
-import { getINDIServerAPI } from './app/indiserver.js';
+import { updateINDI } from './app/indiserver.js';
 import { initTimer, eventHandlers, syslogPrint } from './app/helpers.js';
 import { requestTerminal } from './app/terminal.js';
 
@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     // Update from INDI server API
     setTimeout(function() {
-      getINDIServerAPI();
+      updateINDI();
     }, 1000); // don't run too early, we need to give a second for API service to start up
 
     // Init event handlers

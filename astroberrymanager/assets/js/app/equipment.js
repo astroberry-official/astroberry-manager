@@ -24,10 +24,7 @@ import { getDriverDetails } from './indiserver.js';
 import { syslogPrint } from './helpers.js';
 
 // Supported device types
-const deviceTypes = ["GENERAL", "TELESCOPE", "CCD", "GUIDER", "FOCUSER", "FILTER", "DOME", "GPS", "WEATHER", "AO", "DUSTCAP", "LIGHTBOX", "DETECTOR", "ROTATOR", "SPECTROGRAPH", "CORRELATOR", "AUX"];
-
-var equipmentImage = document.getElementById("setup_status").contentDocument;
-var activeEquipment = {'profile': "Simulators", 'devices': []};
+const deviceGroups = ["GENERAL", "TELESCOPE", "CCD", "GUIDER", "FOCUSER", "FILTER", "DOME", "GPS", "WEATHER", "AO", "DUSTCAP", "LIGHTBOX", "DETECTOR", "ROTATOR", "SPECTROGRAPH", "CORRELATOR", "AUX"];
 
 /* ================================================== */
 /*              Process INDI server data
@@ -41,8 +38,7 @@ function updateEquipment(data) {
     if ('equipment' in data) {
         data = data['equipment'];
         if (data === undefined || data == null) return;
-        activeEquipment.devices = Object.keys(data);
-        markActiveDrivers(activeEquipment.devices);
+        //markActiveDevices(Object.keys(data));
     }
 
     if ('msg' in data) {
@@ -53,33 +49,17 @@ function updateEquipment(data) {
 }
 
 /* ================================================== */
-/*              Control equipent image
+/*              Control equipment image
 /* ================================================== */
 
-function markAllDrivers(status) { // helper function
-    $.each(deviceTypes, function (index, device) {
-        markActiveDriver(device, status)
-    });
-}
-
-function markActiveDrivers(devices) { // helper function
-    $.each(devices, function (index, device) {
-        markActiveDriver(device, true)
-    });
-}
-
-function markActiveDriver(device, status) {
+function markActiveDevice(device, status) {
     if (device === undefined || device == null ) return;
-
-    equipmentImage = document.getElementById("setup_status").contentDocument;
-
-    if (equipmentImage === undefined || equipmentImage == null) return;
 
     device = device.toLowerCase();
 
-    if (!device in deviceTypes) {
+    if (!device in deviceGroups) {
         syslogPrint(device + " device not supported", "danger");
-        return; // svg equipment image does not support this device
+        return; // equipment image does not support this device
     }
 
     var color_on = "#009933";
@@ -92,9 +72,11 @@ function markActiveDriver(device, status) {
     }
 
     // Set device status in equipment image
-    var item = equipmentImage.getElementById(device);
+    var equipmentImage = document.getElementById("setup_status").contentDocument;
+    if (equipmentImage === undefined || equipmentImage === null) return;
 
-    if (item === undefined || item == null) return;
+    var item = equipmentImage.getElementById(device);
+    if (item === undefined || item === null) return;
 
     // Set active device color
     if ($.inArray(device, ["dome", "weather", "gps", "ao", "detector", "aux"]) !== -1) {
@@ -112,6 +94,18 @@ function markActiveDriver(device, status) {
         item.style.cursor = "default";
     };
 
+}
+
+function markActiveDevices(devices) { // helper function
+    $.each(devices, function (index, device) {
+        markActiveDevice(device, true)
+    });
+}
+
+function markAllDevices(status) { // helper function
+    $.each(deviceGroups, function (index, device) {
+        markActiveDevice(device, status)
+    });
 }
 
 /* ================================================================== */
@@ -163,9 +157,8 @@ function editProfile() {
 
 export {
     updateEquipment,
-    markAllDrivers,
-    markActiveDrivers,
-    markActiveDriver,
-    equipmentEvents,
-    activeEquipment, /* List of device types connected to INDI server  */
+    markActiveDevice,
+    markActiveDevices,
+    markAllDevices,
+    equipmentEvents
 };

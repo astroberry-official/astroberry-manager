@@ -26,7 +26,7 @@ import { weatherEvents } from './weather.js';
 import { almanacEvents } from './almanac.js';
 import { starchartEvents, updateTelecopeCoords } from './celestial.js';
 import { equipmentEvents } from './equipment.js';
-import { indiwebEvents } from './indiserver.js';
+import { updateINDI, indiwebEvents } from './indiserver.js';
 import { requestAlmanac } from './almanac.js';
 import { requestWeather } from './weather.js';
 import { requestDesktop, closeDesktop } from './desktop.js';
@@ -143,6 +143,15 @@ function appEvents() {
 
                     $("#main-dock-equipment").addClass("dock-item-active");
                     $("#panel-equipment").css({display: "block"});
+
+		    // wait for svg image to load
+		    setTimeout(function() {
+		        updateINDI();
+		    }, 500);
+                    // or use jquery to wait for svg ready
+                    //$("setup_status").ready( function() {
+                    //    updateINDI();
+                    //});
                 }
                 break;
 
@@ -315,10 +324,9 @@ function syslogPrint(msg, level, popup = false) {
 /*                             COOKIES
 /* ================================================================== */
 
-/* Global Cookie */
 function setCookie(name, value) {
     if(getCookie(name)) {
-       var _value =  JSON.parse(getCookie(name));
+        var _value =  JSON.parse(getCookie(name));
     } else {
         var _value = {};
     }

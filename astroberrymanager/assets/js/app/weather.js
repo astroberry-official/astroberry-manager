@@ -103,7 +103,7 @@ function updateWeather(data) {
 
 function updateWeatherMetno(data) {
     /* https://github.com/metno/weatherapi-docs/blob/master/doc/locationforecast/HowTO.md */
-    /* apiurl = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=" + lat + "&lon=" + lon; */
+    /* url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=" + lat + "&lon=" + lon; */
 
     if (data === undefined || data === null)
         return;

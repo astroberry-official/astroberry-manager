@@ -78,20 +78,13 @@ function loadMap() { // https://leafletjs.com/examples/quick-start/
 }
 
 function loadGeoloc() {
-
     // Load initial location
     if (getCookie("config")) {
         geoLocation = JSON.parse(getCookie("config")).location;
     } else {
-        geoLocation = {'mode': 0, 'latitude': 0, 'longitude': 0, 'altitude': 0, 'share': false}; // fall back location
+        geoLocation = {'mode': 0, 'latitude': 0, 'longitude': 0, 'altitude': 0}; // fall back location
     }
 
-    // Load location sharing preferrence
-    if (geoLocation.share) {
-        $('#geoloc_share').prop("checked", true);
-    } else {
-        $('#geoloc_share').prop("checked", false);
-    }
     // Set mode
     if (geoLocation.mode > 0) {
         $("#geoloc_mode_gps").prop('checked', true);
@@ -244,9 +237,6 @@ function updateGeoloc(data = {}) {
             // Update home marker and center
             centerMap([geoLocation.latitude, geoLocation.longitude]);
 
-            // Share approximate location (only if enabled by user)
-            shareLocation([Math.round(geoLocation.latitude * 10) / 10, Math.round(geoLocation.longitude * 10) / 10]);
-
             // Update star chart location
             if ($("#system_timeloc").is(':checked'))
                 updateStarChartLocation();
@@ -297,22 +287,6 @@ function networkLocation() {
         syslogPrint("Error updating location from network", "danger");
         return;
     }
-}
-
-function shareLocation(data) {
-    if (data === undefined || data === null)
-        return;
-
-    // check if location sharing is enabled bu user
-    if ($('#geoloc_share').is(':checked')) {
-        socket.timeout(5000).emit("publish", data, (err) => {
-            if (err) {
-                console.log("Location data sharing timed out");
-            } else {
-                console.log("Location data shared");
-            }
-        });
-    };
 }
 
 function centerMap(coordinates) {
@@ -673,18 +647,6 @@ function locationEvents() {
             syslogPrint("Location source changed to custom", "success");
         }
         updateGeoloc();
-    });
-
-    $("#geoloc_share").change(function () {
-        if ($('#geoloc_share').is(':checked')) {
-            syslogPrint("Location sharing enabled", "success");
-            geoLocation.share = true;
-            setCookie("config", JSON.stringify({"location": geoLocation}));
-        } else {
-            syslogPrint("Location sharing disabled", "success");
-            geoLocation.share = false;
-            setCookie("config", JSON.stringify({"location": geoLocation}));
-        }
     });
 
     $("#celestial-map-location-icon").on("click", function() {
