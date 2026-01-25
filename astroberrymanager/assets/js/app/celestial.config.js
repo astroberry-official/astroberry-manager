@@ -75,11 +75,11 @@ export var celestialConfig = {	//https://github.com/ofrohn/d3-celestial
                                 // (see list below of languages codes available for stars)
         propernameStyle: { fill: "#ddddbb", font: "12px 'Roboto Regular', Arial, sans-serif", align: "right", baseline: "bottom" },
         propernameLimit: 2,     // Show proper names for stars brighter than propernameLimit
-        size: 6,                // Maximum size (radius) of star circle in pixels
-        exponent: -0.3,         // Scale exponent for star size, larger = more linear
-        data: 'stars.6.json'  // Data source for stellar data
+        size: 10,                // Maximum size (radius) of star circle in pixels
+        exponent: -0.4,         // Scale exponent for star size, larger = more linear
+        data: 'stars.6.json'    // Data source for stellar data
         //data: 'stars.8.json'    // Alternative deeper data source for stellar data
-        //data: 'stars.14.json' // Alternative deepest data source for stellar data
+        //data: 'stars.14.json'   // Alternative deepest data source for stellar data
       },
       dsos: { // Deep Space Objects
         show: true,             // Show Deep Space Objects
