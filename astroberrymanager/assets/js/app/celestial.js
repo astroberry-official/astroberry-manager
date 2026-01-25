@@ -101,6 +101,8 @@ function updateTelescope(data) {
   const telescopeId = 0; // use the first telescope ONLY
 
   if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
+    // console.log(data);
+
     // remember last coordinates
     var lastRA = telescopeCoords.RA ? telescopeCoords.RA : 0;
     var lastDEC = telescopeCoords.DEC ? telescopeCoords.DEC : 0;

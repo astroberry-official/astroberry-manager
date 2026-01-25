@@ -127,30 +127,30 @@ function equipmentEvents() {
 function toggleProfile() {
     $("#toggle-profile").addClass("button-active");
     $("#toggle-profile-settings").removeClass("button-active");
-    $("#server_status").css({display: "block"})
+    $("#server_status").show();
     controlProfile();
 }
 
 function toggleProfileSettings() {
     $("#toggle-profile").removeClass("button-active");
     $("#toggle-profile-settings").addClass("button-active");
-    $("#server_status").css({display: "none"})
+    $("#server_status").hide()
     $("#driver_details").trigger("click"); // hide driver details
     editProfile();
 }
 
 function controlProfile() {
-    $("#profile_view").css({display: "block"});
-    $("#profile_ctrl").css({display: "block"});
-    $("#setup_status").css({display: "block"});
-    $("#profile_settings").css({display: "none"});
+    $("#profile_view").show();
+    $("#profile_ctrl").show();
+    $("#setup_status").show();
+    $("#profile_settings").hide();
 }
 
 function editProfile() {
-    $("#profile_view").css({display: "block"});
-    $("#profile_ctrl").css({display: "none"});
-    $("#setup_status").css({display: "none"});
-    $("#profile_settings").css({display: "block"});
+    $("#profile_view").show();
+    $("#profile_ctrl").hide();
+    $("#setup_status").hide();
+    $("#profile_settings").show();
 
     $('#profiles').change(); //getProfileDrivers();
 }

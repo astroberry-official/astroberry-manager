@@ -84,7 +84,7 @@ function loadWeather() {
       if (config["weather_forecast_at"] == "18") $('#weather_forecast_18').prop("checked", true);
   } else {
       $('#weather_units_c').prop("checked", true);
-      $('#weather_alerts_noclouds').prop("checked", false);
+      $('#weather_alerts_noclouds').prop("checked", true);
       $('#weather_alerts_humidity').prop("checked", false);
       $('#weather_alerts_wind').prop("checked", false);
       $('#weather_forecast_00').prop("checked", true);
@@ -312,16 +312,16 @@ function toggleWeatherForecast() {
 $("#toggle-weather-forecast").addClass("button-active");
 $("#toggle-weather-settings").removeClass("button-active");
 
-$("#weather_forecast").css({display: "block"});
-$("#weather_settings").css({display: "none"});
+$("#weather_forecast").show();
+$("#weather_settings").hide();
 }
 
 function toggleWeatherSettings() {
 $("#toggle-weather-forecast").removeClass("button-active");
 $("#toggle-weather-settings").addClass("button-active");
 
-$("#weather_forecast").css({display: "none"});
-$("#weather_settings").css({display: "block"});
+$("#weather_forecast").hide();
+$("#weather_settings").show();
 }
 
 const legend = [

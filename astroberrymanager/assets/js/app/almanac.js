@@ -144,23 +144,23 @@ function updateAlmanac(data) {
     /* Set  Equinox and Solstice in order */
     var ss = new Date(data.sun_solstice);
     var se = new Date(data.sun_equinox);
-    if (ss < se) { 
-        $("#sun_solstice_first").css({display: ""});
-        $("#sun_solstice_second").css({display: "none"});
+    if (ss < se) {
+        $("#sun_solstice_first").show();
+        $("#sun_solstice_second").hide();
     } else {
-        $("#sun_solstice_first").css({display: "none"});
-        $("#sun_solstice_second").css({display: ""});
+        $("#sun_solstice_first").hide();
+        $("#sun_solstice_second").show();
     };
 
     /* Set  New Moon and Full Moon in order */
     var nm = new Date(data.moon_new);
     var fm = new Date(data.moon_full);
-    if (nm < fm) { 
-        $("#new_moon_first").css({display: ""});
-        $("#new_moon_second").css({display: "none"});
+    if (nm < fm) {
+        $("#new_moon_first").show();
+        $("#new_moon_second").hide();
     } else {
-        $("#new_moon_first").css({display: "none"});
-        $("#new_moon_second").css({display: ""});
+        $("#new_moon_first").hide();
+        $("#new_moon_second").show();
     };
 
     // Update Moon Phase
@@ -474,10 +474,10 @@ function toggleMoon() {
     $("#toggle-sun").removeClass("button-active");
     $("#toggle-planets").removeClass("button-active");
 
-    $("#polaris").css({display: "none"});
-    $("#moon").css({display: "block"});
-    $("#sun").css({display: "none"});
-    $("#planets").css({display: "none"});
+    $("#polaris").hide();
+    $("#moon").show();
+    $("#sun").hide();
+    $("#planets").hide();
 }
 
 function toggleSun() {
@@ -486,10 +486,10 @@ function toggleSun() {
     $("#toggle-sun").addClass("button-active");
     $("#toggle-planets").removeClass("button-active");
 
-    $("#polaris").css({display: "none"});
-    $("#moon").css({display: "none"});
-    $("#sun").css({display: "block"});
-    $("#planets").css({display: "none"});
+    $("#polaris").hide();
+    $("#moon").hide();
+    $("#sun").show();
+    $("#planets").hide();
 }
 
 function togglePlanets() {
@@ -498,10 +498,10 @@ function togglePlanets() {
     $("#toggle-sun").removeClass("button-active");
     $("#toggle-planets").addClass("button-active");
 
-    $("#polaris").css({display: "none"});
-    $("#moon").css({display: "none"});
-    $("#sun").css({display: "none"});
-    $("#planets").css({display: "block"});
+    $("#polaris").hide();
+    $("#moon").hide();
+    $("#sun").hide();
+    $("#planets").show();
 }
 
 function togglePolaris() {
@@ -510,10 +510,10 @@ function togglePolaris() {
     $("#toggle-sun").removeClass("button-active");
     $("#toggle-planets").removeClass("button-active");
 
-    $("#polaris").css({display: "block"});
-    $("#moon").css({display: "none"});
-    $("#sun").css({display: "none"});
-    $("#planets").css({display: "none"});
+    $("#polaris").show();
+    $("#moon").hide();
+    $("#sun").hide();
+    $("#planets").hide();
 }
 
 export {

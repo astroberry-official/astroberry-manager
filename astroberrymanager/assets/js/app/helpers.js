@@ -110,39 +110,39 @@ function appEvents() {
             case 0: // Search
                 if ($("#main-dock-search").hasClass("dock-item-active")) {
                     $("#main-dock-search").removeClass("dock-item-active");
-                    $("#panel-search").css({display: "none"});
+                    $("#panel-search").hide();
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-search").addClass("dock-item-active");
-                    $("#panel-search").css({display: "block"});
+                    $("#panel-search").show();
                 }
                 break;
 
             case 1: // Almanac
                 if ($("#main-dock-almanac").hasClass("dock-item-active")) {
                     $("#main-dock-almanac").removeClass("dock-item-active");
-                    $("#panel-almanac").css({display: "none"});
+                    $("#panel-almanac").hide();
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-almanac").addClass("dock-item-active");
-                    $("#panel-almanac").css({display: "block"});
+                    $("#panel-almanac").show();
                 }
                 break;
 
             case 2: // Equipment
                 if ($("#main-dock-equipment").hasClass("dock-item-active")) {
                     $("#main-dock-equipment").removeClass("dock-item-active");
-                    $("#panel-equipment").css({display: "none"});
+                    $("#panel-equipment").hide();
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-equipment").addClass("dock-item-active");
-                    $("#panel-equipment").css({display: "block"});
+                    $("#panel-equipment").show();
 
 		    // wait for svg image to load
 		    setTimeout(function() {
@@ -158,13 +158,13 @@ function appEvents() {
             case 3: // Location
                 if ($("#main-dock-location").hasClass("dock-item-active")) {
                     $("#main-dock-location").removeClass("dock-item-active");
-                    $("#panel-location").css({display: "none"});
+                    $("#panel-location").hide();
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-location").addClass("dock-item-active");
-                    $("#panel-location").css({display: "block"});
+                    $("#panel-location").show();
                     mainMap.invalidateSize(); // fix for map display
                 }
                 break;
@@ -172,26 +172,26 @@ function appEvents() {
             case 4: // Weather
                 if ($("#main-dock-weather").hasClass("dock-item-active")) {
                     $("#main-dock-weather").removeClass("dock-item-active");
-                    $("#panel-weather").css({display: "none"});
+                    $("#panel-weather").hide();
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-weather").addClass("dock-item-active");
-                    $("#panel-weather").css({display: "block"});
+                    $("#panel-weather").show();
                 }
                 break;
 
             case 5: // System
                 if ($("#main-dock-system").hasClass("dock-item-active")) {
                     $("#main-dock-system").removeClass("dock-item-active");
-                    $("#panel-system").css({display: "none"});
+                    $("#panel-system").hide();
                 } else {
                     $(".panel-container").hide(); // hide all
                     $("#main-dock span").removeClass("dock-item-active"); // inactivate all
 
                     $("#main-dock-system").addClass("dock-item-active");
-                    $("#panel-system").css({display: "block"});
+                    $("#panel-system").show();
                 }
                 break;
 
@@ -260,7 +260,7 @@ function appEvents() {
         $(".panel-container").hide();
         // open almanac
         $("#main-dock-almanac").addClass("dock-item-active");
-        $("#panel-almanac").css({display: "block"});
+        $("#panel-almanac").show();
 
     });
 }

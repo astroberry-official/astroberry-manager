@@ -120,8 +120,8 @@ function updateGeoloc(data = {}) {
     // If manual mode is enabled, use custom location
     if ($('input[name="geoloc_mode"]:checked').val() == "manual") {
         // disable GPS Satellites & Details buttons
-        $("#toggle-skymap").css({display: "none"});
-        $("#toggle-gpsdetails").css({display: "none"});
+        $("#toggle-skymap").hide();
+        $("#toggle-gpsdetails").hide();
 
         data['mode'] = 0;
         data['gpstime'] = new Date().toISOString();
@@ -144,14 +144,18 @@ function updateGeoloc(data = {}) {
         return;
     } else if (Object.keys(data).length > 0 && $('input[name="geoloc_mode"]:checked').val() == "network") { // second hit: configure controls
         // disable GPS Satellites & Details buttons
-        $("#toggle-skymap").css({display: "none"});
-        $("#toggle-gpsdetails").css({display: "none"});
+        //$("#toggle-skymap").hide();
+        //$("#toggle-gpsdetails").hide();
+        $("#toggle-skymap").hide();
+        $("#toggle-gpsdetails").hide();
 
         homePosition.dragging.disable(); // disable home marker dragging
     } else {
         // enable GPS Satellites & Details buttons
-        $("#toggle-skymap").css({display: "inline-block"});
-        $("#toggle-gpsdetails").css({display: "inline-block"});
+        //$("#toggle-skymap").show();
+        //$("#toggle-gpsdetails").show();
+        $("#toggle-skymap").show();
+        $("#toggle-gpsdetails").show();
 
         homePosition.dragging.disable(); // disable home marker dragging
     }
@@ -652,11 +656,11 @@ function locationEvents() {
     $("#celestial-map-location-icon").on("click", function() {
         // hide all
         $("#main-dock span").removeClass("dock-item-active");
-        $(".panel-container").css({display: "none"});
+        $(".panel-container").hide();
 
         // show location
         $("#main-dock-location").addClass("dock-item-active");
-        $("#panel-location").css({display: "block"});
+        $("#panel-location").show();
         mainMap.invalidateSize(); // fix for map display
     });
 }
@@ -667,10 +671,10 @@ function toggleGeomap() {
     $("#toggle-gpsdetails").removeClass("button-active");
     $("#toggle-geolocsettings").removeClass("button-active");
 
-    $("#map_container").css({display: "block"});
-    $("#skymap_container").css({display: "none"});
-    $("#gpsdetails_container").css({display: "none"});
-    $("#geoloc_container").css({display: "none"});
+    $("#map_container").show();
+    $("#skymap_container").hide();
+    $("#gpsdetails_container").hide();
+    $("#geoloc_container").hide();
 
     mainMap.invalidateSize(); // fix for map display
 }
@@ -681,10 +685,10 @@ function toggleSkymap() {
     $("#toggle-gpsdetails").removeClass("button-active");
     $("#toggle-geolocsettings").removeClass("button-active");
 
-    $("#map_container").css({display: "none"});
-    $("#skymap_container").css({display: "block"});
-    $("#gpsdetails_container").css({display: "none"});
-    $("#geoloc_container").css({display: "none"});
+    $("#map_container").hide();
+    $("#skymap_container").show();
+    $("#gpsdetails_container").hide();
+    $("#geoloc_container").hide();
 }
 
 function toggleGpsDetails() {
@@ -693,10 +697,10 @@ function toggleGpsDetails() {
     $("#toggle-gpsdetails").addClass("button-active");
     $("#toggle-geolocsettings").removeClass("button-active");
 
-    $("#map_container").css({display: "none"});
-    $("#skymap_container").css({display: "none"});
-    $("#gpsdetails_container").css({display: "block"});
-    $("#geoloc_container").css({display: "none"});
+    $("#map_container").hide();
+    $("#skymap_container").hide();
+    $("#gpsdetails_container").show();
+    $("#geoloc_container").hide();
 }
 
 function toggleGeolocSettings() {
@@ -705,10 +709,10 @@ function toggleGeolocSettings() {
     $("#toggle-gpsdetails").removeClass("button-active");
     $("#toggle-geolocsettings").addClass("button-active");
 
-    $("#map_container").css({display: "none"});
-    $("#skymap_container").css({display: "none"});
-    $("#gpsdetails_container").css({display: "none"});
-    $("#geoloc_container").css({display: "block"});
+    $("#map_container").hide();
+    $("#skymap_container").hide();
+    $("#gpsdetails_container").hide();
+    $("#geoloc_container").show();
 }
 
 export {

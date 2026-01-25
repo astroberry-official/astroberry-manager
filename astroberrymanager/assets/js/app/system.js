@@ -212,9 +212,9 @@ function toggleStatus() {
     $("#_system-events").removeClass("button-active");
     $("#_system-settings").removeClass("button-active");
 
-    $("#system-status").css({display: "block"});
-    $("#system-events").css({display: "none"});
-    $("#system-settings").css({display: "none"});
+    $("#system-status").show();
+    $("#system-events").hide();
+    $("#system-settings").hide();
 }
 
 function toggleEvents() {
@@ -222,9 +222,9 @@ function toggleEvents() {
     $("#_system-events").addClass("button-active");
     $("#_system-settings").removeClass("button-active");
 
-    $("#system-status").css({display: "none"});
-    $("#system-events").css({display: "block"});
-    $("#system-settings").css({display: "none"});
+    $("#system-status").hide();
+    $("#system-events").show();
+    $("#system-settings").hide();
 }
 
 function toggleSettings() {
@@ -232,9 +232,9 @@ function toggleSettings() {
     $("#_system-events").removeClass("button-active");
     $("#_system-settings").addClass("button-active");
 
-    $("#system-status").css({display: "none"});
-    $("#system-events").css({display: "none"});
-    $("#system-settings").css({display: "block"});
+    $("#system-status").hide();
+    $("#system-events").hide();
+    $("#system-settings").show();
 }
 
 function systemUpdate() {

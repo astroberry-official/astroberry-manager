@@ -66,7 +66,6 @@ function updateINDI() { // Update from API
     getGroups();        	// populate drivers list with groups
     getDrivers();       	// populate drivers list with drivers
     getProfiles();		// get profiles from API and select active profile
-    getProfileDrivers();        // select drivers for active profile
 
     var url = encodeURI(indiwebUrl + "/api/server/status");
 
@@ -86,8 +85,8 @@ function updateINDI() { // Update from API
            $("#profile_save").prop('disabled', true);
            $("#profile_cancel").prop('disabled', false);
 
-           $("#profile_start").css({display: "none"});
-           $("#profile_stop").css({display: "block"});
+           $("#profile_start").hide();
+           $("#profile_stop").show();
 
            markActiveDevices(); // mark selected drivers in the equipment image
        } else {
@@ -102,8 +101,8 @@ function updateINDI() { // Update from API
            $("#profile_save").prop('disabled', false);
            $("#profile_cancel").prop('disabled', false);
 
-           $("#profile_start").css({display: "block"});
-           $("#profile_stop").css({display: "none"});
+           $("#profile_start").show();
+           $("#profile_stop").hide();
 
            markAllDevices(false); // reset status of all devices in the equipment image
        }
@@ -323,7 +322,7 @@ function getDriverDetails(data) {
 }
 
 function hideDriverDetails() {
-    $("#driver_details").css({display: "none"});
+    $("#driver_details").hide();
 }
 
 function getDevice(family) {
