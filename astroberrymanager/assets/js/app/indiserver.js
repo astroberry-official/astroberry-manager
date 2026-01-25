@@ -29,38 +29,19 @@ const indiwebUrl = location.protocol + '//' + location.hostname + ':8624';
 
 //const deviceFamilies = ["Adaptive Optics", "Agent", "Auxiliary", "CCDs", "Domes", "Filter Wheels", "FilterWheels", "Focusers", "Spectrographs", "Telescopes", "Weather"];
 
-
-function connectINDIServer() {
-    var data = {};
-    data.connect = true;
-
-    socket.timeout(5000).emit("equipment", data, (err) => {
-        if (err) {
-            console.log("INDI server request timed out");
-        } else {
-            //console.log("Equipment data requested");
-            $("#reticle-telescope").show();
-        }
-    });
+function indiServerConnected() {
+    console.log("Connected to INDI Server");
+    updateINDI();
+    updateTelescopeStatusIcon(true);
+    $("#reticle-telescope").show();
 }
 
-function disconnectINDIServer() {
-    var data = {};
-    data.disconnect = true;
-
-    socket.timeout(5000).emit("equipment", data, (err) => {
-        if (err) {
-            console.log("INDI server request timed out");
-        } else {
-            //console.log("Equipment data requested");
-            updateTelescopeStatusIcon(false);
-            updateStarchartStatusIcon();
-            updateLocationStatusIcon();
-            $("#reticle-telescope").hide();
-        }
-    });
+function indiServerDisconnected() {
+    console.log("Disconnected from INDI Server");
+     $("#reticle-telescope").hide();
+    updateTelescopeStatusIcon(false);
+    updateINDI();
 }
-
 
 function updateINDI() { // Update from API
     getGroups();        	// populate drivers list with groups
@@ -246,7 +227,6 @@ function startProfile() {
         type: 'POST',
         url: url,
         success: function() {
-            connectINDIServer();
             syslogPrint("Starting " + profile, "success", true);
             setTimeout(function() { // wait a second to refresh status
                 updateINDI();
@@ -266,7 +246,6 @@ function stopProfile() {
         type: 'POST',
         url: url,
         success: function() {
-            disconnectINDIServer();
             syslogPrint("Stopping " + profile, "success", true);
             setTimeout(function() { // wait a second to refresh status
                 updateINDI();
@@ -282,7 +261,7 @@ function getDriverDetails(data) {
     if (data === undefined || data === null) return;
 
     var device = data.target.id;
-    if (!device) return;
+    if (device === undefined || device === null) return;
 
     // convert device type to device family
     var family = getFamily(device);
@@ -306,19 +285,18 @@ function getDriverDetails(data) {
         });
 
         if (count < 1)
-            details += "<div class='driver_details'><span class='name'>No device</span><span class='details'>" + data.target.id + " driver is not running</span></div>";
+            details += "<div class='driver_details'><span class='name'>No device</span><span class='details'>No " + data.target.id + " is running</span></div>";
 
         $("#driver_details").html(details);
     });
 
     setTimeout(function() { // we need to wait a moment after creating content to bind an event
-        // set driver details events
         $("#driver_details").on("click", function (evt) {
             hideDriverDetails();
         });
     }, 1000);
 
-    $("#driver_details").fadeIn();
+    $("#driver_details").show();
 }
 
 function hideDriverDetails() {
@@ -649,5 +627,7 @@ export {
     saveProfileDrivers,
     getDriverDetails,
     restartDriver,
-    indiwebEvents
+    indiwebEvents,
+    indiServerConnected,
+    indiServerDisconnected
 };

@@ -126,23 +126,20 @@ def weather(data):
 def almanac(data):
     getAlmanac(socketio, data["time"], data["latitude"], data["longitude"], data["altitude"])
 
-@socketio.on('equipment')
-def equipment(data):
-    global equipmentThread, equipmentThreadEvent
-
-    if 'username' in session and 'connect' in data.keys() and data['connect']:
-        print("Connecting to INDI server")
-        equipmentThreadEvent.set()
-        equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
-
-    if 'username' in session and 'disconnect' in data.keys() and data['disconnect']:
-        print("Disconnecting from INDI server")
-        equipmentThreadEvent.clear()
-        equipmentThread = None
-
-@socketio.on('telescope')
-def telescope(data):
-    telescopeControl(data)
+# INDI Server on demand
+#@socketio.on('equipment')
+#def equipment(data):
+#    global equipmentThread, equipmentThreadEvent
+#
+#    if 'username' in session and 'connect' in data.keys() and data['connect']:
+#        print("Connecting to INDI server")
+#        equipmentThreadEvent.set()
+#        equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
+#
+#    if 'username' in session and 'disconnect' in data.keys() and data['disconnect']:
+#        print("Disconnecting from INDI server")
+#        equipmentThreadEvent.clear()
+#        equipmentThread = None
 
 @socketio.on('system')
 def system(data):
@@ -202,7 +199,7 @@ def shut_down():
 def main():
     global app_addr, app_port
     global fd, child_pid
-    global terminalThread, locationThread, sysmonThread
+    global terminalThread, locationThread, sysmonThread, equipmentThread
 
     try:
         print("Astroberry Manager v"+__version__+"\n")
@@ -223,6 +220,11 @@ def main():
         if sysmonThread is None:
             print("✓ Starting system services")
             sysmonThread = socketio.start_background_task(getSystemReports, socketio)
+
+        if equipmentThread is None:
+            print("✓ Starting equipment services")
+            equipmentThreadEvent.set() # call equipmentThreadEvent.clear() to terminate background thread
+            equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
 
         print("✓ Starting main application\n")
 

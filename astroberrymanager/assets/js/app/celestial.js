@@ -52,7 +52,7 @@ var reticleTelescope = d3.select("body").append("img")
   .attr("width", reticleRadius)
   .attr("height", reticleRadius)
   .attr("src", "assets/images/reticle_telescope.svg")
-  .style({opacity: 0.8, "z-index": 50});
+  .style({opacity: 0.8, "z-index": 50, display: "none"});
 
 var targetTimeout = 0; // hides target widget after 3s of inactivity
 
@@ -443,7 +443,7 @@ function getRegionOfInterest(coordinates, fov = 5) {
   }
   if (imageUrl) box.append("div").attr("id", "region-of-interest-image").style({background: "url("+imageUrl+")"});
 
-  box.append("span").attr({"id": "region-of-interest-fav", "class": "fa fa-star", "data-tooltip": "tooltip", title: "Add this region to favorities"})
+  box.append("span").attr({"id": "region-of-interest-fav", "class": "fa fa-star", "data-tooltip": "tooltip", title: "Add this region to favorites"})
     .style({position: "absolute", top: "15px", left: "15px"});
 
   box.append("span").text("Region of Interest").style({position: "absolute", top: "14px", left: "45px", color: "#aaa"});

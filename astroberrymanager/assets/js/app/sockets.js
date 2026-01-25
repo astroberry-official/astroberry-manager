@@ -23,6 +23,7 @@
 import { updateGeoloc } from './location.js';
 import { updateWeather } from './weather.js';
 import { updateAlmanac } from './almanac.js';
+import { indiServerConnected, indiServerDisconnected } from './indiserver.js';
 import { updateEquipment } from './equipment.js';
 import { updateTelescope } from './celestial.js';
 import { updateSystem } from './system.js';
@@ -68,6 +69,8 @@ function setSockets() {
 
     socket.on('indiserver', function (data) { // equipment
         //console.log(data);
+        if (data.connect) indiServerConnected();
+        if (data.disconnect) indiServerDisconnected();
         updateEquipment(data);
         updateTelescope(data);
     });

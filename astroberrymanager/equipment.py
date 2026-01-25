@@ -77,14 +77,16 @@ class IndiClient(PyIndi.BaseClient):
 
 	def serverConnected(self):
 		'''Emmited when the server is connected.'''
-		self.logger.info(f"Server connected ({self.getHost()}:{self.getPort()})")
+		self.logger.info(f"INDI Server connected: ({self.getHost()}:{self.getPort()})")
+		emitEquipment(self.socketio, {"connect":"true"})
 
 	def serverDisconnected(self, code):
 		'''Emmited when the server gets disconnected.'''
-		self.logger.info(f"Server disconnected (exit code = {code},{self.getHost()}:{self.getPort()})")
-		self.disconnectServer() # double shot required to destroy instance
+		self.logger.info(f"INDI Server disconnected (exit code = {code},{self.getHost()}:{self.getPort()})")
+		emitEquipment(self.socketio, {"disconnect":"true"})
+		self.disconnectServer() # double shot REQUIRED to really disconnect and enter reconnection loop
 
-# Create an instance of the IndiClient class and initialize its host/port members
+# Create an instance of IndiClient
 indiClient = IndiClient()
 indiClient.setServer(INDI_HOST,INDI_PORT)
 
@@ -95,16 +97,16 @@ def getINDIServer(socketio, event):
 	indiClient.socketio = socketio # use main socket
 
 	while True:
-		if not event.is_set():
-			print("Closing INDI server connection")
-			break # exit on request from main thread
+		if not event.is_set(): # exit on request by calling equipmentThreadEvent.clear()
+			print("Terminating equipment services")
+			break
 
 		while not indiClient.isServerConnected():
 			try:
 				indiClient.connectServer()
 				time.sleep(1)
 				if not indiClient.isServerConnected():
-					indiClient.logger.info(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
+					#indiClient.logger.info(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
 					time.sleep(TIMEOUT)
 			except Exception as err:
 				indiClient.logger.info(f"Error connecting to INDI server: {err}")
@@ -136,8 +138,8 @@ def getProperty(property):
 	state = property.getStateAsString()
 	perm = property.getPermission()
 
-	if device_type is None or device_name is None or name is None:
-		return
+	#if device_type is None or device_name is None or name is None or label is None or group is None or state is None or perm is None:
+	#	return
 
 	device_data = json.loads("{}")
 	device_properties = json.loads("{}")
@@ -263,6 +265,9 @@ def strIPState(s):
 
 # Based on https://github.com/indilib/indi/blob/master/libs/indidevice/basedevice.h#L83
 def getDeviceType(s):
+	if s is None:
+		return
+
 	if s & 0:
 		return "GENERAL"
 	elif s & (1 << 0):
