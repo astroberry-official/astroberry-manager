@@ -98,7 +98,7 @@ div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display:
 #d3-celestial-footer { text-align:center; color:#666; font:10pt/1 'Roboto Medium', Arial, Helvetica, sans-serif; }
 #d3-celestial-footer a { text-decoration:none; color:#99f; }
 
-#celestial-map { display: block; width: 100%; height: 100%; margin: 0; padding: 50px 10px; position: relative; overflow: hidden; cursor: crosshair !important; }
+#celestial-map { display: block; width: 100%; height: 100%; margin: 0; padding: 0; position: relative; overflow: hidden; cursor: crosshair !important; }
 #celestial-map input[type=button] { background: #333; color: #fff; }
 #celestial-map input[type=button]:hover { background: #009933; }
 
@@ -494,7 +494,7 @@ img.panel-title { margin-bottom: 7px; }
 #profiles { display: block; }
 
 #profile_ctrl { width: 100%; display: block; height: 50px; }
-#profile_start, #profile_stop { width: 120px; margin: auto auto; padding: 10px 5px;}
+#profile_start, #profile_stop { display: block; width: 120px; margin: auto auto; padding: 10px 5px;}
 #profile_stop:hover { background: #ff3300; }
 
 #drivers_list { padding-left: 10px; }
