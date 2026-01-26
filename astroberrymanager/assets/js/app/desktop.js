@@ -24,18 +24,14 @@
 
 import RFB from '../noVNC/core/rfb.js';
 
+const desktopUrl = 'wss://' + location.hostname + '/websockify';
+
 let rfb;
 let desktopName;
 
 function requestDesktop() {
-    //document.getElementById('sendCtrlAltDelButton')
-    //    .onclick = sendCtrlAltDel;
-
-    // Use local websockify instance
-    let url = 'ws://' + location.hostname + ':8070/websockify';
-
     // Creating a new RFB object will start a new connection
-    rfb = new RFB(document.getElementById('desktop-container'), url);
+    rfb = new RFB(document.getElementById('desktop-container'), desktopUrl);
 
     // Add listeners to important events from the RFB module
     rfb.addEventListener("connect",  connectedToServer);
@@ -56,6 +52,9 @@ function requestDesktop() {
     rfb.dragViewport = false;
     // rfb.compressionLevel = 0;
     // rfb.qualityLevel = 9;
+
+    //document.getElementById('sendCtrlAltDelButton')
+    //    .onclick = sendCtrlAltDel;
 }
 
 function closeDesktop() {

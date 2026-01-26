@@ -50,7 +50,7 @@ wdir = os.getenv('HOME', '/')
 os.chdir(wdir)
 
 # networking
-app_addr = '0.0.0.0'
+app_addr = '127.0.0.1'
 app_port = 8080
 app_host = socket.gethostname()
 

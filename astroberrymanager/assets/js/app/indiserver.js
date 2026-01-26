@@ -25,7 +25,7 @@ import { markActiveDevice, markAllDevices } from './equipment.js';
 import { syslogPrint } from './helpers.js';
 import { socket } from './sockets.js';
 
-const indiwebUrl = location.protocol + '//' + location.hostname + ':8624';
+const indiwebUrl = location.protocol + '//' + location.hostname;
 
 //const deviceFamilies = ["Adaptive Optics", "Agent", "Auxiliary", "CCDs", "Domes", "Filter Wheels", "FilterWheels", "Focusers", "Spectrographs", "Telescopes", "Weather"];
 
