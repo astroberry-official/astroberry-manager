@@ -222,7 +222,7 @@ function appEvents() {
                 $("#main-dock-screen").show();
 
                 // hide main dock
-                $("#main-dock-handle").trigger("click");
+                //$("#main-dock-handle").trigger("click");
                 break;
 
             case 8: // Desktop
@@ -241,7 +241,7 @@ function appEvents() {
                 $("#main-dock-screen").hide();
 
                 // hide main dock
-                $("#main-dock-handle").trigger("click");
+                //$("#main-dock-handle").trigger("click");
                 break;
 
             case 9: // Fullscreen
