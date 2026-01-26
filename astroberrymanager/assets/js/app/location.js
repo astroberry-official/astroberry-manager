@@ -144,16 +144,12 @@ function updateGeoloc(data = {}) {
         return;
     } else if (Object.keys(data).length > 0 && $('input[name="geoloc_mode"]:checked').val() == "network") { // second hit: configure controls
         // disable GPS Satellites & Details buttons
-        //$("#toggle-skymap").hide();
-        //$("#toggle-gpsdetails").hide();
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
 
         homePosition.dragging.disable(); // disable home marker dragging
     } else {
         // enable GPS Satellites & Details buttons
-        //$("#toggle-skymap").show();
-        //$("#toggle-gpsdetails").show();
         $("#toggle-skymap").show();
         $("#toggle-gpsdetails").show();
 

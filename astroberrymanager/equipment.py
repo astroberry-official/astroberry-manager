@@ -68,7 +68,7 @@ class IndiClient(PyIndi.BaseClient):
 	def newMessage(self, d, m):
 		'''Emmited when a new message arrives from INDI server.'''
 		self.logger.debug(f"New Message: {d.messageQueue(m)}")
-		# msg = "2026-01-23T17:47:34: [INFO] Telescope
+		# d.messageQueue(m) = "2026-01-23T17:47:34: [INFO] Telescope"
 		msg = d.messageQueue(m).split(":")
 		msg = msg[3].strip().split("]")
 		msg = msg[1].strip()
@@ -138,8 +138,8 @@ def getProperty(property):
 	state = property.getStateAsString()
 	perm = property.getPermission()
 
-	#if device_type is None or device_name is None or name is None or label is None or group is None or state is None or perm is None:
-	#	return
+	if device_type is None or device_name is None:
+		return
 
 	device_data = json.loads("{}")
 	device_properties = json.loads("{}")
@@ -305,7 +305,7 @@ def getDeviceType(s):
 	else:
 		return
 
-# https://docs.indilib.org/drivers/
+# TODO: Add functionality to control devices
 def telescopeControl(data):
 	if 'action' in data and data['action'] == 'setlocation':
 		try:

@@ -84,15 +84,15 @@ function setSockets() {
             }
         } else if ("backup" in data) {
             if (data['backup']) {
-                syslogPrint("Configuration backup successful", "success", true);
+                syslogPrint("Creating backup copy successful", "success", true);
             } else {
-                syslogPrint("Configuration backup failure!", "danger", true);
+                syslogPrint("Creating backup copy failure!", "danger", true);
             }
         } else if ("restore" in data) {
             if (data['restore']) {
-                syslogPrint("Configuration restore successful", "success", true);
+                syslogPrint("Restoring backup copy successful", "success", true);
             } else {
-                syslogPrint("Configuration restore failure!", "danger", true);
+                syslogPrint("Restoring backup copy failure!", "danger", true);
             }
         } else if ("restart" in data) {
             if (data['restart']) {
