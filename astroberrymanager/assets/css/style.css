@@ -258,7 +258,7 @@ span#main-dock-chart { display: none; }
 	padding: 10px; background-color: #1c1c1ccc; border: 1px solid #e1e1e11f; border-radius: 5px; }
 
 .panel-title { margin-right: 10px; font-size: 1.25em; /* color: #ff3300; */ }
-img.panel-title { margin-bottom: 7px; }
+img.panel-title { margin-bottom: 5px; }
 
 .container-footer { display: block; width: 100%; position: absolute; bottom: 5px; padding: 5px 0; }
 .container-footer div { display: inline-block; min-width: 35%; margin-bottom: 3px; margin-right: 3px; }
