@@ -79,7 +79,7 @@ function loadMap() { // https://leafletjs.com/examples/quick-start/
 
 function loadGeoloc() {
     // Load initial location
-    if (getCookie("config")) {
+    if (getCookie("config") && JSON.parse(getCookie("config")).location) {
         geoLocation = JSON.parse(getCookie("config")).location;
     } else {
         geoLocation = {'mode': 0, 'latitude': 0, 'longitude': 0, 'altitude': 0}; // fall back location
