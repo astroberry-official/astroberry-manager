@@ -67,7 +67,7 @@ function requestTerminal() {
     term.write(data.output);
   });
 
-  $("#terminal-container").draggable();
+  //$("#terminal-container").draggable();
 }
 
 function fitToscreen() {
