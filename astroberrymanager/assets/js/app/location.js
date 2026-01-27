@@ -26,7 +26,7 @@ import { deg2dms } from './functions.js';
 import { socket } from './sockets.js';
 
 // Global Geographic location variable [Mode, Latitude, Longitude, Altitude]
-var geoLocation = {'mode': 'custom', 'latitude': 0, 'longitude': 0, 'altitude': 0};
+var geoLocation = {'mode': 'telescope', 'latitude': 0, 'longitude': 0, 'altitude': 0};
 
 // Map and home marker
 var mainMap, homePosition;
