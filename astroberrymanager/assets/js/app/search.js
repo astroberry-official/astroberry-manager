@@ -215,7 +215,7 @@ function showResults(data, online = false) {
         fov = 1;
 
     // add details button
-    var simbad = 'http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' + id + '&NbIdent=1&Radius=' + fov + '&Radius.unit=deg';
+    var simbad = 'https://simbad.u-strasbg.fr/simbad/sim-id?Ident=' + id + '&NbIdent=1&Radius=' + fov + '&Radius.unit=deg';
     results += '<a href="' + simbad + '" target="_blank" data-tooltip="tooltip" title="Look up object in SIMBAD Astronomical Database">Details</a>';
 
     // add images button
@@ -275,7 +275,7 @@ function showResults(data, online = false) {
 
     $("#search-results-image").html(results); // render image
 
-    // TODO Get image thumnail from SIMBAD: http://alasky.u-strasbg.fr/cgi/simbad-thumbnails/get-thumbnail.py?oid=434630&size=200&legend=true
+    // TODO Get image thumnail from SIMBAD: https://alasky.u-strasbg.fr/cgi/simbad-thumbnails/get-thumbnail.py?oid=434630&size=200&legend=true
     // Problem: we don't have oid in local database
 
     // Enable actions

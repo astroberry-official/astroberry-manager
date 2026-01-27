@@ -118,7 +118,7 @@ function loadGeoloc() {
 
 function updateGeoloc(data = {}) {
     // If manual mode is enabled, use custom location
-    if ($('input[name="geoloc_mode"]:checked').val() == "manual") {
+    if ($('input[name="geoloc_mode"]:checked').val() == "manual" || $('input[name="geoloc_mode"]:checked').val() == "telescope") {
         // disable GPS Satellites & Details buttons
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
@@ -209,7 +209,7 @@ function updateGeoloc(data = {}) {
         var altitude = parseFloat(data.altitude);
 
         // If new location, update & save
-        if (!geoLocation || latitude != geoLocation.latitude || longitude != geoLocation.longitude || altitude != geoLocation.altitude) {
+        if (!geoLocation || mode != geoLocation.mode || latitude != geoLocation.latitude || longitude != geoLocation.longitude || altitude != geoLocation.altitude) {
             // Set geoLocation global variable
             geoLocation.mode = mode;
             geoLocation.latitude = latitude;
@@ -636,6 +636,11 @@ function locationEvents() {
             $("#geoloc_altitude").prop( "disabled", true );
             syslogPrint("Location source changed to GPS", "success");
         } else if ($('input[name="geoloc_mode"]:checked').val() == "network") {
+            $("#geoloc_latitude").prop( "disabled", true );
+            $("#geoloc_longitude").prop( "disabled", true );
+            $("#geoloc_altitude").prop( "disabled", true );
+            syslogPrint("Location source changed to network", "success");
+        } else if ($('input[name="geoloc_mode"]:checked').val() == "telescope") {
             $("#geoloc_latitude").prop( "disabled", true );
             $("#geoloc_longitude").prop( "disabled", true );
             $("#geoloc_altitude").prop( "disabled", true );

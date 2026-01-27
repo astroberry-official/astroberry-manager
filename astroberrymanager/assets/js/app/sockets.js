@@ -52,7 +52,7 @@ function setSockets() {
 
     socket.on('location', function (data) { // location
         // console.log(data);
-        if ($('input[name="geoloc_mode"]:checked').val() == "manual" || $('input[name="geoloc_mode"]:checked').val() == "network") // Disable update in manual mode
+        if ($('input[name="geoloc_mode"]:checked').val() != "gps") // Disable update in manual mode
             return
         updateGeoloc(data);
     });

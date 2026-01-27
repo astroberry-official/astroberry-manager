@@ -52,36 +52,36 @@ function loadWeather() {
       var config = JSON.parse(getCookie("config"));
 
       // load units
-      if (config["weather_units"] == "F") {
+      if (config.weather_units == "F") {
         $('#weather_units_f').prop("checked", true);
       } else {
         $('#weather_units_c').prop("checked", true);
       }
 
       // load alerts
-      if (config["alert_noclouds"]) {
+      if (config.alert_noclouds) {
           $('#weather_alerts_noclouds').prop("checked", true);
       } else {
           $('#weather_alerts_noclouds').prop("checked", false);
       }
 
-      if (config["alert_humidity"]) {
+      if (config.alert_humidity) {
           $('#weather_alerts_humidity').prop("checked", true);
       } else {
           $('#weather_alerts_humidity').prop("checked", false);
       }
 
-      if (config["alert_wind"]) {
+      if (config.alert_wind) {
           $('#weather_alerts_wind').prop("checked", true);
       } else {
           $('#weather_alerts_wind').prop("checked", false);
       }
 
       // load forecast hour
-      if (config["weather_forecast_at"] == "00") $('#weather_forecast_00').prop("checked", true);
-      if (config["weather_forecast_at"] == "06") $('#weather_forecast_06').prop("checked", true);
-      if (config["weather_forecast_at"] == "12") $('#weather_forecast_12').prop("checked", true);
-      if (config["weather_forecast_at"] == "18") $('#weather_forecast_18').prop("checked", true);
+      if (config.weather_forecast_at == "00") $('#weather_forecast_00').prop("checked", true);
+      if (config.weather_forecast_at == "06") $('#weather_forecast_06').prop("checked", true);
+      if (config.weather_forecast_at == "12") $('#weather_forecast_12').prop("checked", true);
+      if (config.weather_forecast_at == "18") $('#weather_forecast_18').prop("checked", true);
   } else {
       $('#weather_units_c').prop("checked", true);
       $('#weather_alerts_noclouds').prop("checked", true);

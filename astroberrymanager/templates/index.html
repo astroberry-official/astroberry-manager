@@ -221,6 +221,8 @@
 					<label for="geoloc_mode_gps" data-tooltip="tooltip" title="Get location from GPS">GPS</label>
 					<input id="geoloc_mode_network" name="geoloc_mode" type="radio" value="network" />
 					<label for="geoloc_mode_network" title="Get location from network">Network</label>
+                                        <input id="geoloc_mode_telescope" name="geoloc_mode" type="radio" value="telescope" />
+                                        <label for="geoloc_mode_telescope" title="Get location from telescope">Telescope</label>
 					<input id="geoloc_mode_custom" name="geoloc_mode" type="radio" value="manual" />
 					<label for="geoloc_mode_custom" title="Set custom location">Custom</label>
 				</fieldset>
@@ -554,9 +556,9 @@
 				</fieldset>
 
 				<fieldset id="system-apikey">
-					<h2>Astroberry API</h2>
-					<span class="system-maintenance-desc">Secret API key for Astroberry online services.</span>
-					<input id="apikey" class="form-control" type="password" placeholder="Enter secret API key" data-tooltip="tooltip" title="For registered users only" inactive>
+					<h2>Online services</h2>
+					<span class="system-maintenance-desc">Enter secret API key to use online services.</span>
+					<input id="apikey" class="form-control" type="password" placeholder="Enter secret API key" data-tooltip="tooltip" title="For registered users only" disabled>
 				</fieldset>				
 
 				<fieldset id="system-maintenance">
