@@ -52,7 +52,7 @@ function initTimer() {
 function mainLoop() {
 
     // Update time while in manual mode (use system time)
-    if ($('input[name="geoloc_mode"]:checked').val() == "manual" || $('input[name="geoloc_mode"]:checked').val() == "network") {
+    if ($('input[name="geoloc_mode"]:checked').val() != "gps") {
         var d = new Date();
         var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
 

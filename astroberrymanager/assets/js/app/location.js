@@ -26,7 +26,7 @@ import { deg2dms } from './functions.js';
 import { socket } from './sockets.js';
 
 // Global Geographic location variable [Mode, Latitude, Longitude, Altitude]
-var geoLocation = {};
+var geoLocation = {'mode': 'custom', 'latitude': 0, 'longitude': 0, 'altitude': 0};
 
 // Map and home marker
 var mainMap, homePosition;
@@ -72,40 +72,45 @@ function loadMap() { // https://leafletjs.com/examples/quick-start/
 
         // Center map
         setTimeout(function() {
-            updateGeoloc();
+            updateGeoLocation();
         }, 500);
     });
 }
 
-function loadGeoloc() {
-    // Load initial location
-    if (getCookie("config") && JSON.parse(getCookie("config")).location) {
-        geoLocation = JSON.parse(getCookie("config")).location;
-    } else {
-        geoLocation = {'mode': 0, 'latitude': 0, 'longitude': 0, 'altitude': 0}; // fall back location
+function loadGeoLocation() {
+    // Load from cookie
+    if (getCookie("config")) {
+        var config = JSON.parse(getCookie("config"));
+        if ('location' in config) {
+            geoLocation.mode = config.location.mode ? config.location.mode : "telescope";
+            geoLocation.latitude = config.location.latitude ? config.location.latitude : 0;
+            geoLocation.longitude = config.location.longitude ? config.location.longitude : 0;
+            geoLocation.altitude = config.location.altitude ? config.location.altitude : 0;
+        }
     }
 
     // Set mode
-    if (geoLocation.mode > 0) {
-        $("#geoloc_mode_gps").prop('checked', true);
-        $("#geoloc_latitude").prop( "disabled", true );
-        $("#geoloc_longitude").prop( "disabled", true );
-        $("#geoloc_altitude").prop( "disabled", true );
+    if (geoLocation.mode == "telescope") {
+        $("#geoloc_mode_telescope").prop("checked", true);
+    } else if (geoLocation.mode == "gps") {
+        $("#geoloc_mode_gps").prop("checked", true);
+    } else if (geoLocation.mode == "network") {
+        $("#geoloc_mode_network").prop("checked", true);
     } else {
-        $("#geoloc_mode_custom").prop('checked', true);
+        $("#geoloc_mode_custom").prop("checked", true);
         $("#geoloc_latitude").prop( "disabled", false );
         $("#geoloc_longitude").prop( "disabled", false );
         $("#geoloc_altitude").prop( "disabled", false );
     }
 
-    // Set lat/lon in footer
-    $("#latitude").html(deg2dms(geoLocation.latitude));
-    $("#longitude").html(deg2dms(geoLocation.longitude));
-
-    // Set lat/lon/alt in settings tab
+    // Set lat/lon/alt values
     $("#geoloc_latitude").val(geoLocation.latitude);
     $("#geoloc_longitude").val(geoLocation.longitude);
     $("#geoloc_altitude").val(geoLocation.altitude);
+
+    // Set lat/lon in footer
+    $("#latitude").html(deg2dms(geoLocation.latitude));
+    $("#longitude").html(deg2dms(geoLocation.longitude));
 
     // Set mode/lat/lon/alt in details tab
     $("#gps_mode").html(geoLocation.mode);
@@ -113,52 +118,72 @@ function loadGeoloc() {
     $("#gps_longitude").html(geoLocation.longitude);
     $("#gps_altitude").html(geoLocation.altitude);
 
-    console.log("Location loaded")
+    console.log("Location loaded");
 }
 
-function updateGeoloc(data = {}) {
-    // If manual mode is enabled, use custom location
-    if ($('input[name="geoloc_mode"]:checked').val() == "manual" || $('input[name="geoloc_mode"]:checked').val() == "telescope") {
-        // disable GPS Satellites & Details buttons
-        $("#toggle-skymap").hide();
-        $("#toggle-gpsdetails").hide();
-
-        data['mode'] = 0;
-        data['gpstime'] = new Date().toISOString();
-
-        var latitude = parseFloat($("#geoloc_latitude").val());
-        if (typeof latitude === 'number' && isFinite(latitude))
-            data['latitude'] = latitude;
-
-        var longitude = parseFloat($("#geoloc_longitude").val());
-        if (typeof longitude === 'number' && isFinite(longitude))
-            data['longitude'] = longitude;
-
-        var altitude = parseFloat($("#geoloc_altitude").val());
-        if (typeof altitude === 'number' && isFinite(altitude))
-            data['altitude'] = altitude;
-
-        homePosition.dragging.enable(); // enable home marker dragging
-    } else if (Object.keys(data).length == 0 && $('input[name="geoloc_mode"]:checked').val() == "network") { // first hit: get location from network
-        networkLocation();
+function updateGeoLocation(location = {}) {
+    // Trigger network location if requested, then return to process data
+    if (Object.keys(location).length == 0 && $('input[name="geoloc_mode"]:checked').val() == "network") {
+        console.log("Call network location");
+        getNetworkLocation();
         return;
-    } else if (Object.keys(data).length > 0 && $('input[name="geoloc_mode"]:checked').val() == "network") { // second hit: configure controls
-        // disable GPS Satellites & Details buttons
-        $("#toggle-skymap").hide();
-        $("#toggle-gpsdetails").hide();
-
-        homePosition.dragging.disable(); // disable home marker dragging
-    } else {
-        // enable GPS Satellites & Details buttons
-        $("#toggle-skymap").show();
-        $("#toggle-gpsdetails").show();
-
-        homePosition.dragging.disable(); // disable home marker dragging
     }
 
+    // Validate mode
+    if ('mode' in location === false)
+        location.mode = $('input[name="geoloc_mode"]:checked').val() ? $('input[name="geoloc_mode"]:checked').val() : "telescope";
+
+    // Validate time
+    if ('gpstime' in location === false)
+        location.gpstime = new Date().toISOString()
+
+    // Process mode
+    if (location.mode == "gps") {
+        $("#toggle-skymap").show();
+        $("#toggle-gpsdetails").show();
+        $("#geoloc_mode_gps").prop("checked", true); // trigger save
+        $("#geoloc_latitude").prop( "disabled", true );
+        $("#geoloc_longitude").prop( "disabled", true );
+        $("#geoloc_altitude").prop( "disabled", true );
+        homePosition.dragging.disable();
+    } else if (location.mode == "network") {
+        $("#toggle-skymap").hide();
+        $("#toggle-gpsdetails").hide();
+        $("#geoloc_mode_network").prop("checked", true); // trigger save
+        $("#geoloc_latitude").prop( "disabled", true );
+        $("#geoloc_longitude").prop( "disabled", true );
+        $("#geoloc_altitude").prop( "disabled", true );
+        homePosition.dragging.disable();
+    } else if (location.mode == "telescope") {
+        $("#toggle-skymap").hide();
+        $("#toggle-gpsdetails").hide();
+        $("#geoloc_mode_telescope").prop("checked", true); // trigger save
+        $("#geoloc_latitude").prop( "disabled", true );
+        $("#geoloc_longitude").prop( "disabled", true );
+        $("#geoloc_altitude").prop( "disabled", true );
+        homePosition.dragging.disable();
+    } else {
+        $("#toggle-skymap").hide();
+        $("#toggle-gpsdetails").hide();
+        $("#geoloc_mode_custom").prop("checked", true); // trigger save
+        $("#geoloc_latitude").prop( "disabled", false );
+        $("#geoloc_longitude").prop( "disabled", false );
+        $("#geoloc_altitude").prop( "disabled", false );
+        homePosition.dragging.enable();
+    }
+
+    //  fallback location
+    if ('latitude' in location === false)
+        location.latitude = $("#geoloc_latitude").val() ? parseFloat($("#geoloc_latitude").val()) : 0;
+
+    if ('longitude' in location === false)
+        location.longitude = $("#geoloc_longitude").val() ? parseFloat($("#geoloc_longitude").val()) : 0;
+
+    if ('altitude' in location === false)
+        location.altitude = $("#geoloc_altitude").val() ? parseFloat($("#geoloc_altitude").val()) : 0;
+
     // Abort processing if no data available
-    // Triggers only if no gps data available and mode is set to gps (not manual)
-    if (Object.keys(data).length == 0) {
+    if (Object.keys(location).length == 0) {
         console.log("Waiting for location data...");
         return;
     }
@@ -168,32 +193,41 @@ function updateGeoloc(data = {}) {
     // ***********************
 
     // Set mode
-    if ('mode' in data) {
-        if (data.mode == 3) { // gps mode
+    if ('mode' in location) {
+        if (location.mode == 3) { // gps mode
             $("#gpsfix").html('<span class="gpsfix_obtained">3D</span>');
             $("#gpsfix").removeClass("blink");
-        } else if (data.mode == 2) { // gps mode
+        } else if (location.mode == 2) { // gps mode
             $("#gpsfix").html('<span class="gpsfix_obtained">2D</span>');
             $("#gpsfix").removeClass("blink");
-        } else if (data.mode == 1) { // gps mode
+        } else if (location.mode == 1) { // gps mode
             $("#gpsfix").html('<span class="gpsfix_waiting fa fa-circle"></span>');
             $("#gpsfix").addClass("blink");
-        } else { // manual mode
-            $("#gpsfix").html('<span style="color:#f08c00;" title="Manual Mode">M</span>');
+        } else if (location.mode == "gps") { // gps mode
+            $("#gpsfix").html('<span class="gpsfix_waiting fa fa-circle"></span>');
+            $("#gpsfix").addClass("blink");
+        } else if (location.mode == "network") { // network mode
+            $("#gpsfix").html('<span style="color:#f08c00;" title="Network">N</span>');
+            $("#gpsfix").removeClass("blink");
+        } else if (location.mode == "telescope") { // telescope mode
+            $("#gpsfix").html('<span style="color:#f08c00;" title="Telescope">T</span>');
+            $("#gpsfix").removeClass("blink");
+        } else { // custom mode
+            $("#gpsfix").html('<span style="color:#f08c00;" title="Custom">C</span>');
             $("#gpsfix").removeClass("blink");
         }
     }
 
     // Set time
-    if ('gpstime' in data) {
-        var d = new Date(data.gpstime);
+    if ('gpstime' in location) {
+        var d = new Date(location.gpstime);
         var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
 
         /* Update date/time in footer */
         $("#gtime").html(date);
 
         /* Update date/time in details tab */
-        var gps_time = data.gpstime.split("T");
+        var gps_time = location.gpstime.split("T");
         $("#gps_time").html(gps_time[0] + "<br>" + gps_time[1]);
 
         /* Update Star Chart */
@@ -202,11 +236,11 @@ function updateGeoloc(data = {}) {
     }
 
     // Set location
-    if ('latitude' in data && 'longitude' in data && 'altitude' in data) {
-        var mode = data.mode;
-        var latitude = parseFloat(data.latitude);
-        var longitude = parseFloat(data.longitude);
-        var altitude = parseFloat(data.altitude);
+    if ('latitude' in location && 'longitude' in location) {
+        var mode = location.mode;
+        var latitude = parseFloat(location.latitude);
+        var longitude = parseFloat(location.longitude);
+        var altitude = location.altitude ? parseFloat(location.altitude) : 0;
 
         // If new location, update & save
         if (!geoLocation || mode != geoLocation.mode || latitude != geoLocation.latitude || longitude != geoLocation.longitude || altitude != geoLocation.altitude) {
@@ -245,43 +279,43 @@ function updateGeoloc(data = {}) {
         }
     }
 
-    if ('satellites' in data) {
-        $("#gps_hdop").html(data.hdop);
-        $("#gps_vdop").html(data.vdop);
+    if ('satellites' in location) {
+        $("#gps_hdop").html(location.hdop);
+        $("#gps_vdop").html(location.vdop);
 
         // Update satellites list
-        gpsSatellites(data.satellites);
+        gpsSatellites(location.satellites);
 
         // Update satellites skymap
-        gpsSkyChart(data.satellites);
+        gpsSkyChart(location.satellites);
 
         // Update satellites signal chart
-        gpsSignalChart(data.satellites);
+        gpsSignalChart(location.satellites);
     }
 }
 
-function networkLocation() {
-    var data = {};
-    // Get location from network
+function getNetworkLocation() {
+    var location = {};
+
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
-            data['mode'] = 0;
-            data['gpstime'] = new Date().toISOString();
+            location.mode = "network";
+            location.gpstime = new Date().toISOString();
 
             var latitude = position.coords.latitude ? position.coords.latitude : 0;
             if (typeof latitude === 'number' && isFinite(latitude))
-                data['latitude'] = latitude;
+                location.latitude = latitude;
 
             var longitude = position.coords.longitude ? position.coords.longitude : 0;
             if (typeof longitude === 'number' && isFinite(longitude))
-                data['longitude'] = longitude;
+                location.longitude = longitude;
 
             var altitude = position.coords.altitude ? position.coords.altitude : 0;
             if (typeof altitude === 'number' && isFinite(altitude))
-                data['altitude'] = altitude;
+                location.altitude = altitude;
 
             syslogPrint("Location updated from network", "success");
-            updateGeoloc(data);
+            updateGeoLocation(location);
         });
     } else {
         syslogPrint("Error updating location from network", "danger");
@@ -609,49 +643,14 @@ function locationEvents() {
         toggleGeolocSettings();
     });
 
-    $("#gpsfix").on("click", function () {
-        // toggle between gps and manual modes
-        if ($('input[name="geoloc_mode"]:checked').val() == "manual") {
-            $('#geoloc_mode_custom').prop("checked", false);
-            $('#geoloc_mode_gps').prop("checked", true);
-        } else {
-            $('#geoloc_mode_gps').prop("checked", false);
-            $('#geoloc_mode_custom').prop("checked", true);
-        }
-        $("#geoloc_mode").trigger("change");
-    });
-
-    $("#geoloc_custom").change(function () { // Update location if custom lat/lon/alt is entered
-        updateGeoloc();
-    });
-
     $("#geoloc_mode").change(function () {
-        // Status
         $("#gpsfix").html('<span class="gpsfix_waiting fa fa-circle"></span>');
         $("#gpsfix").addClass("blink");
+        updateGeoLocation();
+    });
 
-        if ($('input[name="geoloc_mode"]:checked').val() == "gps") {
-            $("#geoloc_latitude").prop( "disabled", true );
-            $("#geoloc_longitude").prop( "disabled", true );
-            $("#geoloc_altitude").prop( "disabled", true );
-            syslogPrint("Location source changed to GPS", "success");
-        } else if ($('input[name="geoloc_mode"]:checked').val() == "network") {
-            $("#geoloc_latitude").prop( "disabled", true );
-            $("#geoloc_longitude").prop( "disabled", true );
-            $("#geoloc_altitude").prop( "disabled", true );
-            syslogPrint("Location source changed to network", "success");
-        } else if ($('input[name="geoloc_mode"]:checked').val() == "telescope") {
-            $("#geoloc_latitude").prop( "disabled", true );
-            $("#geoloc_longitude").prop( "disabled", true );
-            $("#geoloc_altitude").prop( "disabled", true );
-            syslogPrint("Location source changed to network", "success");
-        } else {
-            $("#geoloc_latitude").prop( "disabled", false );
-            $("#geoloc_longitude").prop( "disabled", false );
-            $("#geoloc_altitude").prop( "disabled", false );
-            syslogPrint("Location source changed to custom", "success");
-        }
-        updateGeoloc();
+    $("#geoloc_custom").change(function () {
+        updateGeoLocation();
     });
 
     $("#celestial-map-location-icon").on("click", function() {
@@ -718,8 +717,8 @@ function toggleGeolocSettings() {
 
 export {
     geoLocation, // {'mode': 0, 'latitude': 0, 'longitude': 0, 'altitude': 0}
-    loadGeoloc,
-    updateGeoloc,
+    loadGeoLocation,
+    updateGeoLocation,
     mainMap,
     loadMap,
     centerMap,

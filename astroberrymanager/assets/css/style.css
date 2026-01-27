@@ -315,7 +315,6 @@ img.panel-title { margin-bottom: 5px; }
 .gpsvalues { color: white; font-size: 0.90em; display: inline-block; text-align: right; margin-left: 5px; }
 
 #gpsfix { text-align: center; padding: 2px 25px 0px 25px; border: none; border-radius: 3px; }
-#gpsfix:hover { background: #333; cursor: pointer; }
 .gpsfix_waiting { color: #ff3300; }
 .gpsfix_obtained { color: #009933; }
 
@@ -343,8 +342,8 @@ img.panel-title { margin-bottom: 5px; }
 #sschart { display: block; /* width: 95%;*/ margin: 20px auto 0px auto; }
 
 #geoloc_container input[type=text] { margin-bottom: 10px; font-size: 1.1em; }
-#geoloc_container input[type=radio] { margin-right: 10px; }
-#geoloc_container input[type=checkbox] { margin-right: 10px; }
+#geoloc_container input[type=radio] { margin-right: 5px; }
+#geoloc_container input[type=checkbox] { margin-right: 5px; }
 
 #geoloc_mode { display: block; margin-bottom: 10px; }
 #geoloc_mode label { margin-right: 15px; }

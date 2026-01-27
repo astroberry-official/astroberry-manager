@@ -205,7 +205,7 @@ def main():
         print("Astroberry Manager v"+__version__+"\n")
 
         if locationThread is None:
-            print("✓ Starting geolocation services")
+            print("✓ Starting location services")
             locationThread = socketio.start_background_task(getLocation, socketio)
 
         if terminalThread is None:

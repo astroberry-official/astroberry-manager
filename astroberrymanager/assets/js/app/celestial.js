@@ -22,7 +22,7 @@
 
 // Celestial Docs: https://armchairastronautics.blogspot.com/search/label/D3-Celestial
 
-import { geoLocation, updateGeoloc } from './location.js';
+import { geoLocation, updateGeoLocation } from './location.js';
 import { syslogPrint } from './helpers.js';
 import { JulianDateFromUnixTime, raDecToAltAz,  deg2dms, deg2hms } from './functions.js';
 import { celestialConfig } from './celestial.config.js';
@@ -89,99 +89,79 @@ function updateStarChartLocation() { // update star chart geo location based on 
 }
 
 function updateTelescope(data) {
-  if (data === undefined || data === null)
-    return;
+    if (data === undefined || data === null)
+        return;
 
-  data = data['equipment']; // strip header
-  if (data === undefined || data.TELESCOPE === undefined)
-    return;
+    data = data['equipment']; // strip header
+    if (data === undefined || data.TELESCOPE === undefined)
+        return;
 
-  var telescopeNames = Object.keys(data.TELESCOPE); // get all active telescopes
+    var telescopeNames = Object.keys(data.TELESCOPE); // get all active telescopes
 
-  const telescopeId = 0; // use the first telescope ONLY
+    const telescopeId = 0; // use the first telescope ONLY
 
-  if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
-    // console.log(data);
+    if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
+        // remember last coordinates
+        var lastRA = telescopeCoords.RA ? telescopeCoords.RA : 0;
+        var lastDEC = telescopeCoords.DEC ? telescopeCoords.DEC : 0;
 
-    // remember last coordinates
-    var lastRA = telescopeCoords.RA ? telescopeCoords.RA : 0;
-    var lastDEC = telescopeCoords.DEC ? telescopeCoords.DEC : 0;
+        // get coordinates from telescope
+        var _telescopeCoords = data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD'];
+        telescopeCoords.RA = _telescopeCoords.RA[0];
+        telescopeCoords.DEC = _telescopeCoords.DEC[0];
 
-    // get coordinates from telescope
-    var _telescopeCoords = data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD'];
-    telescopeCoords.RA = _telescopeCoords.RA[0];
-    telescopeCoords.DEC = _telescopeCoords.DEC[0];
+        // update telescope status
+        updateTelescopeStatusIcon(true);
 
-    // update telescope status
-    updateTelescopeStatusIcon(true);
+        // update position of telescope reticle
+        updateTelescopeReticle(telescopeCoords);
 
-    // update position of telescope reticle
-    updateTelescopeReticle(telescopeCoords);
+        // get equatorial coordinates from star chart
+        var starchartCoords = Celestial.rotate()
 
-    // get equatorial coordinates from star chart
-    var starchartCoords = Celestial.rotate()
+        // convert RA from -180...+180 to 0...360 deg
+        if (starchartCoords[0] < 0)
+            starchartCoords[0] += 360;
 
-    // convert RA from -180...+180 to 0...360 deg
-    if (starchartCoords[0] < 0)
-      starchartCoords[0] += 360;
+        //console.log({'RA': telescopeCoords.RA * 15, 'DEC': telescopeCoords.DEC}, {'RA': starchartCoords[0], 'DEC': starchartCoords[1]});
 
-    //console.log({'RA': telescopeCoords.RA * 15, 'DEC': telescopeCoords.DEC}, {'RA': starchartCoords[0], 'DEC': starchartCoords[1]});
+        // If star chart coords equal telescope coords ~30 arsec, set icon status
+        var coordsPrecision = 30/3600;
+        if (Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) < coordsPrecision && Math.abs(telescopeCoords.DEC - starchartCoords[1]) < coordsPrecision) {
+            updateStarchartStatusIcon(true);
+        } else {
+            updateStarchartStatusIcon(false);
+        }
 
-    // If star chart coords equal telescope coords ~30 arsec, set icon status
-    var coordsPrecision = 30/3600;
-    if (Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) < coordsPrecision && Math.abs(telescopeCoords.DEC - starchartCoords[1]) < coordsPrecision) {
-      updateStarchartStatusIcon(true);
-    } else {
-      updateStarchartStatusIcon(false);
+        // If chart locked on telescope, follow the telescope
+        var updateThreshold = 15 * 60 / 3600;
+        if (telescopeCoords.chartlock && (!telescopeCoords || Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) > updateThreshold  || Math.abs(telescopeCoords.DEC - starchartCoords[1]) > updateThreshold)) {
+            centerOnTelescope();
+        }
     }
 
-    // If chart locked on telescope, follow the telescope
-    var updateThreshold = 15 * 60 / 3600;
-    if (telescopeCoords.chartlock && (!telescopeCoords || Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) > updateThreshold  || Math.abs(telescopeCoords.DEC - starchartCoords[1]) > updateThreshold)) {
-      centerOnTelescope();
-    }
-  }
-
-  /*
-  if (data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']) {
-     // get location from telescope
-     var scopeLocation = {
-       LAT: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LAT[0],
-       LONG: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] > 180 ? 180 - data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] : data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0],
-       ELEV: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].ELEV[0]
-     };
-
-     // Display warning if telescope location does not match system location
-     if (scopeLocation['LAT'].toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation['LONG'].toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
-       updateLocationStatusIcon(true);
-     } else {
-       updateLocationStatusIcon(false);
-       syslogPrint("Telescope location is different than system location", "danger", true);
-       console.log(scopeLocation['LAT'], scopeLocation['LONG']);
-     }
-   }
-  */
     if (data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']) {
-	console.log(data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']);
+	//console.log(data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']);
 
         var scopeLocation = {
+            mode: "telescope",
             latitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LAT[0],
             longitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] > 180 ? 180 - data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] : data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0],
             altitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].ELEV[0]
         };
 
-        /* Update lat/lon/alt in settings tab  */
-        $("#geoloc_mode_telescope").trigger("click");
-        $("#geoloc_latitude").val(scopeLocation.latitude.toFixed(6));
-        $("#geoloc_longitude").val(scopeLocation.longitude.toFixed(6));
-        $("#geoloc_altitude").val(scopeLocation.altitude.toFixed(0));
-
-	// Center map
-	setTimeout(function() {
-	    updateGeoloc();
-	}, 500);
+        if ($('input[name="geoloc_mode"]:checked').val() == "telescope")
+	    updateGeoLocation(scopeLocation);
+        /*
+        if (scopeLocation['LAT'].toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation['LONG'].toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
+            updateLocationStatusIcon(true);
+        } else {
+            updateLocationStatusIcon(false);
+            syslogPrint("Telescope location is different than system location", "danger", true);
+            console.log(scopeLocation['LAT'], scopeLocation['LONG']);
+        }
+        */
     }
-
 }
 
 function setTelescopeLocation(data) {

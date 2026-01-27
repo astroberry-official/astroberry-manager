@@ -21,7 +21,7 @@
 */
 
 import { setSockets } from './app/sockets.js';
-import { loadGeoloc, updateGeoloc, loadMap } from './app/location.js';
+import { loadGeoLocation, updateGeoLocation, loadMap } from './app/location.js';
 import { requestAlmanac } from './app/almanac.js';
 import { loadWeather } from './app/weather.js';
 import { requestStarChart, updateStarChartLocation } from './app/celestial.js';
@@ -41,7 +41,7 @@ $(document).ready(function() {
     setSockets();
 
     // Get saved location
-    loadGeoloc();
+    loadGeoLocation();
 
     // Init geo maps
     loadMap();
@@ -50,7 +50,7 @@ $(document).ready(function() {
     requestStarChart();
 
     // Update geolocation
-    updateGeoloc();
+    updateGeoLocation();
     updateStarChartLocation();
 
     // Update weather

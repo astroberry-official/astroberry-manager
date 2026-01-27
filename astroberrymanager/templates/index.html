@@ -217,20 +217,20 @@
 
 				<fieldset id="geoloc_mode">
 					<h2>Mode</h2>
-					<input id="geoloc_mode_gps" name="geoloc_mode" type="radio" value="gps" checked />
+                                        <input id="geoloc_mode_telescope" name="geoloc_mode" type="radio" value="telescope" checked />
+                                        <label for="geoloc_mode_telescope" title="Get location from telescope">Telescope</label>
+					<input id="geoloc_mode_gps" name="geoloc_mode" type="radio" value="gps" />
 					<label for="geoloc_mode_gps" data-tooltip="tooltip" title="Get location from GPS">GPS</label>
 					<input id="geoloc_mode_network" name="geoloc_mode" type="radio" value="network" />
 					<label for="geoloc_mode_network" title="Get location from network">Network</label>
-                                        <input id="geoloc_mode_telescope" name="geoloc_mode" type="radio" value="telescope" />
-                                        <label for="geoloc_mode_telescope" title="Get location from telescope">Telescope</label>
-					<input id="geoloc_mode_custom" name="geoloc_mode" type="radio" value="manual" />
+					<input id="geoloc_mode_custom" name="geoloc_mode" type="radio" value="custom" />
 					<label for="geoloc_mode_custom" title="Set custom location">Custom</label>
 				</fieldset>
 
 				<fieldset id="geoloc_custom">
-					<label for="geoloc_latitude">Latitude</label><input id="geoloc_latitude" class="form-control" type="text" placeholder="Latitude (deg)">
-					<label for="geoloc_longitude">Longitude</label><input id="geoloc_longitude" class="form-control" type="text" placeholder="Longitude (deg)">
-					<label for="geoloc_altitude">Altitude</label><input id="geoloc_altitude" class="form-control" type="text" placeholder="Altitude (meters)">
+					<label for="geoloc_latitude">Latitude</label><input id="geoloc_latitude" class="form-control" type="text" placeholder="Latitude (deg)" disabled>
+					<label for="geoloc_longitude">Longitude</label><input id="geoloc_longitude" class="form-control" type="text" placeholder="Longitude (deg)" disabled>
+					<label for="geoloc_altitude">Altitude</label><input id="geoloc_altitude" class="form-control" type="text" placeholder="Altitude (meters)" disabled>
 				</fieldset>				
 			</div>
 
@@ -240,7 +240,7 @@
 				<div><span class="label">UTC Time</span><span id="gtime" class="gpsvalues">0000-00-00T00:00:00</span></div>
 				<div>
 					<span class="label">Mode</span>
-						<span id="gpsfix" class="gpsvalues blink" data-tooltip="tooltip" title="Toggle GPS/Manual">
+						<span id="gpsfix" class="gpsvalues blink" data-tooltip="tooltip">
 						<span class="gpsfix_waiting fa fa-circle" ></span>
 					</span>
 				</div>
