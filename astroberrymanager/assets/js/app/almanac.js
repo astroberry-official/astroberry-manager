@@ -338,41 +338,6 @@ function getReticle(pha_angle) {
     ctx.stroke();
 }
 
-function renderMoon(phase) { // https://codepen.io/anowodzinski/pen/ZWKXPQ
-    phase = 0.5;
-
-    //console.log("Moon phase: " + phase);
-
-    var width = parseInt($("#moon_phase").width());
-    var height = parseInt($("#moon_phase").height());
-
-    const canvas = document.getElementById("moon_phase");
-    const ctx = canvas.getContext("2d");
-
-    ctx.scale(1, 1);
-
-	const radius = width / 2;
-
-    // clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = '#000000cc';
-    //ctx.fillStyle = 'red';
-
-    ctx.beginPath();
-    ctx.arc(radius, radius, radius - 5, 0, 2 * Math.PI);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.globalCompositeOperation = 'destination-in';
-
-    var c = (5 + phase);
-
-    ctx.beginPath();
-    ctx.arc(radius - c * phase * radius * 2, radius, radius * c, 0, 2 * Math.PI);
-    ctx.fill();
-}
-
 function toggleAltTrend(planet, alt) {
     if (!planet || !alt) return;
     var last_alt = parseFloat($("#" + planet + "_alt").text());
@@ -520,7 +485,6 @@ export {
     requestAlmanac,
     updateAlmanac,
     getReticle,
-    renderMoon,
     toggleAltTrend,
     almanacEvents
 };
