@@ -141,6 +141,7 @@ function updateGeoLocation(location = {}) {
     if (location.mode == "gps") {
         $("#toggle-skymap").show();
         $("#toggle-gpsdetails").show();
+        $("#control-set-location").show();
         $("#geoloc_mode_gps").prop("checked", true); // trigger save
         $("#geoloc_latitude").prop( "disabled", true );
         $("#geoloc_longitude").prop( "disabled", true );
@@ -149,6 +150,7 @@ function updateGeoLocation(location = {}) {
     } else if (location.mode == "network") {
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
+        $("#control-set-location").show();
         $("#geoloc_mode_network").prop("checked", true); // trigger save
         $("#geoloc_latitude").prop( "disabled", true );
         $("#geoloc_longitude").prop( "disabled", true );
@@ -157,6 +159,7 @@ function updateGeoLocation(location = {}) {
     } else if (location.mode == "telescope") {
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
+        $("#control-set-location").hide();
         $("#geoloc_mode_telescope").prop("checked", true); // trigger save
         $("#geoloc_latitude").prop( "disabled", true );
         $("#geoloc_longitude").prop( "disabled", true );
@@ -165,6 +168,7 @@ function updateGeoLocation(location = {}) {
     } else {
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
+        $("#control-set-location").show();
         $("#geoloc_mode_custom").prop("checked", true); // trigger save
         $("#geoloc_latitude").prop( "disabled", false );
         $("#geoloc_longitude").prop( "disabled", false );
@@ -621,6 +625,17 @@ function gpsSignalChart(satellites) {
     }
 }
 
+function setTelescopeLocation() {
+  socket.timeout(5000).emit("control", geoLocation, (err) => {
+      if (err) {
+          console.log("Setting telescope location timed out");
+      } else {
+          //console.log("Telescope location requested");
+      }
+  });
+}
+
+
 /* ================================================================== */
 /*                             EVENTS
 /* ================================================================== */
@@ -643,6 +658,10 @@ function locationEvents() {
         toggleGeolocSettings();
     });
 
+    $("#control-set-location").on("click", function () {
+        setTelescopeLocation();
+    });
+
     $("#geoloc_mode").change(function () {
         $("#gpsfix").html('<span class="gpsfix_waiting fa fa-circle"></span>');
         $("#gpsfix").addClass("blink");
@@ -654,13 +673,7 @@ function locationEvents() {
     });
 
     $("#celestial-map-location-icon").on("click", function() {
-        // hide all
-        $("#main-dock span").removeClass("dock-item-active");
-        $(".panel-container").hide();
-
-        // show location
-        $("#main-dock-location").addClass("dock-item-active");
-        $("#panel-location").show();
+        $("#main-dock-location").trigger("click");
         mainMap.invalidateSize(); // fix for map display
     });
 }

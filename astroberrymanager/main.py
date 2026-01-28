@@ -37,7 +37,7 @@ from flask_socketio import SocketIO
 from .location import getLocation
 from .weather import getWeather
 from .almanac import getAlmanac
-from .equipment import getINDIServer, telescopeControl
+from .equipment import getEquipment, setEquipment
 from .system import getSystemReports, getSystemReportOnce, runSystemUpdate, runSystemBackup, runSystemRestore, runSystemRestart, runSystemShutdown, process_status
 
 __author__ = 'Radek Kaczorek'
@@ -106,16 +106,16 @@ def index():
 @socketio.on('connect')
 def connect():
     if 'username' in session:
-        #print("Socket connected")
+        print("Socket connected")
         getSystemReportOnce(socketio)
         return True
     else:
-        #print("Socket connection rejected")
+        print("Socket connection rejected")
         return False
 
 @socketio.on('disconnect')
 def disconnect():
-    #print("Socket disconnected")
+    print("Socket disconnected")
     return True
 
 @socketio.on('weather')
@@ -126,20 +126,9 @@ def weather(data):
 def almanac(data):
     getAlmanac(socketio, data["time"], data["latitude"], data["longitude"], data["altitude"])
 
-# INDI Server on demand
-#@socketio.on('equipment')
-#def equipment(data):
-#    global equipmentThread, equipmentThreadEvent
-#
-#    if 'username' in session and 'connect' in data.keys() and data['connect']:
-#        print("Connecting to INDI server")
-#        equipmentThreadEvent.set()
-#        equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
-#
-#    if 'username' in session and 'disconnect' in data.keys() and data['disconnect']:
-#        print("Disconnecting from INDI server")
-#        equipmentThreadEvent.clear()
-#        equipmentThread = None
+@socketio.on('control')
+def equipment(data):
+    setEquipment(data)
 
 @socketio.on('system')
 def system(data):
@@ -224,7 +213,7 @@ def main():
         if equipmentThread is None:
             print("✓ Starting equipment services")
             equipmentThreadEvent.set() # call equipmentThreadEvent.clear() to terminate background thread
-            equipmentThread = socketio.start_background_task(getINDIServer, socketio, equipmentThreadEvent)
+            equipmentThread = socketio.start_background_task(getEquipment, socketio, equipmentThreadEvent)
 
         print("✓ Starting main application\n")
 

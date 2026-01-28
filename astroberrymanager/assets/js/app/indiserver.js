@@ -20,7 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
-import { updateTelescopeStatusIcon, updateStarchartStatusIcon, updateLocationStatusIcon } from './celestial.js';
+import { updateTelescopeStatusIcon } from './celestial.js';
 import { markActiveDevice, markAllDevices } from './equipment.js';
 import { syslogPrint } from './helpers.js';
 import { socket } from './sockets.js';

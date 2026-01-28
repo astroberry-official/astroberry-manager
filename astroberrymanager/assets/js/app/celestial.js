@@ -152,15 +152,14 @@ function updateTelescope(data) {
 
         if ($('input[name="geoloc_mode"]:checked').val() == "telescope")
 	    updateGeoLocation(scopeLocation);
-        /*
-        if (scopeLocation['LAT'].toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation['LONG'].toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
+
+        if (scopeLocation.latitude.toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation.longitude.toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
             updateLocationStatusIcon(true);
         } else {
             updateLocationStatusIcon(false);
-            syslogPrint("Telescope location is different than system location", "danger", true);
-            console.log(scopeLocation['LAT'], scopeLocation['LONG']);
+            syslogPrint("Telescope location is different than star chart location", "danger", true);
+            //console.log(scopeLocation.latitude, scopeLocation.longitude);
         }
-        */
     }
 }
 
@@ -509,7 +508,7 @@ function updateTelescopeStatusIcon(status) {
 }
 
 function updateStarchartStatusIcon(status) {
-  return; // function disabled
+  return // disabled
   if (status === undefined) {
       var color = "#ffffff";
   } else if (status) {
@@ -522,7 +521,6 @@ function updateStarchartStatusIcon(status) {
 }
 
 function updateLocationStatusIcon(status) {
-  return; // function disabled
   if (status === undefined) {
       var color = "#ffffff";
   } else if (status) {

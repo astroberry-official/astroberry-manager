@@ -90,7 +90,7 @@ class IndiClient(PyIndi.BaseClient):
 indiClient = IndiClient()
 indiClient.setServer(INDI_HOST,INDI_PORT)
 
-def getINDIServer(socketio, event):
+def getEquipment(socketio, event):
 	#logging.basicConfig(format = '%(asctime)s %(message)s', level = logging.INFO)
 	logging.basicConfig(format = '%(message)s', level = logging.INFO)
 
@@ -305,41 +305,48 @@ def getDeviceType(s):
 	else:
 		return
 
-# TODO: Add functionality to control devices
-def telescopeControl(data):
-	if 'action' in data and data['action'] == 'setlocation':
-		try:
-			devices = indiClient.getDevices()
-			for device in devices:
-				if getDeviceType(device.getDriverInterface()) == "TELESCOPE":
-					telescope = device.getDeviceName()
-					break # use first seen telescope
+def setEquipment(data): # setting telescope location POC
+	if not indiClient:
+		print("Setting telescope location aborted.  Not connected to INDI server.")
+		return
 
-			device = indiClient.getDevice(telescope)
+	try:
+		# always get fresh list of devices
+		devices = indiClient.getDevices()
+		for device in devices:
+			if getDeviceType(device.getDriverInterface()) == "TELESCOPE":
+				telescope = device.getDeviceName()
+				break # use first seen telescope
 
-			if not (device) or not (device.isConnected()):
-				print("Setting telescope location aborted. No telescope device found")
-				return
+		device = indiClient.getDevice(telescope)
 
-			if data['params']['lat'] < -90 or data['params']['lat'] > 90 or data['params']['lon'] < 0 or data['params']['lon'] > 360:
-				print("Setting telescope location aborted. Invalid location requested")
-				return
-
-			observer = device.getNumber("GEOGRAPHIC_COORD") # Get telescope location
-			# latitude = observer[0].getValue()
-			# longitude = observer[1].getValue()
-			# elevation = observer[2].getValue()
-
-			# Set telescope location
-			observer[0].setValue(data['params']['lat'])
-			observer[1].setValue(data['params']['lon'])
-			observer[2].setValue(data['params']['alt'])
-
-			indiClient.sendNewProperty(observer)
-			print("%s location set to LAT %s LONG %s" % (telescope, target["ra"], target["dec"]))
-		except Exception as e:
-			print(e)
+		if not (device) or not (device.isConnected()):
+			print("Setting telescope location aborted. No telescope device found or telescope is not connected.")
 			return
+
+		if data["latitude"] < -90 or data["latitude"] > 90 or data["longitude"] < 0 or data["longitude"] > 360:
+			print("Setting telescope location aborted. Invalid location requested.")
+			return
+
+		observer = device.getNumber("GEOGRAPHIC_COORD") # get current telescope location
+		latitude = observer[0].getValue()
+		longitude = observer[1].getValue()
+		elevation = observer[2].getValue()
+
+		if data["latitude"] == latitude and data["longitude"] == longitude:
+			print("Setting telescope location aborted. Already in this location.")
+			return
+
+		# Set new location
+		observer[0].setValue(data["latitude"])
+		observer[1].setValue(data["longitude"])
+		observer[2].setValue(data["altitude"])
+		indiClient.sendNewProperty(observer)
+
+		print("%s location set to lat: %s long: %s" % (telescope, data["latitude"], data["longitude"]))
+	except Exception as e:
+		print(e)
+		pass
 
 # TODO: Fix ephem returning slightly different altitude than celestial map
 def getAzAlt(coordinates, location, time = None):
