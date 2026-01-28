@@ -40,7 +40,7 @@ const term = new Terminal({
   macOptionIsMeta: true,
   enableBold: true,
   cols: 120,
-  rows: 40,
+  rows: 42,
   screenKeys: true,
   scrollback: true,
 });
