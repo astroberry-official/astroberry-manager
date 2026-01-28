@@ -263,6 +263,7 @@ function appEvents() {
         $("#panel-almanac").show();
 
     });
+
 }
 
 /* ================================================================== */
@@ -370,6 +371,15 @@ function eventHandlers() {
 
     // Enable tooltip
     $('[data-toggle="tooltip"]').tooltip();
+
+    // On exit procedures
+    $(window).on("beforeunload", function() {
+        return "Are you sure you want to leave?";
+    });
+
+    $(window).on("unload", function(){
+        //console.log("Window closed");
+    });
 
 }
 
