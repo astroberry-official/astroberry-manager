@@ -51,7 +51,7 @@ tr { height: 1.6em; }
 @keyframes blinker { 50% { opacity: 0; } }
 
 #particles-js { position:absolute; left:0; top:0; width:100%; height: 99%; z-index:-100; }
-#notify_message { display: block; position: absolute; width: 20%; left: 40%; top: 30%; z-index: 500; }
+#notify_message { display: block; position: absolute; width: 30%; left: 40%; top: 30%; z-index: 500; }
 .alert { text-align: center; }
 
 /*************************************/
@@ -166,7 +166,7 @@ div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display:
 #m-show { margin:0 6px 6px 0;  background: #1c1c1c; border: 1px solid #333; border-radius:3px;  }
 #m-show:hover { background-color:#eee; }
 
-#celestial-form { display: none; font-size: 0.8em; position: absolute; top: 20%; right: 30px; 
+#celestial-form { display: none; font-size: 0.8em; position: absolute; top: 20%; left: 25%;
 	background: #1c1c1cdd; padding: 20px 10px; border: 1px solid #e1e1e11f; border-radius: 5px; overflow: hidden; z-index: 100;}
 #celestial-form input[type=number] { margin: 0 6px; text-align: right; }
 #celestial-form input[type=checkbox] { margin: 0 5px; accent-color: #ccc;cursor: pointer; }
@@ -348,6 +348,8 @@ img.panel-title { margin-bottom: 5px; }
 
 #geoloc_mode { display: block; margin-bottom: 10px; }
 #geoloc_mode label { margin-right: 15px; }
+
+#control-set-location { display: none; }
 
 .ol-attribution { display: none; font-family: 'Roboto Light', Arial, Helvetica; font-size: 0.8em; display: flex; }
 .ol-attribution.ol-uncollapsible button { display: block; }
