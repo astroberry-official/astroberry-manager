@@ -99,24 +99,24 @@ export var celestialConfig = {	//https://github.com/ofrohn/d3-celestial
         //data: 'lg.json',
         //data: 'messier.json',
         symbols: { //DSO symbol styles, 'stroke'-parameter present = outline
-          gg: {shape: "circle", stroke: "#f08c00", width: 1.5},          // Galaxy cluster
-          g:  {shape: "ellipse", stroke: "#f08c00", width: 1.5},         // Generic galaxy
-          s:  {shape: "ellipse", stroke: "#f08c00", width: 1.5},         // Spiral galaxy
-          s0: {shape: "ellipse", stroke: "#f08c00", width: 1.5},         // Lenticular galaxy
-          sd: {shape: "ellipse", stroke: "#f08c00", width: 1.5},         // Dwarf galaxy
-          e:  {shape: "ellipse", stroke: "#f08c00", width: 1.5},         // Elliptical galaxy
-          i:  {shape: "ellipse", stroke: "#f08c00", width: 1.5},         // Irregular galaxy
-          oc: {shape: "circle", stroke: "#ffcc00", width: 1.5},          // Open cluster
-          gc: {shape: "circle", stroke: "#ff9900", width: 1.5},          // Globular cluster
-          en: {shape: "square", stroke: "#ff00cc", width: 1.5},          // Emission nebula
-          bn: {shape: "square", stroke: "#ff00cc", width: 2},            // Generic bright nebula
-          sfr:{shape: "square", stroke: "#cc00ff", width: 2},            // Star forming region
-          rn: {shape: "square", stroke: "#0000ff", width: 1.5},          // Reflection nebula
-          pn: {shape: "diamond", stroke: "#00cccc", width: 1.5},         // Planetary nebula
-          snr:{shape: "diamond", stroke: "#ff00cc", width: 1.5},         // Supernova remnant
-          dn: {shape: "square", stroke: "#999999", width: 2},            // Dark nebula grey
+          gg: {shape: "circle", stroke: "#f08c00", width: 1},          // Galaxy cluster
+          g:  {shape: "ellipse", stroke: "#f08c00", width: 1},         // Generic galaxy
+          s:  {shape: "ellipse", stroke: "#f08c00", width: 1},         // Spiral galaxy
+          s0: {shape: "ellipse", stroke: "#f08c00", width: 1},         // Lenticular galaxy
+          sd: {shape: "ellipse", stroke: "#f08c00", width: 1},         // Dwarf galaxy
+          e:  {shape: "ellipse", stroke: "#f08c00", width: 1},         // Elliptical galaxy
+          i:  {shape: "ellipse", stroke: "#f08c00", width: 1},         // Irregular galaxy
+          oc: {shape: "circle", stroke: "#ffcc00", width: 1},          // Open cluster
+          gc: {shape: "circle", stroke: "#ff9900", width: 1},          // Globular cluster
+          en: {shape: "square", stroke: "#ff00cc", width: 1},          // Emission nebula
+          bn: {shape: "square", stroke: "#ff00cc", width: 1},          // Generic bright nebula
+          sfr:{shape: "square", stroke: "#cc00ff", width: 1},          // Star forming region
+          rn: {shape: "square", stroke: "#0000ff", width: 1},          // Reflection nebula
+          pn: {shape: "diamond", stroke: "#00cccc", width: 1},         // Planetary nebula
+          snr:{shape: "diamond", stroke: "#ff00cc", width: 1},         // Supernova remnant
+          dn: {shape: "square", stroke: "#999999", width: 1},          // Dark nebula grey
           pos:{shape: "marker", fill: "#cccccc",
-               stroke: "#cccccc", width: 1.5}                            // Generic marker
+               stroke: "#cccccc", width: 1}                            // Generic marker
         }
       },
       planets: {  //Show planet locations, if date-time is set
