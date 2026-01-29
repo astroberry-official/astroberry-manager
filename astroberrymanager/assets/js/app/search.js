@@ -181,7 +181,6 @@ function showResults(data, online = false) {
 
     // set output
     var id = data.id;
-    //console.log(id.substring(0,3));
     if (id.substring(0,4) == 'NAME')
         id = id.substring(4);
     var coordinates = data.geometry.coordinates;
@@ -211,8 +210,8 @@ function showResults(data, online = false) {
 
     // calculate field of view
     var fov = dim ? parseInt(dim.split("x")[0]) * 1.5/60 : 2;
-    if (fov < 1)
-        fov = 1;
+    if (fov < 5)
+        fov = 5;
 
     // add details button
     var simbad = 'https://simbad.u-strasbg.fr/simbad/sim-id?Ident=' + id + '&NbIdent=1&Radius=' + fov + '&Radius.unit=deg';
@@ -267,10 +266,12 @@ function showResults(data, online = false) {
     if (_ra < 0) // convert RA from -180...+180 to 0...360 deg
         _ra += 360;
 
-    var image = 'https://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + ra/15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
-    var aladin = 'https://aladin.cds.unistra.fr/AladinLite/?target='+_ra+'+'+dec+'&fov='+fov+'&survey=CDS%2FP%2FDSS2%2Fcolor';
-    var results = '<a href="' + aladin + '" target="_blank" data-tooltip="tooltip" title="Look up object in Aladin Sky Atlas">';
-    results += '<img src='+image+' width="178" />';
+    //var imageUrl = 'https://alasky.u-strasbg.fr/cgi/simbad-thumbnails/get-thumbnail.py?name=m45&size=300&legend=true'
+    //var imageUrl = 'https://sky.esa.int/esasky-tap/skyimage?target=' + ra + '%20' + dec + '&fov=' + fov + '&aspectratio=1&size=400';
+    var imageUrl = 'https://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + ra/15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
+    var aladinUrl = 'https://aladin.cds.unistra.fr/AladinLite/?target='+_ra+'+'+dec+'&fov='+fov+'&survey=CDS%2FP%2FDSS2%2Fcolor';
+    var results = '<a href="' + aladinUrl + '" target="_blank" data-tooltip="tooltip" title="Look up object in Aladin Sky Atlas">';
+    results += '<img src=' + imageUrl + ' width="178" />';
     results += '</a>';
 
     $("#search-results-image").html(results); // render image

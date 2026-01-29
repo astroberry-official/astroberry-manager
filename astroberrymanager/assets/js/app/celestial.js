@@ -163,39 +163,6 @@ function updateTelescope(data) {
     }
 }
 
-function setTelescopeLocation(data) {
-  if (data === undefined || data === null)
-    return;
-
-  if (data[0] === undefined || data[1] === undefined)
-    return;
-
-  var lat = data[0];
-  var lon = data[1];
-  var alt = data[2] ? data[2] : 0;
-
-  if (typeof lat !== 'number' || !isFinite(lat)) return;
-  if (typeof lon !== 'number' || !isFinite(lon)) return;
-  if (typeof alt !== 'number' || !isFinite(alt)) return;
-
-  if (lat < -90 || lon > 90) return;
-  if (lon < 0 || lon > 360) return;
-
-  var _data = {};
-  _data['action'] = "setlocation";
-  _data['params'] = {};
-  _data['params']['lat'] = lat;
-  _data['params']['lon'] = lon;
-  _data['params']['alt'] = alt;
-  socket.timeout(5000).emit("telescope", _data, (err) => {
-      if (err) {
-          console.log("Telescope request timed out");
-      } else {
-          //console.log("Telescope location requested");
-      }
-  });
-}
-
 function getAzAlt(ra, dec) {
   if (ra === undefined || ra === null || dec === undefined || dec === null)
     return;
@@ -344,6 +311,27 @@ function centerOnCoords(ra, dec, rot=0) { // degrees
   Celestial.rotate(config); // go to
 }
 
+function setTelescopeCoordinates(ra, dec) {
+  if (ra === undefined || ra === null || dec === undefined || dec === null)
+    return;
+
+  if (typeof ra !== 'number' || !isFinite(ra)) return;
+  if (typeof dec !== 'number' || !isFinite(dec)) return;
+
+  if (ra < 0 || ra > 360) return;
+  if (dec < -90 || dec > 90) return;
+
+  var coordinates = { ra: ra, dec: dec };
+
+  socket.timeout(5000).emit("control", coordinates, (err) => {
+      if (err) {
+          console.log("Setting telescope coordinates timed out");
+      } else {
+          //console.log("Telescope coordinates requested");
+      }
+  });
+}
+
 function centerOnSolarObject(id) {
   if (id === undefined || id === null)
   var dt = new Date();
@@ -410,10 +398,15 @@ function getRegionOfInterest(coordinates, fov = 5) {
   $("#region-of-interest").remove(); // clear
   var box = d3.select("body").append("div").attr("id", "region-of-interest").style("z-index", 100);
   var pt = Celestial.mapProjection(coordinates);
+
+  var imageUrl = 'https://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + coordinates[0]/15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
+  //var imageUrl = 'https://sky.esa.int/esasky-tap/skyimage?target=' + ra + ' ' + dec + '&fov=' + fov + '&aspectratio=1&size=400';
+  var aladinUrl = 'https://aladin.cds.unistra.fr/AladinLite/?target='+ra+'+'+dec+'&fov='+fov+'&survey=CDS%2FP%2FDSS2%2Fcolor';
+  //var detailsUrl = 'https://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&Radius=' + fov + '&Radius.unit=deg&output.max=10'
+  var detailsUrl = 'https://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&CooFrame=ICRS&CooEqui=2000.0&CooEpoch=J2000&&&Radius.unit=deg&submit=Query+around&Radius=' + fov + '&output.max=10';
+
   // var properties = {'name': 'NGC 224', 'desig': 'M31', 'alt': 'Andromeda Galaxy', 'cl': 'Spiral Galaxy', 'mag': 5, 'dim': 10};
   var properties = {}; // TODO: show data for a major object in the region
-  var imageUrl = 'https://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + coordinates[0]/15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
-  var detailsUrl = 'https://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&Radius=' + fov * 16 + '&Radius.unit=deg&output.max=10'
 
   box.style({left:px(ra + pt[0] - width/2), top:px(dec + pt[1]), opacity:1, border: "solid 1px #e1e1e11f"});
 
@@ -430,6 +423,7 @@ function getRegionOfInterest(coordinates, fov = 5) {
       box.append("span").text(properties.cl).append("br");
     }
   }
+
   if (properties.mag || properties.dim) {
     box.append("span").classed("data", true).text("Properties: ");
     if (properties.mag) {
@@ -441,7 +435,11 @@ function getRegionOfInterest(coordinates, fov = 5) {
       box.append("span").text(properties.dim + "'");
     }
   }
-  if (imageUrl) box.append("div").attr("id", "region-of-interest-image").style({background: "url("+imageUrl+")"});
+
+  if (imageUrl && aladinUrl) {
+    box.append("div").attr("id", "region-of-interest-image").append("a").attr({"href": aladinUrl, "target": "_blank", "data-tooltip": "tooltip", title: "Look up object in Aladin Sky Atlas"})
+      .append("img").attr({"src": imageUrl, "width": 256});
+  }
 
   box.append("span").attr({"id": "region-of-interest-fav", "class": "fa fa-star", "data-tooltip": "tooltip", title: "Add this region to favorites"})
     .style({position: "absolute", top: "15px", left: "15px"});
@@ -455,7 +453,11 @@ function getRegionOfInterest(coordinates, fov = 5) {
 
   box.append("button").attr("id", "region-of-interest-center").attr("class", "btn").attr("data-tooltip", "tooltip").attr("title", "Center object in star chart").text("Center");
 
-  if (detailsUrl) box.append("a").attr({href: detailsUrl, target: "_blank", "data-tooltip": "tooltip", title: "Look up the region in SIMBAD online database"}).text("Details");
+  if (detailsUrl) {
+    box.append("a").attr({"id": "region-of-interest-details", "href": detailsUrl, target: "_blank", "data-tooltip": "tooltip", title: "Look up the region in SIMBAD online database"}).text("Details");
+  }
+
+  box.append("button").attr("id", "region-of-interest-goto").attr("class", "btn").attr("data-tooltip", "tooltip").attr("title", "Center telescope on the object").text("Go to");
 
   box.append("span").classed("label", true).text("RA");
   box.append("span").classed("starchart-coords", true).text(deg2hms(ra));
@@ -480,16 +482,16 @@ function getRegionOfInterest(coordinates, fov = 5) {
     addROItoFavorites(data);
   });
 
-  d3.select("#region-of-interest-image").on("click", function() {
-    //$("#region-of-interest").hide();
-  });
-
   d3.select("#region-of-interest-center").on("click", function() {
     centerOnCoords(ra, dec);
   });
 
+  d3.select("#region-of-interest-goto").on("click", function() {
+    setTelescopeCoordinates(ra, dec);
+  });
+
   d3.select("#region-of-interest-close").on("click", function() {
-    $("#region-of-interest").hide();
+    $("#region-of-interest").remove();
   });
 }
 

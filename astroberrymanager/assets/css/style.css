@@ -153,13 +153,15 @@ div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display:
 #region-of-interest-fav:hover { cursor: pointer; color: #ffc107; }
 #region-of-interest-close { font-size: 1.5em; color: #aaa }
 #region-of-interest-close:hover { cursor: pointer; color: #ff3300; }
-#region-of-interest-center { font-size: 1.0em; min-width: 70px; position: absolute; bottom: 65px; padding: 2px; left: 20px; }
-#region-of-interest a { position: absolute; bottom: 65px; left: 100px; padding: 3px 10px; background: #333; border: none; border-radius: 3px; 
-	color: #fff; font-size: 0.8; vertical-align: bottom; min-width: 70px; text-align: center; }
-#region-of-interest a:hover { background: #009933; }
+#region-of-interest-center { font-size: 1.0em; width: 70px; position: absolute; bottom: 65px; left: 15px; padding: 2px; }
+#region-of-interest-details { position: absolute; bottom: 65px; left: 98px; padding: 3px 10px; background: #333; border: none; border-radius: 3px; 
+	color: #fff; font-size: 0.8; vertical-align: bottom; width: 70px; text-align: center; }
+#region-of-interest-details:hover { background: #009933; }
+#region-of-interest-goto { font-size: 1.0em; width: 70px; position: absolute; bottom: 65px; left: 175px; padding: 2px; }
+
 #region-of-interest .label { min-width: 30px; margin-top: 5px; }
 #region-of-interest .starchart-coords { margin-right: 15px; }
-#region-of-interest-image { width:256px; height:256px; border: 1px solid #333; }
+#region-of-interest-image { width:256px; height:256px; /* border: 1px solid #333; */ cursor: pointer; }
 #region-of-interest .title { }
 #region-of-interest .data { }
 
