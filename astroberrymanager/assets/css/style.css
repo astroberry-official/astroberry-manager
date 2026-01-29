@@ -537,8 +537,7 @@ img.panel-title { margin-bottom: 5px; }
 
 #system-settings { font-size: 0.75em; margin-top: 20px; }
 #starchart-settings,
-#system-maintenance,
-#system-apikey { margin-top: 20px; }
+#system-maintenance { margin-top: 20px; }
 #system-maintenance button { font-size: 1em; min-width: 40px; }
 
 #starchart-settings input { margin-right: 5px; }
@@ -546,8 +545,6 @@ img.panel-title { margin-bottom: 5px; }
 #system-shutdown:hover { background: #ff3300; }
 
 .system-maintenance-desc { display: block; font-size: 0.9em; margin-bottom: 10px; }
-
-#system-apikey { display: none; }
 
 /*************************************/
 /*         AUTO SCALING

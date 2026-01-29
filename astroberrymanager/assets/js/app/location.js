@@ -318,7 +318,7 @@ function getNetworkLocation() {
             if (typeof altitude === 'number' && isFinite(altitude))
                 location.altitude = altitude;
 
-            syslogPrint("Location updated from network", "success");
+            console.log("Location updated from network");
             updateGeoLocation(location);
         });
     } else {
