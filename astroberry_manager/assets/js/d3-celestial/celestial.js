@@ -2540,7 +2540,7 @@ function form(cfg) {
   col.append("label").attr("for", "stars-colors").html("with spectral colors");
   col.append("input").attr("type", "checkbox").attr("id", "stars-colors").property("checked", config.stars.colors).on("change", apply);
   
-  col.append("label").attr("for", "stars-color").html("or default color ");
+  col.append("label").attr("for", "stars-colors").html("or default color ");
   col.append("input").attr("type", "color").attr("autocomplete", "off").attr("id", "stars-style-fill").attr("title", "Star color").property("value", config.stars.style.fill).on("change", apply);
 
   col.append("br");
@@ -2601,7 +2601,7 @@ function form(cfg) {
   col.append("label").attr("for", "dsos-colors").html("with symbol colors");
   col.append("input").attr("type", "checkbox").attr("id", "dsos-colors").property("checked", config.dsos.colors).on("change", apply);
   
-  col.append("label").attr("for", "dsos-color").html("or default color ");
+  col.append("label").attr("for", "dsos-colors").html("or default color ");
   col.append("input").attr("type", "color").attr("autocomplete", "off").attr("id", "dsos-style-fill").attr("title", "DSO color").property("value", config.dsos.style.fill).on("change", apply);
 
   col.append("br");
@@ -2688,19 +2688,19 @@ function form(cfg) {
   col = frm.append("div").attr("class", "col").attr("id", "lines");
   col.append("label").attr("class", "header").html("Lines");
   
-  col.append("label").attr("title", "Latitude/longitude grid lines").attr("for", "lines-graticule").html("Graticule");
+  col.append("label").attr("title", "Latitude/longitude grid lines").attr("for", "lines-graticule-show").html("Graticule");
   col.append("input").attr("type", "checkbox").attr("id", "lines-graticule-show").property("checked", config.lines.graticule.show).on("change", apply);
   
-  col.append("label").attr("for", "lines-equatorial").html("Equator");
+  col.append("label").attr("for", "lines-equatorial-show").html("Equator");
   col.append("input").attr("type", "checkbox").attr("id", "lines-equatorial-show").property("checked", config.lines.equatorial.show).on("change", apply);
   
-  col.append("label").attr("for", "lines-ecliptic").html("Ecliptic");
+  col.append("label").attr("for", "lines-ecliptic-show").html("Ecliptic");
   col.append("input").attr("type", "checkbox").attr("id", "lines-ecliptic-show").property("checked", config.lines.ecliptic.show).on("change", apply);
   
-  col.append("label").attr("for", "lines-galactic").html("Galactic plane");
+  col.append("label").attr("for", "lines-galactic-show").html("Galactic plane");
   col.append("input").attr("type", "checkbox").attr("id", "lines-galactic-show").property("checked", config.lines.galactic.show).on("change", apply);
   
-  col.append("label").attr("for", "lines-supergalactic").html("Supergalactic plane");
+  col.append("label").attr("for", "lines-supergalactic-show").html("Supergalactic plane");
   col.append("input").attr("type", "checkbox").attr("id", "lines-supergalactic-show").property("checked", config.lines.supergalactic.show).on("change", apply);
 
   // Other
