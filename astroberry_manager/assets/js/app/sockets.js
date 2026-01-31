@@ -104,20 +104,18 @@ function setSockets() {
 
     /* Application specific */
     socket.on('location', function (data) { // location
-        console.log("GPS data received");
+        //console.log("GPS data received");
         if ($('input[name="geoloc_mode"]:checked').val() == "gps")
             updateGeoLocation(data);
     });
 
     socket.on('weather', function (data) { // location
-        // console.log(data);
-        console.log("Weather data received");
+        //console.log("Weather data received");
         updateWeather(data);
     });
 
     socket.on('almanac', function (data) { // location & almanac
-        // console.log(data);
-        console.log("Almanac data received");
+        //console.log("Almanac data received");
         updateAlmanac(data);
     });
 
@@ -130,7 +128,7 @@ function setSockets() {
     });
 
     socket.on('system', function (data) { // equipment
-        console.log("System data received");
+        //console.log("System data received");
         if ("update" in data) {
             if (data['update']) {
                 syslogPrint("System update successful", "success", true);

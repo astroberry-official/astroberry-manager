@@ -112,7 +112,7 @@ def getAlmanac(socketio, gpstime, latitude, longitude, elevation):
     'neptune_az': "%.2f°" % numpy.degrees(ephem.Neptune(home).az),
     'neptune_alt': "%.2f°" % numpy.degrees(ephem.Neptune(home).alt)
     })
-    print("Almanac data published")
+    #print("Almanac data published")
 
 def getMoonPhase(observer):
     target_date_utc = observer.date

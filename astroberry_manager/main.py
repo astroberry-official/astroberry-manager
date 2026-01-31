@@ -25,7 +25,7 @@ Boston, MA 02110-1301, USA.
 
 import sys, os, shutil, subprocess
 import pty, fcntl, termios, struct, select
-import pam, socket
+import pam, socket, logging
 
 from gevent import monkey
 monkey.patch_all()
@@ -59,6 +59,9 @@ app = Flask(__name__, static_folder='assets')
 app.secret_key = os.getenv('APP_KEY', 'e55325c30acadadaae4006cf80c6439502043408f792afe57f501c2db4a0fc22')
 socketio = SocketIO(app)
 
+# Setup logger
+logging.basicConfig(level = logging.ERROR)
+
 # web terminal file descriptor & process
 fd = None
 child_pid = None
@@ -80,7 +83,7 @@ def login():
         remember = request.form.get('remember')
         login = pam.authenticate(username, password)
         if login:
-            print("User %s login successful" % username)
+            app.logger.info("User %s login successful" % username)
             session['username'] = username
             if remember:
                 session.permanent = True
@@ -88,12 +91,12 @@ def login():
                 session.permanent = False
             return redirect(url_for('index'))
         else:
-            print("User %s login failed" % username)
+            app.logger.info("User %s login failed" % username)
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
-    print("User session closed")
+    app.logger.info("User session closed")
     session.pop('username', None)
     return redirect(url_for('login'))
 
@@ -106,16 +109,16 @@ def index():
 @socketio.on('connect')
 def connect():
     if 'username' in session:
-        print("Socket connected")
+        app.logger.info("Socket connected")
         getSystemReportOnce(socketio)
         return True
     else:
-        print("Socket connection rejected")
+        app.logger.info("Socket connection rejected")
         return False
 
 @socketio.on('disconnect')
 def disconnect():
-    print("Socket disconnected")
+    app.logger.info("Socket disconnected")
     return True
 
 @socketio.on('weather')
@@ -182,7 +185,7 @@ def read_and_forward_pty_output():
                 socketio.emit("pty-output", {"output": output})
 
 def shut_down():
-    print('Good Bye\n')
+    app.logger.info('Good Bye\n')
     sys.exit()
 
 def main():
@@ -221,7 +224,7 @@ def main():
 
         # start main app
         socketio.run(app, host=app_addr, port = app_port, debug=False)
-        print("Application exited")
+        app.logger.info("Application exited")
         shut_down()
 
     except KeyboardInterrupt:

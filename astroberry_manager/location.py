@@ -49,7 +49,7 @@ def emitTimeData(socketio, mode, time):
             'mode': mode,
             'gpstime': time
         })
-        print("Time data published")
+        #print("Time data published")
     else:
         print("time_data: {mode: " + mode + ", gpstime: " + time + "}")
 
@@ -62,7 +62,7 @@ def emitGPSData(socketio, mode, time, lat, lon, alt):
             'longitude': lon,
             'altitude': alt
         })
-        print("Location data published")
+        #print("Location data published")
     else:
         print("gps_data: {mode: " + mode + ", gpstime: " + time + ", latitude: " + lat + ", longitude: " + lon + ", altitude: " + alt + "}")
 
@@ -73,7 +73,7 @@ def emitSatData(socketio, hdop, vdop, satellites):
             'vdop': vdop,
             'satellites': satellites
         })
-        print("Satellite data published")
+        #print("Satellite data published")
     else:
         print("sat_data: {hdop: " + hdop + ", vdop: " + vdop + " , satellites: " + satellites + "}")
 

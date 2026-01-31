@@ -35,6 +35,7 @@ class IndiClient(PyIndi.BaseClient):
 	def __init__(self):
 		super(IndiClient, self).__init__()
 		self.logger = logging.getLogger('IndiClient')
+		self.logger.setLevel(logging.INFO)
 		self.logger.info('Creating an instance of IndiClient')
 
 	def newDevice(self, d):
@@ -91,8 +92,6 @@ indiClient = IndiClient()
 indiClient.setServer(INDI_HOST,INDI_PORT)
 
 def getEquipment(socketio, event):
-	#logging.basicConfig(format = '%(asctime)s %(message)s', level = logging.INFO)
-	logging.basicConfig(format = '%(message)s', level = logging.INFO)
 
 	indiClient.socketio = socketio # use main socket
 
@@ -106,10 +105,10 @@ def getEquipment(socketio, event):
 				indiClient.connectServer()
 				time.sleep(1)
 				if not indiClient.isServerConnected():
-					#indiClient.logger.info(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
+					#indiClient.logger.error(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
 					time.sleep(TIMEOUT)
 			except Exception as err:
-				indiClient.logger.info(f"Error connecting to INDI server: {err}")
+				indiClient.logger.error(f"Error connecting to INDI server: {err}")
 
 		time.sleep(1)
 
@@ -128,7 +127,6 @@ def getProperty(property):
 		}
 	}
 	"""
-
 	device_type = getDeviceType(property.getBaseDevice().getDriverInterface())
 	device_name = property.getDeviceName()
 	name = property.getName()
