@@ -192,6 +192,7 @@ def getSystemReportOnce(socketio):
         "model_info": get_model_info(),
     }
     socketio.emit('system', data)
+    print("System data published")
 
 def process_status(process_name):
     for process in psutil.process_iter(['pid', 'name']):

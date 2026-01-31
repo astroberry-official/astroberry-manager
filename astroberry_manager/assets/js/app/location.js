@@ -318,7 +318,6 @@ function getNetworkLocation() {
             if (typeof altitude === 'number' && isFinite(altitude))
                 location.altitude = altitude;
 
-            console.log("Location updated from network");
             updateGeoLocation(location);
         });
     } else {
@@ -626,7 +625,7 @@ function gpsSignalChart(satellites) {
 }
 
 function setTelescopeLocation() {
-  socket.timeout(5000).emit("control", geoLocation, (err) => {
+  socket.timeout(5000).emit("equipment", geoLocation, (err) => {
       if (err) {
           console.log("Setting telescope location timed out");
       } else {

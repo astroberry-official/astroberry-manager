@@ -22,10 +22,10 @@
 
 import { setSockets } from './app/sockets.js';
 import { loadGeoLocation, updateGeoLocation, loadMap } from './app/location.js';
-import { requestAlmanac } from './app/almanac.js';
+import { loadAlmanac } from './app/almanac.js';
 import { loadWeather } from './app/weather.js';
 import { requestStarChart, updateStarChartLocation } from './app/celestial.js';
-import { updateINDI } from './app/indiserver.js';
+import { loadINDI } from './app/indiserver.js';
 import { initTimer, eventHandlers, syslogPrint } from './app/helpers.js';
 import { requestTerminal } from './app/terminal.js';
 
@@ -57,14 +57,14 @@ $(document).ready(function() {
     loadWeather();
 
     // Update almanac
-    requestAlmanac();
+    loadAlmanac();
 
     // Load terminal
     requestTerminal();
 
     // Update from INDI server API
     setTimeout(function() {
-      updateINDI();
+      loadINDI();
     }, 1000); // don't run too early, we need to give a second for API service to start up
 
     // Init event handlers

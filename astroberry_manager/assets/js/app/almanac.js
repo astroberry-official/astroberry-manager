@@ -26,6 +26,11 @@ import { updateMoon } from './moon.js';
 import { deg2dms, deg2hms } from './functions.js';
 import { socket } from './sockets.js';
 
+function loadAlmanac() {
+     requestAlmanac();
+     console.log("Almanac loaded");
+}
+
 function updateAlmanac(data) {
     if (data === undefined || data === null)
       return;
@@ -482,6 +487,7 @@ function togglePolaris() {
 }
 
 export {
+    loadAlmanac,
     requestAlmanac,
     updateAlmanac,
     getReticle,

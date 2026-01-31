@@ -24,7 +24,7 @@ import { focusTerminal } from './terminal.js';
 import { mainMap, locationEvents } from './location.js';
 import { weatherEvents } from './weather.js';
 import { almanacEvents } from './almanac.js';
-import { starchartEvents, updateTelecopeCoords } from './celestial.js';
+import { starchartEvents } from './celestial.js';
 import { equipmentEvents } from './equipment.js';
 import { updateINDI, indiwebEvents } from './indiserver.js';
 import { requestAlmanac } from './almanac.js';
@@ -35,6 +35,8 @@ import { searchEvents } from './search.js';
 
 var mainLoopInterval = 1000; // main loop interval = 1 second
 var mainTimer;
+var tenSecCounter = 0;
+var minuteCounter = 0;
 var hourCounter = 0;
 
 /* ================================================================== */
@@ -51,8 +53,29 @@ function initTimer() {
 
 function mainLoop() {
 
-    // Update time while in manual mode (use system time)
-    if ($('input[name="geoloc_mode"]:checked').val() != "gps") {
+    // Run once every second
+    updateTime(); // Update time while in manual mod, using system time
+
+    // Run every 10s
+    if (++tenSecCounter > (10000 / mainLoopInterval)) {
+        tenSecCounter = 0;
+    }
+
+    // Run every minute
+    if (++minuteCounter > (60000 / mainLoopInterval)) {
+        minuteCounter = 0;
+        requestAlmanac();
+    }
+
+    // Run every hour
+    if (++hourCounter > (3600000 / mainLoopInterval)) {
+        hourCounter = 0;
+        requestWeather();
+    }
+}
+
+function updateTime() {
+    if ($('input[name="geoloc_mode"]:checked').val() != "gps") { // gps gives us own time
         var d = new Date();
         var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
 
@@ -67,19 +90,6 @@ function mainLoop() {
         if ($("#system_timeloc").is(':checked'))
             Celestial.date(d);
     }
-
-    // Update telescope coordinates on Star Chart
-    updateTelecopeCoords();
-
-    // Request almanac data update
-    requestAlmanac();
-
-    // Run once every hour
-    if (++hourCounter > (3600000 / mainLoopInterval)) {
-        hourCounter = 0;
-        requestWeather();
-    }
-
 }
 
 function toggleFullScreen() {
@@ -381,6 +391,7 @@ function eventHandlers() {
         //console.log("Window closed");
     });
 
+    console.log("Event handlers loaded");
 }
 
 export {

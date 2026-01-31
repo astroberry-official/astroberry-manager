@@ -34,7 +34,6 @@ const logo = "\
 
 
 const term = new Terminal({
-  // fontFamily: 'Roboto Regular',
   fontSize: 12,
   cursorBlink: true,
   macOptionIsMeta: true,
@@ -68,6 +67,8 @@ function requestTerminal() {
   });
 
   //$("#terminal-container").draggable();
+
+  console.log("Terminal loaded");
 }
 
 function fitToscreen() {

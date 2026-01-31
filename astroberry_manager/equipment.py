@@ -243,7 +243,7 @@ def getJSON(devices):
 
 def emitEquipment(socketio, data):
 	if socketio and data:
-		socketio.emit('indiserver', data )
+		socketio.emit('equipment', data )
 	else:
 		print(data)
 

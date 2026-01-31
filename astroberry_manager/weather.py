@@ -39,5 +39,6 @@ def getWeather(socketio, latitude, longitude):
 def emitWeather(socketio, data):
 	if socketio and data:
 		socketio.emit('weather', data)
+		print("Weather data published")
 	else:
 		print(data)

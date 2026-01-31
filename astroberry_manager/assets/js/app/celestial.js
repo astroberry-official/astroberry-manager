@@ -61,6 +61,7 @@ function requestStarChart() {
   Celestial.addCallback(updateStarChartCoords);
   systemLocationTime(true);
   loadStarChartLock();
+  console.log("Star Chart loaded");
 }
 
 function getPointCoordinates(data) {
@@ -323,7 +324,7 @@ function setTelescopeCoordinates(ra, dec) {
 
   var coordinates = { ra: ra, dec: dec };
 
-  socket.timeout(5000).emit("control", coordinates, (err) => {
+  socket.timeout(5000).emit("equipment", coordinates, (err) => {
       if (err) {
           console.log("Setting telescope coordinates timed out");
       } else {

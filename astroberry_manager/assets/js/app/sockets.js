@@ -29,43 +29,101 @@ import { updateTelescope } from './celestial.js';
 import { updateSystem } from './system.js';
 import { syslogPrint } from './helpers.js';
 
-/* Main Socket */
 const socketUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port: '');
-const socket = io.connect(socketUrl, { path: location.pathname  + 'socket.io' });
+var socket; // Main socket
+var connected = false; // Connection status
 
 function setSockets() {
+    console.log('Connecting...')
+
+    if(socket){
+        socket.destroy()
+        socket = null;
+    }
+
+    socket = io.connect(socketUrl, {
+        path: location.pathname  + 'socket.io',
+        forceNew: true,
+        reconnection: true,
+        reconnectionDelay: 3000,
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: Infinity
+    });
+
+    //console.log(socket);
+
+    /* General use */
     socket.onAny((event, ...args) => { // catch-all
-        // console.log(`socketio: ${event} received`);
+        //console.log(`socketio: ${event} received`);
     });
 
-    socket.on('connect', function () {
-        console.log("Socket connected");
+    socket.on('connect', function(){
+        console.log('Connected to server');
+        connected = true;
     });
 
-    socket.on("connect_error", (err) => {
-        console.log(`connect_error due to ${err.message}`);
+    socket.on('disconnect', function(reason){
+        console.log('Disconnected from server: ' + reason);
+        connected = false;
     });
 
-    socket.on('disconnect', function () {
-        console.log("Socket disconnected");
+    socket.on('connect_error', function(error){
+        console.log('Connection error: ' + error);
     });
 
+    socket.on('connect_timeout', function(){
+        console.log('Connection timeout');
+    });
+
+    socket.on('reconnect', function(){
+        console.log('Reconnect');
+    });
+
+    socket.on('reconnect_attempt', function(){
+        console.log('Reconnect attempt');
+    });
+
+    socket.on('reconnect_failed', function(){
+        console.log('Reconnect failed');
+    });
+
+    socket.on('reconnect_error', function(){
+        console.log('Reconnect error');
+    });
+
+    socket.on('reconnecting', function(){
+        console.log('Reconnecting');
+    });
+
+    socket.on('ping', function(){
+        console.log('Ping');
+    });
+
+    socket.on('pong', function(ms){
+        console.log('Pong ' + ms + "ms");
+    });
+
+
+    /* Application specific */
     socket.on('location', function (data) { // location
+        console.log("GPS data received");
         if ($('input[name="geoloc_mode"]:checked').val() == "gps")
             updateGeoLocation(data);
     });
 
     socket.on('weather', function (data) { // location
         // console.log(data);
+        console.log("Weather data received");
         updateWeather(data);
     });
 
     socket.on('almanac', function (data) { // location & almanac
         // console.log(data);
+        console.log("Almanac data received");
         updateAlmanac(data);
     });
 
-    socket.on('indiserver', function (data) { // equipment
+    socket.on('equipment', function (data) { // equipment
         //console.log(data);
         if (data.connect) indiServerConnected();
         if (data.disconnect) indiServerDisconnected();
@@ -74,6 +132,7 @@ function setSockets() {
     });
 
     socket.on('system', function (data) { // equipment
+        console.log("System data received");
         if ("update" in data) {
             if (data['update']) {
                 syslogPrint("System update successful", "success", true);
@@ -108,8 +167,6 @@ function setSockets() {
             updateSystem(data);
         }
     });
-
-    console.log("Sockets loaded");
 }
 
 export {

@@ -90,6 +90,8 @@ function loadWeather() {
       $('#weather_forecast_00').prop("checked", true);
   }
 
+  console.log("Weather loaded");
+
   requestWeather();
 }
 

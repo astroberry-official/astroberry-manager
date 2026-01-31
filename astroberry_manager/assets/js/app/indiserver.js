@@ -29,6 +29,11 @@ const indiwebUrl = location.protocol + '//' + location.hostname;
 
 //const deviceFamilies = ["Adaptive Optics", "Agent", "Auxiliary", "CCDs", "Domes", "Filter Wheels", "FilterWheels", "Focusers", "Spectrographs", "Telescopes", "Weather"];
 
+function loadINDI() {
+     updateINDI();
+     console.log("INDI API loaded");
+}
+
 function indiServerConnected() {
     console.log("Connected to INDI Server");
     updateINDI();
@@ -616,6 +621,7 @@ function indiwebEvents() {
 }
 
 export {
+    loadINDI,
     updateINDI,
     getProfileDrivers,
     startProfile,

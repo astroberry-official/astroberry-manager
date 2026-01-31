@@ -126,7 +126,7 @@ def weather(data):
 def almanac(data):
     getAlmanac(socketio, data["time"], data["latitude"], data["longitude"], data["altitude"])
 
-@socketio.on('control')
+@socketio.on('equipment')
 def equipment(data):
     setEquipment(data)
 
