@@ -25,7 +25,7 @@ import { loadGeoLocation, updateGeoLocation, loadMap } from './app/location.js';
 import { loadAlmanac } from './app/almanac.js';
 import { loadWeather } from './app/weather.js';
 import { requestStarChart, updateStarChartLocation } from './app/celestial.js';
-import { loadINDI } from './app/indiserver.js';
+import { loadINDI } from './app/equipment.js';
 import { initTimer, eventHandlers, syslogPrint } from './app/helpers.js';
 import { requestTerminal } from './app/terminal.js';
 

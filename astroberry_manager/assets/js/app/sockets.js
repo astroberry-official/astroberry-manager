@@ -23,8 +23,7 @@
 import { updateGeoLocation } from './location.js';
 import { updateWeather } from './weather.js';
 import { updateAlmanac } from './almanac.js';
-import { indiServerConnected, indiServerDisconnected } from './indiserver.js';
-import { updateEquipment } from './equipment.js';
+import { indiServerConnected, indiServerDisconnected, updateEquipment } from './equipment.js';
 import { updateTelescope } from './celestial.js';
 import { updateSystem } from './system.js';
 import { syslogPrint } from './helpers.js';
@@ -58,12 +57,12 @@ function setSockets() {
     });
 
     socket.on('connect', function(){
-        console.log('Connected to server');
+        console.log('Socket connected');
         connected = true;
     });
 
     socket.on('disconnect', function(reason){
-        console.log('Disconnected from server: ' + reason);
+        console.log('Socket disconnected: ' + reason);
         connected = false;
     });
 
@@ -102,7 +101,6 @@ function setSockets() {
     socket.on('pong', function(ms){
         console.log('Pong ' + ms + "ms");
     });
-
 
     /* Application specific */
     socket.on('location', function (data) { // location

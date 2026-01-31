@@ -22,13 +22,10 @@
 
 import { focusTerminal } from './terminal.js';
 import { mainMap, locationEvents } from './location.js';
-import { weatherEvents } from './weather.js';
-import { almanacEvents } from './almanac.js';
+import { requestWeather, weatherEvents } from './weather.js';
+import { requestAlmanac, almanacEvents } from './almanac.js';
 import { starchartEvents } from './celestial.js';
-import { equipmentEvents } from './equipment.js';
-import { updateINDI, indiwebEvents } from './indiserver.js';
-import { requestAlmanac } from './almanac.js';
-import { requestWeather } from './weather.js';
+import { updateINDI, indiwebEvents, equipmentEvents } from './equipment.js';
 import { requestDesktop, closeDesktop } from './desktop.js';
 import { systemEvents } from './system.js';
 import { searchEvents } from './search.js';
