@@ -44,6 +44,21 @@ table, th, td { border: none; font-size: 0.90em; }
 tr { height: 1.6em; }
 
 .btn { padding: .225rem .75rem; }
+.btn:disabled {
+  background-color: #333333;
+  border-color: #333333;
+}
+.btn-primary {
+  background-color: #333333;
+  border-color: #333333;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+  background-color: #009933;
+  border-color: #333333;
+}
 .button-active { background: #009933; }
 .warning { color: #FF0000; }
 

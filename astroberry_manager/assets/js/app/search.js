@@ -206,7 +206,7 @@ function showResults(data, online = false) {
     $("#search-results-text").html(results); // render info
 
     // add center button
-    var results = '<button id="search-results-center" class="btn" data-tooltip="tooltip" title="Center object in star chart" disabled>Center</button>';
+    var results = '<button id="search-results-center" class="btn btn-primary" data-tooltip="tooltip" title="Center object in star chart" disabled>Center</button>';
 
     // calculate field of view
     var fov = dim ? parseInt(dim.split("x")[0]) * 1.5/60 : 2;

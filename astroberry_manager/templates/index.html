@@ -36,7 +36,7 @@
 	<link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<link href="assets/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/jquery-ui.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/leaflet.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/xterm.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/style.css" rel="stylesheet" type="text/css">
@@ -56,12 +56,12 @@
 			<div>
 				<span class="label">RA</span><span id="starchart_telescope_ra" class="starchart-coords">00ʰ 00ᵐ 00ˢ</span>
 				<span class="label">DEC</span><span id="starchart_telescope_dec" class="starchart-coords">00° 00′ 00″</span>
-				<button id="starchart_center" class="btn" data-tooltip="tooltip" title="Center Star Chart on telescope coordinates" disabled>Center</button>
+				<button id="starchart_center" class="btn btn-primary" data-tooltip="tooltip" title="Center Star Chart on telescope coordinates" disabled>Center</button>
 			</div>
 			<div>
 				<span class="label">AZ</span><span id="starchart_telescope_az" class="starchart-coords">000° 00′ 00″</span>
 				<span class="label">ALT</span><span id="starchart_telescope_alt" class="starchart-coords">00° 00′ 00″</span>
-				<button id="starchart_lock" class="btn" data-tooltip="tooltip" title="Lock Star Chart on and track telescope" disabled>Lock</button>
+				<button id="starchart_lock" class="btn btn-primary" data-tooltip="tooltip" title="Lock Star Chart on and track telescope" disabled>Lock</button>
 			</div>
 		</div>
 
@@ -71,7 +71,7 @@
 			<div>
 				<span class="label">RA</span><span id="starchart_ra" class="starchart-coords">00ʰ 00ᵐ 00ˢ</span>
 				<span class="label">DEC</span><span id="starchart_dec" class="starchart-coords">00° 00′ 00″</span>
-				<button id="system-logout" class="btn" data-tooltip="tooltip" title="Logout from system"><span class="fa fa-lock"></span> Logout</button>
+				<button id="system-logout" class="btn btn-primary" data-tooltip="tooltip" title="Logout from system"><span class="fa fa-lock"></span> Logout</button>
 			</div>
 			<div>
 				<span class="label">AZ</span><span id="starchart_az" class="starchart-coords">000° 00′ 00″</span>
@@ -141,8 +141,8 @@
 				<div class="ui-widget">
 					<input id="search-text" class="form-control" type="text" placeholder="Search with Astroberry..."></input>
 				</div>
-				<button id="toggle-search" class="btn button-active" data-tooltip="tooltip" title="Search for an object in local database or online.">Search</button>
-				<button id="toggle-lucky" class="btn" data-tooltip="tooltip" title="Find random object in local database.">I'm Feeling Lucky</button>
+				<button id="toggle-search" class="btn btn-primary button-active" data-tooltip="tooltip" title="Search for an object in local database or online.">Search</button>
+				<button id="toggle-lucky" class="btn btn-primary" data-tooltip="tooltip" title="Find random object in local database.">I'm Feeling Lucky</button>
 			</div>
 			<div id="search-results">
 				<div id="search-results-text">
@@ -169,10 +169,10 @@
 			<span class="panel-title fa fa-globe" ></span><h1>Location</h1>
 
 			<div class="displayctl">
-				<button id="toggle-map" class="btn button-active">Map</button>
-				<button id="toggle-skymap" class="btn">Satellites</button>
-				<button id="toggle-gpsdetails" class="btn">Details</button>
-				<button id="toggle-geolocsettings" class="btn">Settings</button>
+				<button id="toggle-map" class="btn btn-primary button-active">Map</button>
+				<button id="toggle-skymap" class="btn btn-primary">Satellites</button>
+				<button id="toggle-gpsdetails" class="btn btn-primary">Details</button>
+				<button id="toggle-geolocsettings" class="btn btn-primary">Settings</button>
 			</div>
 
 			<div id="map_container">
@@ -233,7 +233,7 @@
 					<label for="geoloc_altitude">Altitude</label><input id="geoloc_altitude" class="form-control" type="text" placeholder="Altitude (meters)" disabled>
 				</fieldset>
 
-				 <button id="control-set-location" class="btn" data-tooltip="tooltip" title="Send location to telescope">Send</button>
+				 <button id="control-set-location" class="btn btn-primary" data-tooltip="tooltip" title="Send location to telescope">Send</button>
 			</div>
 
 			<div id="coordtime" class="container-footer">
@@ -255,8 +255,8 @@
 			<span class="panel-title fa fa-cloud" ></span><h1>Conditions</h1>
 
 			<div class="displayctl">
-				<button id="toggle-weather-forecast" class="btn button-active">Weather</button>
-				<button id="toggle-weather-settings" class="btn">Settings</button>
+				<button id="toggle-weather-forecast" class="btn btn-primary button-active">Weather</button>
+				<button id="toggle-weather-settings" class="btn btn-primary">Settings</button>
 				<span id="weather_update" class="fa fa-refresh" data-tooltip="tooltip" title="Update weather"></span>
 			</div>
 
@@ -347,8 +347,8 @@
 			<img src="assets/images/telescope.png" class="panel-title" /><h1>Equipment</h1>
 
 			<div class="displayctl">
-				<button id="toggle-profile" class="btn button-active">Profiles</button>
-				<button id="toggle-profile-settings" class="btn">Settings</button>
+				<button id="toggle-profile" class="btn btn-primary button-active">Profiles</button>
+				<button id="toggle-profile-settings" class="btn btn-primary">Settings</button>
 			</div>
 
 			<div id="equipment-container">
@@ -376,11 +376,11 @@
 
 					<!-- Profile Settings Confirm -->
 					<fieldset id="profile_settings_confirm">
-						<button id="profile_add" class="btn" data-toggle="tooltip" title="Add Profile">Add</button>
-						<button id="profile_remove" class="btn" data-toggle="tooltip" title="Delete Profile">Delete</button>
+						<button id="profile_add" class="btn btn-primary" data-toggle="tooltip" title="Add Profile">Add</button>
+						<button id="profile_remove" class="btn btn-primary" data-toggle="tooltip" title="Delete Profile">Delete</button>
 						<!--
-						<button id="profile_save" class="btn" data-toggle="tooltip" title="Save changes">Save</button>
-						<button id="profile_cancel" class="btn" data-toggle="tooltip" title="Cancel changes">Cancel</button>
+						<button id="profile_save" class="btn btn-primary" data-toggle="tooltip" title="Save changes">Save</button>
+						<button id="profile_cancel" class="btn btn-primary" data-toggle="tooltip" title="Cancel changes">Cancel</button>
 						-->
 					</fieldset>
 				</div>
@@ -390,8 +390,8 @@
 
 				<!-- Profile Start/Stop -->
 				<div id="profile_ctrl">
-					<button id="profile_start" class="btn" style="display: none;" data-toggle="tooltip" title="Start profile"><span class='fa fa-play'></span> Start</button>
-					<button id="profile_stop" class="btn" style="display: none;" data-toggle="tooltip" title="Stop profile"><span class='fa fa-cog fa-spin'></span> Stop</button>
+					<button id="profile_start" class="btn btn-primary" style="display: none;" data-toggle="tooltip" title="Start profile"><span class='fa fa-play'></span> Start</button>
+					<button id="profile_stop" class="btn btn-primary" style="display: none;" data-toggle="tooltip" title="Stop profile"><span class='fa fa-cog fa-spin'></span> Stop</button>
 				</div>
 				
 				<div id="server_status">
@@ -405,10 +405,10 @@
 			<span class="panel-title fa fa-sun-o" ></span><h1>Almanac</h1>
 
 			<div class="displayctl">
-				<button id="toggle-moon" class="btn button-active">Moon</button>
-				<button id="toggle-sun" class="btn">Sun</button>
-				<button id="toggle-planets" class="btn">Planets</button>
-				<button id="toggle-polaris" class="btn">Polaris</button>
+				<button id="toggle-moon" class="btn btn-primary button-active">Moon</button>
+				<button id="toggle-sun" class="btn btn-primary">Sun</button>
+				<button id="toggle-planets" class="btn btn-primary">Planets</button>
+				<button id="toggle-polaris" class="btn btn-primary">Polaris</button>
 			</div>
 
 			<div id="moon">
@@ -433,7 +433,7 @@
 					<tr id="new_moon_second" style="display:none;"><td class="moonhdr">Next New Moon</td><td class="moondata"><span class="moon_new">0000-00-00 00:00:00</span></td></tr>
 				</table>
 				<div id="moon-actions">
-					<button id="moon-actions-center" class="btn" data-tooltip="tooltip" title="Center in Star Chart">Center</button>
+					<button id="moon-actions-center" class="btn btn-primary" data-tooltip="tooltip" title="Center in Star Chart">Center</button>
 				</div>
 			</div>
 
@@ -458,7 +458,7 @@
 					<tr id="sun_solstice_second" style="display:none;"><td class="sunhdr">Solstice</td><td class="sundata"><span class="sun_solstice">0000-00-00 00:00:00</span></td></tr>
 				</table>
 				<div id="sun-actions">
-					<button id="sun-actions-center" class="btn" data-tooltip="tooltip" title="Center in Star Chart">Center</button>
+					<button id="sun-actions-center" class="btn btn-primary" data-tooltip="tooltip" title="Center in Star Chart">Center</button>
 				</div>
 			</div>
 
@@ -490,9 +490,9 @@
 			<span class="panel-title fa fa-cog" ></span><h1>System</h1>
 
 			<div class="systemctl">
-				<button id="_system-status" class="btn button-active">Info</button>
-				<button id="_system-events" class="btn">Events</button>
-				<button id="_system-settings" class="btn">Settings</button>
+				<button id="_system-status" class="btn btn-primary button-active">Info</button>
+				<button id="_system-events" class="btn btn-primary">Events</button>
+				<button id="_system-settings" class="btn btn-primary">Settings</button>
 			</div>
 
 			<div id="system-status">
@@ -557,11 +557,11 @@
 				<fieldset id="system-maintenance">
 					<h2>Maintenance</h2>
 					<span class="system-maintenance-desc">Maintenance actions require system level priviledges.</span>
-					<button id="system-update" class="btn" data-tooltip="tooltip" title="Install available updates">Update</button>
-					<button id="system-backup" class="btn" data-tooltip="tooltip" title="Create backup copy of system configuration">Backup</button>
-					<button id="system-restore" class="btn" data-tooltip="tooltip" title="Restore system configuration from backup copy">Restore</button>
-					<button id="system-restart" class="btn" data-tooltip="tooltip" title="Stop all processes and reboot the system">Restart</button>
-					<button id="system-shutdown" class="btn" data-tooltip="tooltip" title="Stop all processes and poweroff the system">Shutdown</button>
+					<button id="system-update" class="btn btn-primary" data-tooltip="tooltip" title="Install available updates">Update</button>
+					<button id="system-backup" class="btn btn-primary" data-tooltip="tooltip" title="Create backup copy of system configuration">Backup</button>
+					<button id="system-restore" class="btn btn-primary" data-tooltip="tooltip" title="Restore system configuration from backup copy">Restore</button>
+					<button id="system-restart" class="btn btn-primary" data-tooltip="tooltip" title="Stop all processes and reboot the system">Restart</button>
+					<button id="system-shutdown" class="btn btn-primary" data-tooltip="tooltip" title="Stop all processes and poweroff the system">Shutdown</button>
 				</fieldset>
 			</div>
 		</div>
@@ -570,7 +570,7 @@
 
 	<script src="assets/js/socket.io/socket.io.min.js" type="text/javascript"></script>
 	<script src="assets/js/jquery/jquery.min.js" type="text/javascript"></script>
-	<script src="assets/js/jquery/jquery-ui.js" type="text/javascript"></script>
+	<script src="assets/js/jquery/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="assets/js/popper/popper.min.js" type="text/javascript"></script>
 	<script src="assets/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
 	<script src="assets/js/bootstrap/bootstrap-select.min.js" type="text/javascript"></script>

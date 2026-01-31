@@ -288,7 +288,7 @@ function getDriverDetails(data) {
                 details += "<div class='driver_details'>";
                 details += "<span class='name'>" + driver.label + "</span>";
                 details += "<span class='details'>" + driver.binary + "</span>";
-                details += "<button class='btn' data-driver=\"" + driver.label + "\" data-toggle='tooltip'>Restart</button>";
+                details += "<button class='btn btn-primary' data-driver=\"" + driver.label + "\" data-toggle='tooltip'>Restart</button>";
                 details += "</div>";
                 count++;
             }

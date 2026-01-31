@@ -452,13 +452,13 @@ function getRegionOfInterest(coordinates, fov = 5) {
   box.append("span").attr({"id": "region-of-interest-close", "class": "fa fa-times", "data-tooltip": "tooltip", title: "Close region of interest"})
     .style({position: "absolute", top: "12px", right: "12px"});
 
-  box.append("button").attr("id", "region-of-interest-center").attr("class", "btn").attr("data-tooltip", "tooltip").attr("title", "Center object in star chart").text("Center");
+  box.append("button").attr("id", "region-of-interest-center").attr("class", "btn btn-primary").attr("data-tooltip", "tooltip").attr("title", "Center object in star chart").text("Center");
 
   if (detailsUrl) {
     box.append("a").attr({"id": "region-of-interest-details", "href": detailsUrl, target: "_blank", "data-tooltip": "tooltip", title: "Look up the region in SIMBAD online database"}).text("Details");
   }
 
-  box.append("button").attr("id", "region-of-interest-goto").attr("class", "btn").attr("data-tooltip", "tooltip").attr("title", "Center telescope on the object").text("Go to");
+  box.append("button").attr("id", "region-of-interest-goto").attr("class", "btn btn-primary").attr("data-tooltip", "tooltip").attr("title", "Center telescope on the object").text("Go to");
 
   box.append("span").classed("label", true).text("RA");
   box.append("span").classed("starchart-coords", true).text(deg2hms(ra));
