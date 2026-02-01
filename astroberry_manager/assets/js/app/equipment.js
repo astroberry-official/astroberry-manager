@@ -54,8 +54,30 @@ function indiServerDisconnected() {
 }
 
 function updateINDI() { // Update from API
-    getGroups();        	// populate drivers list with groups
-    getDrivers();       	// populate drivers list with drivers
+
+    // Get list of groups and drivers
+    var select_groups = "";
+    var url = encodeURI(indiwebUrl + "/api/drivers/groups");
+    $.getJSON(url, function(groups) {
+        $.each(groups, function(i, group) {
+            select_groups += "<optgroup label='" + group + "'></optgroup>";
+        });
+        $("#drivers_list").html(select_groups);
+
+        var driver = "";
+        var url = encodeURI(indiwebUrl + "/api/drivers");
+
+        $.getJSON(url, function(drivers) {
+            $.each(drivers, function(i, item) {
+                driver = "<option value='" + item.label + "' data-tokens='" + item.label + "'>" + item.label + "</option>";
+                $("#drivers_list optgroup[label='" + item.family + "']").append(driver);
+            });
+        });
+    });
+
+    //getGroups();        	// populate drivers list with groups
+    //getDrivers();       	// populate drivers list with drivers
+
     getProfiles();		// get profiles from API and select active profile
 
     var url = encodeURI(indiwebUrl + "/api/server/status");
