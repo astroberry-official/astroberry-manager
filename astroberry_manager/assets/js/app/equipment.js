@@ -632,7 +632,7 @@ function markActiveDevice(device, status) {
     }
 
     // Set device status in equipment image
-    var equipmentImage = document.getElementById("setup_status").contentDocument;
+    var equipmentImage = document.getElementById("equipment_status").contentDocument;
     if (equipmentImage === undefined || equipmentImage === null) return;
 
     var item = equipmentImage.getElementById(device);
@@ -759,14 +759,14 @@ function toggleProfileSettings() {
 function controlProfile() {
     $("#profile_view").show();
     $("#profile_ctrl").show();
-    $("#setup_status").show();
+    $("#equipment_status").show();
     $("#profile_settings").hide();
 }
 
 function editProfile() {
     $("#profile_view").show();
     $("#profile_ctrl").hide();
-    $("#setup_status").hide();
+    $("#equipment_status").hide();
     $("#profile_settings").show();
 
     $('#profiles').change(); //getProfileDrivers();

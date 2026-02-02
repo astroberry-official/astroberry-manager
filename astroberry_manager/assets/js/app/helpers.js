@@ -155,8 +155,7 @@ function appEvents() {
 		    setTimeout(function() {
 		        updateINDI();
 		    }, 500);
-                    // or use jquery to wait for svg ready
-                    //$("setup_status").ready( function() {
+                    //$("equipment_status").ready( function() {
                     //    updateINDI();
                     //});
                 }

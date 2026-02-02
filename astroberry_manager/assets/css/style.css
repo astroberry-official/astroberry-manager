@@ -527,7 +527,7 @@ img.panel-title { margin-bottom: 5px; }
 
 #drivers_list { padding-left: 10px; }
 
-#setup_status { display: block; width: 100%; max-width: 360px; height: 190px; margin: auto auto; margin-top: 10px; }
+#equipment_status { display: block; width: 100%; max-width: 360px; height: 190px; margin: auto auto; margin-top: 10px; }
 #server_status { display:block; min-height: 90px; overflow: hidden; /* margin-top: 5px; */ font-size: 0.9em; }
 
 #driver_details { display: none; margin-top: 20px; width: 100%; background: #666; padding: 5px 10px; height: 125px; overflow-x: hidden; overflow-y: 
