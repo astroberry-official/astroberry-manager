@@ -74,6 +74,7 @@ function disconnectedFromServer(e) {
     } else {
         console.log("Lost connection to desktop!")
     }
+    $("#main-dock-chart").trigger("click");
 }
 
 // When this function is called, the server requires
