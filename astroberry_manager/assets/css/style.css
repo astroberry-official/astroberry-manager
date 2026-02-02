@@ -70,6 +70,17 @@ tr { height: 1.6em; }
 .alert { text-align: center; }
 
 /*************************************/
+/*              Welcome
+/*************************************/
+#welcome-container { display: block; width: 600px; margin: auto auto; padding: 20px 30px; background: #1c1c1c; 
+        border: solid 1px #333; border-radius: 5px; opacity: 0.9; box-shadow: 10px 10px 5px #0c0c0ccc; }
+#welcome-container h1 { margin-left: 10px; font-size: 1.5em; vertical-align: bottom; }
+#welcome { width: 100%; margin-top: 10px; }
+#welcome ul { margin-top: 10px; }
+#welcome li { margin-top: 5px; font-size: 0.9em; font-family: 'Roboto'; }
+#welcome a { color: #009933; }
+
+/*************************************/
 /*              Login
 /*************************************/
 #login-form-container { display: block; width: 350px; margin: auto auto; padding: 20px 30px; background: #1c1c1c; 

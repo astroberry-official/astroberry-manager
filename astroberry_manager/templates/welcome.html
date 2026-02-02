@@ -1,0 +1,75 @@
+<!--
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+
+ This library is part of Astroberry OS and Astroberry Manager
+ https://github.com/astroberry-official/astroberry-os
+ https://github.com/astroberry-official/astroberry-manager
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License version 3 as published by the Free Software Foundation.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public License
+ along with this library; see the file COPYING.LIB.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Title -->
+	<title>Astroberry OS</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Content-Language" content="en,en-us"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- favicon -->
+	<link rel="icon" sizes="16x16" type="image/png" href="assets/icons/astroberry-16x16.png">
+
+	<!-- CSS Styles -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="assets/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css">
+
+	<!-- Background particles -->
+	<script src="assets/js/misc/particles.js"></script>
+</head>
+
+<body background="assets/images/milkyway-galaxy-center-and-its-companions_1920x1080.jpg">
+	<div id="particles-js"></div>
+	<div id="welcome-container">
+		<img src="assets/icons/astroberry-icon-white.svg" width="50" />
+		<h1>Welcome to Astroberry OS</h1>
+		<div id="welcome">
+			<p>Astroberry OS is an operating system for Raspberry Pi for controlling astronomy equipment</p>
+			<ul>
+				<li>Communication with Astroberry OS is protected with a unique security certificate. Install and trust the <a href="/certificate">certificate</a>
+				in your browser to avoid security warnings.</li>
+				<li>Set wifi regulatory domain using <a href="https://www.raspberrypi.com/documentation/computers/configuration.html" target="_blank"
+				data-tooltip="tooltip" title="A command line configuration tool for Raspberry Pi">raspi-config</a> 
+				or disable wifi hotspot to avoid interfering other devices.</li>
+				<li>Remember, that it is free and open-source operating system, made possible by your 
+				<a href="https://www.astroberry.io/support" target="_blank">support</a>.</li>
+			</ul>
+			<p>By continuing you confirm that you understand and agree with these conditions.</p>
+		</div>
+		<a href="https://astroberry.local" class="btn btn-primary button-active" style="padding: 10px 30px;">Continue</a>
+                <a id="info" href="https://www.astroberry.io" class="fa fa-info-circle" data-tooltip="tooltip"
+                        title="www.astroberry.io"
+                        style="font-size:20px;display:inline-block;float:right;margin-top:25px;" target="_blank">
+                </a>
+	</div>
+</body>
+
+<script>
+particlesJS.load('particles-js', 'assets/js/misc/particles.json', function() {});
+</script>
+
+</html>
