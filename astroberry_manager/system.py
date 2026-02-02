@@ -285,7 +285,6 @@ def getCA():
     try:
         response = requests.get(url)
         json = response.json()
-        print(json['root_certificate'])
     except:
         pass
     return json['root_certificate'].encode()
