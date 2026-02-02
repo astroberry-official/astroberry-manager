@@ -23,6 +23,7 @@ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 """
 
+import os, sys
 import ephem, time, json, logging, PyIndi
 from datetime import datetime, timezone
 
@@ -30,6 +31,41 @@ from datetime import datetime, timezone
 INDI_HOST = '127.0.0.1'
 INDI_PORT = 7624
 TIMEOUT = 5
+
+# Suppress stdout and stderr coming from PyIndi underlying c++ and c libraries
+class suppress_stdout_stderr(object):
+	def __enter__(self):
+		self.outnull_file = open(os.devnull, 'w')
+		self.errnull_file = open(os.devnull, 'w')
+
+		self.old_stdout_fileno_undup    = sys.stdout.fileno()
+		self.old_stderr_fileno_undup    = sys.stderr.fileno()
+
+		self.old_stdout_fileno = os.dup ( sys.stdout.fileno() )
+		self.old_stderr_fileno = os.dup ( sys.stderr.fileno() )
+
+		self.old_stdout = sys.stdout
+		self.old_stderr = sys.stderr
+
+		os.dup2 ( self.outnull_file.fileno(), self.old_stdout_fileno_undup )
+		os.dup2 ( self.errnull_file.fileno(), self.old_stderr_fileno_undup )
+
+		sys.stdout = self.outnull_file
+		sys.stderr = self.errnull_file
+		return self
+
+	def __exit__(self, *_):
+		sys.stdout = self.old_stdout
+		sys.stderr = self.old_stderr
+
+		os.dup2 ( self.old_stdout_fileno, self.old_stdout_fileno_undup )
+		os.dup2 ( self.old_stderr_fileno, self.old_stderr_fileno_undup )
+
+		os.close ( self.old_stdout_fileno )
+		os.close ( self.old_stderr_fileno )
+
+		self.outnull_file.close()
+		self.errnull_file.close()
 
 class IndiClient(PyIndi.BaseClient):
 	def __init__(self):
@@ -102,9 +138,12 @@ def getEquipment(socketio, event):
 
 		while not indiClient.isServerConnected():
 			try:
-				indiClient.connectServer()
+				with suppress_stdout_stderr():
+					indiClient.connectServer()
 				time.sleep(1)
-				if not indiClient.isServerConnected():
+				if indiClient.isServerConnected():
+					indiClient.logger.info(f"INDI Server connected ({indiClient.getHost()}:{str(indiClient.getPort())})")
+				else:
 					#indiClient.logger.error(f"Cannot connect to INDI server on {indiClient.getHost()}:{str(indiClient.getPort())}. Retrying in {str(TIMEOUT)} seconds.")
 					time.sleep(TIMEOUT)
 			except Exception as err:
