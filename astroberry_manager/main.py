@@ -31,7 +31,7 @@ from gevent import monkey
 monkey.patch_all()
 
 from threading import Event
-from flask import Flask, render_template, redirect, url_for, request, session, send_file
+from flask import Flask, render_template, redirect, url_for, request, session, send_file, make_response
 from flask_socketio import SocketIO
 
 from .location import getLocation
@@ -77,7 +77,9 @@ equipmentThreadEvent = Event()
 
 @app.route('/welcome')
 def welcome():
-    return render_template('welcome.html')
+    response = make_response(render_template('welcome.html'))
+    response.set_cookie("iku", value="true", max_age=31536000)
+    return response
 
 @app.route('/ca.crt')
 def certificate():
@@ -86,6 +88,10 @@ def certificate():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.cookies.get('iku') is None:
+        return redirect(url_for('welcome'))
+    if 'username' in session:
+        return redirect(url_for('index'))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']

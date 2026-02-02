@@ -48,7 +48,7 @@
 		<img src="assets/icons/astroberry-icon-white.svg" width="50" />
 		<h1>Welcome to Astroberry OS</h1>
 		<div id="welcome">
-			<p>Astroberry OS is an operating system for Raspberry Pi for controlling astronomy equipment</p>
+			<p>Astroberry OS is an operating system for Raspberry Pi for controlling astronomy equipment.</p>
 			<ul>
 				<li>Communication with Astroberry OS is protected with a unique security certificate. Install and trust the <a href="/ca.crt">certificate</a>
 				in your browser to avoid security warnings.</li>
@@ -58,9 +58,10 @@
 				<li>Remember, that Astroberry OS is a free and open-source operating system, made possible by your
 				<a href="https://www.astroberry.io/support" target="_blank">support</a>.</li>
 			</ul>
-			<p>By continuing, you confirm that you understand and agree with these conditions.</p>
+			<input id="welcome-box" name="welcome-box" type="checkbox">
+			<label for="welcome-box">I understand and agree with these conditions.</label>
 		</div>
-		<a href="https://astroberry.local" class="btn btn-primary button-active" style="padding: 10px 30px;">Continue</a>
+		<a id="welcome-box-continue" href="https://astroberry.local" class="btn btn-primary button-active disabled" style="padding: 10px 30px;">Continue</a>
                 <a id="info" href="https://www.astroberry.io" class="fa fa-info-circle" data-tooltip="tooltip"
                         title="www.astroberry.io"
                         style="font-size:20px;display:inline-block;float:right;margin-top:25px;" target="_blank">
@@ -69,7 +70,17 @@
 </body>
 
 <script>
-particlesJS.load('particles-js', 'assets/js/misc/particles.json', function() {});
+	particlesJS.load('particles-js', 'assets/js/misc/particles.json', function() {});
+</script>
+<script>
+	const checkbox = document.getElementById('welcome-box')
+	checkbox.addEventListener('change', (event) => {
+		if (event.currentTarget.checked) {
+			document.getElementById("welcome-box-continue").classList.remove('disabled');
+		} else {
+			document.getElementById("welcome-box-continue").classList.add('disabled');
+		}
+	})
 </script>
 
 </html>
