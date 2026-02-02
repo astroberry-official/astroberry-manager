@@ -23,7 +23,7 @@ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 """
 
-import sys, os, shutil, subprocess
+import sys, os, shutil, subprocess, io
 import pty, fcntl, termios, struct, select
 import pam, socket, logging
 
@@ -31,14 +31,14 @@ from gevent import monkey
 monkey.patch_all()
 
 from threading import Event
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, send_file
 from flask_socketio import SocketIO
 
 from .location import getLocation
 from .weather import getWeather
 from .almanac import getAlmanac
 from .equipment import getEquipment, setEquipment
-from .system import getSystemReports, getSystemReportOnce, runSystemUpdate, runSystemBackup, runSystemRestore, runSystemRestart, runSystemShutdown, process_status
+from .system import getSystemReports, getSystemReportOnce, runSystemUpdate, runSystemBackup, runSystemRestore, runSystemRestart, runSystemShutdown, process_status, getCA
 
 __author__ = 'Radek Kaczorek'
 __copyright__ = 'Copyright 2026, Radek Kaczorek'
@@ -78,6 +78,11 @@ equipmentThreadEvent = Event()
 @app.route('/welcome')
 def welcome():
     return render_template('welcome.html')
+
+@app.route('/ca.crt')
+def certificate():
+    bytes = io.BytesIO(getCA())
+    return send_file(bytes, mimetype='application/x-x509-ca-cert')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

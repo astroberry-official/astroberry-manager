@@ -23,7 +23,7 @@ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 """
 
-import os, psutil, shutil, time, subprocess
+import os, psutil, shutil, time, subprocess, requests
 
 POLLING = 60
 
@@ -279,3 +279,13 @@ def runSystemShutdown(socketio):
         data = {"shutdown": False}
 
     socketio.emit('system', data)
+
+def getCA():
+    url = "http://localhost:2019/pki/ca/local"
+    try:
+        response = requests.get(url)
+        json = response.json()
+        print(json['root_certificate'])
+    except:
+        pass
+    return json['root_certificate'].encode()
