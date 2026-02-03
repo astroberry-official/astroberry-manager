@@ -22,6 +22,7 @@
 
 import { getCookie, setCookie, syslogPrint } from './helpers.js';
 import { updateStarChartLocation } from './celestial.js';
+import { requestWeather } from './weather.js';
 import { deg2dms } from './functions.js';
 import { socket } from './sockets.js';
 
@@ -278,6 +279,9 @@ function updateGeoLocation(location = {}) {
             // Update star chart location
             if ($("#system_timeloc").is(':checked'))
                 updateStarChartLocation();
+
+            // Update weather
+            requestWeather();
 
             syslogPrint("Location updated", "success");
         }
