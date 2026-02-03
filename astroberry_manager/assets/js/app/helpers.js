@@ -127,20 +127,7 @@ function appEvents() {
                 }
                 break;
 
-            case 1: // Almanac
-                if ($("#main-dock-almanac").hasClass("dock-item-active")) {
-                    $("#main-dock-almanac").removeClass("dock-item-active");
-                    $("#panel-almanac").hide();
-                } else {
-                    $(".panel-container").hide(); // hide all
-                    $("#main-dock span").removeClass("dock-item-active"); // inactivate all
-
-                    $("#main-dock-almanac").addClass("dock-item-active");
-                    $("#panel-almanac").show();
-                }
-                break;
-
-            case 2: // Equipment
+            case 1: // Equipment
                 if ($("#main-dock-equipment").hasClass("dock-item-active")) {
                     $("#main-dock-equipment").removeClass("dock-item-active");
                     $("#panel-equipment").hide();
@@ -158,6 +145,19 @@ function appEvents() {
                     //$("equipment_status").ready( function() {
                     //    updateINDI();
                     //});
+                }
+                break;
+
+            case 2: // Almanac
+                if ($("#main-dock-almanac").hasClass("dock-item-active")) {
+                    $("#main-dock-almanac").removeClass("dock-item-active");
+                    $("#panel-almanac").hide();
+                } else {
+                    $(".panel-container").hide(); // hide all
+                    $("#main-dock span").removeClass("dock-item-active"); // inactivate all
+
+                    $("#main-dock-almanac").addClass("dock-item-active");
+                    $("#panel-almanac").show();
                 }
                 break;
 
