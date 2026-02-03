@@ -24,7 +24,13 @@
 
 import RFB from '../noVNC/core/rfb.js';
 
-const desktopUrl = 'wss://' + location.hostname + '/websockify';
+if (location.protocol == 'https:') {
+    var wsproto = 'wss://'
+} else {
+    var wsproto = 'ws://'
+}
+
+const desktopUrl = wsproto + location.hostname + '/websockify';
 
 let rfb;
 let desktopName;
