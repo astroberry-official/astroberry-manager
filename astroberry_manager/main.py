@@ -34,6 +34,7 @@ from threading import Event
 from flask import Flask, render_template, redirect, url_for, request, session, send_file, make_response
 from flask_socketio import SocketIO
 
+from .time import getTime
 from .location import getLocation
 from .weather import getWeather
 from .almanac import getAlmanac
@@ -67,6 +68,7 @@ fd = None
 child_pid = None
 
 # background threads
+timeThread = None
 locationThread = None
 terminalThread = None
 sysmonThread = None
@@ -206,10 +208,14 @@ def shut_down():
 def main():
     global app_addr, app_port
     global fd, child_pid
-    global terminalThread, locationThread, sysmonThread, equipmentThread
+    global timeThread, locationThread, terminalThread, sysmonThread, equipmentThread
 
     try:
         print("Astroberry Manager v"+__version__+"\n")
+
+        if timeThread is None:
+            print("✓ Starting time services")
+            timeThread = socketio.start_background_task(getTime, socketio)
 
         if locationThread is None:
             print("✓ Starting location services")

@@ -20,6 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
+import { timeNow } from './time.js';
 import { geoLocation } from "./location.js";
 import { getCookie, setCookie } from "./helpers.js";
 import { socket } from "./sockets.js";
@@ -112,10 +113,9 @@ function updateWeatherMetno(data) {
 
     var _data = JSON.parse(data)
 
-    if (!_data || !_data._timeseries)
+    if (_data === undefined || _data === null || _data._timeseries === undefined || _data._timeseries === null)
         return;
 
-    //var dateUTC = new Date(Date.UTC(thisDay.getUTCFullYear(), thisDay.getUTCMonth(), thisDay.getUTCDate(), thisDay.getUTCHours(), thisDay.getUTCMinutes(), thisDay.getUTCSeconds()));
     var thisDay = new Date(_data.updated_at);
     var forecastHour = $('input[name="weather_forecast_time"]:checked').val() ?  $('input[name="weather_forecast_time"]:checked').val() : "00";
     var scope = [];

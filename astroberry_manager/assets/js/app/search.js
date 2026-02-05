@@ -20,6 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
+import { timeNow } from './time.js';
 import { geoLocation } from "./location.js";
 import { deg2dms, deg2hms, JulianDateFromUnixTime, raDecToAltAz } from "./functions.js";
 import { dsoType, centerOnCoords } from "./celestial.js";
@@ -236,8 +237,7 @@ function showResults(data, online = false) {
         var lon = geoLocation.longitude;
 
         // compute UT julian date
-        const now = new Date();
-        const jd = JulianDateFromUnixTime(now.getTime());
+        const jd = JulianDateFromUnixTime(timeNow.getTime());
 
         // convert coordinates to radians
         var _ra = ra * Math.PI / 180;

@@ -21,6 +21,7 @@
 */
 
 import { focusTerminal } from './terminal.js';
+import { timeNow } from './time.js';
 import { mainMap, locationEvents } from './location.js';
 import { requestWeather, weatherEvents } from './weather.js';
 import { requestAlmanac, almanacEvents } from './almanac.js';
@@ -49,10 +50,6 @@ function initTimer() {
 /* ================================================================== */
 
 function mainLoop() {
-
-    // Run once every second
-    updateTime(); // Update time while in manual mod, using system time
-
     // Run every 10s
     if (++tenSecCounter > (10000 / mainLoopInterval)) {
         tenSecCounter = 0;
@@ -68,24 +65,6 @@ function mainLoop() {
     if (++hourCounter > (3600000 / mainLoopInterval)) {
         hourCounter = 0;
         requestWeather();
-    }
-}
-
-function updateTime() {
-    if ($('input[name="geoloc_mode"]:checked').val() != "gps") { // gps gives us own time
-        var d = new Date();
-        var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
-
-        // Update date/time in footer
-        $("#gtime").html(date);
-
-        // Update date/time in details tab
-        var gps_time = date.split("T");
-        $("#gps_time").html(gps_time[0] + "<br>" + gps_time[1]);
-
-        // Update Star Chart
-        if ($("#system_timeloc").is(':checked'))
-            Celestial.date(d);
     }
 }
 
@@ -277,8 +256,6 @@ function appEvents() {
 /* ================================================================== */
 
 function syslogPrint(msg, level, popup = false) {
-    //var datetime = new Date().format("yyyy-MM-ddThh:mm:ss");
-    var datetime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0, 19);
     var alert_level = "alert-warning";
     var msg_level = "INFO";
     var color = "#eeeeee";
@@ -305,17 +282,10 @@ function syslogPrint(msg, level, popup = false) {
         }
     }
 
-    // format message if without date/time/level header
-    // msg = datetime + ": [" + msg_level + "] " + msg;
-/*
-    if (stream) {
-        stream = stream + "<br>" + "<font color=" + color + ">" + msg + "</font>";
-    } else {
-        stream = "<font color=" + color + ">" + msg + "</font>";
-    }
+    // format message: add time and log level header
+    // var eventTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substring(0, 19);
+    // msg = eventTime + ": [" + msg_level + "] " + msg;
 
-    $("#syslog").html(stream);
-*/
     stream = "<font color=" + color + ">" + msg + "</font><br>";
     $("#syslog").append(stream);
 
@@ -346,7 +316,7 @@ function setCookie(name, value) {
         }
     }
 
-    let d = new Date();
+    let d = timeNow;
     d.setTime(d.setFullYear(d.getFullYear() + 1)); // expire cookies after 1 year
     document.cookie = name + "=" + JSON.stringify(_value) + ";" + "expires=" + d.toUTCString() + ";path=/;SameSite=Lax";
 }

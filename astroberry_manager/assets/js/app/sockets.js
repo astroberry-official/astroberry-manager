@@ -20,6 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
+import { updateTime } from './time.js';
 import { updateGeoLocation } from './location.js';
 import { updateWeather } from './weather.js';
 import { updateAlmanac } from './almanac.js';
@@ -103,6 +104,11 @@ function setSockets() {
     });
 
     /* Application specific */
+    socket.on('datetime', function (data) { // time
+        //console.log("Time data received");
+        if ("now" in data) updateTime(data.now);
+    });
+
     socket.on('location', function (data) { // location
         //console.log("GPS data received");
         if ($('input[name="geoloc_mode"]:checked').val() == "gps")

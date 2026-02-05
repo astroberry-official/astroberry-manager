@@ -21,6 +21,7 @@
 */
 
 import { getCookie, setCookie, syslogPrint } from './helpers.js';
+import { timeNow, updateTime } from './time.js';
 import { updateStarChartLocation } from './celestial.js';
 import { requestWeather } from './weather.js';
 import { deg2dms } from './functions.js';
@@ -136,7 +137,7 @@ function updateGeoLocation(location = {}) {
 
     // Validate time
     if ('gpstime' in location === false)
-        location.gpstime = new Date().toISOString()
+        location.gpstime = timeNow.toISOString();
 
     // Process mode
     if (location.mode == "gps") {
@@ -224,21 +225,8 @@ function updateGeoLocation(location = {}) {
     }
 
     // Set time
-    if ('gpstime' in location) {
-        var d = new Date(location.gpstime);
-        var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
-
-        /* Update date/time in footer */
-        $("#gtime").html(date);
-
-        /* Update date/time in details tab */
-        var gps_time = location.gpstime.split("T");
-        $("#gps_time").html(gps_time[0] + "<br>" + gps_time[1]);
-
-        /* Update Star Chart */
-        if ($("#system_timeloc").is(':checked'))
-            Celestial.date(d);
-    }
+    if ('gpstime' in location)
+        updateTime(location.gpstime);
 
     // Set location
     if ('latitude' in location && 'longitude' in location) {
@@ -308,7 +296,7 @@ function getNetworkLocation() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             location.mode = "network";
-            location.gpstime = new Date().toISOString();
+            location.gpstime = timeNow.toISOString();
 
             var latitude = position.coords.latitude ? position.coords.latitude : 0;
             if (typeof latitude === 'number' && isFinite(latitude))

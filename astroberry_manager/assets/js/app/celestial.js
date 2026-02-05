@@ -22,6 +22,7 @@
 
 // Celestial Docs: https://armchairastronautics.blogspot.com/search/label/D3-Celestial
 
+import { timeNow } from './time.js';
 import { geoLocation, updateGeoLocation } from './location.js';
 import { syslogPrint } from './helpers.js';
 import { JulianDateFromUnixTime, raDecToAltAz,  deg2dms, deg2hms } from './functions.js';
@@ -172,8 +173,7 @@ function getAzAlt(ra, dec) {
   var lon = geoLocation.longitude;
 
   // compute UT julian date
-  const now = new Date();
-  const jd = JulianDateFromUnixTime(now.getTime());
+  const jd = JulianDateFromUnixTime(timeNow.getTime());
 
   // convert to radians
   ra *= 15 * Math.PI / 180;
@@ -334,9 +334,8 @@ function setTelescopeCoordinates(ra, dec) {
 }
 
 function centerOnSolarObject(id) {
-  if (id === undefined || id === null)
-  var dt = new Date();
-  var p = Celestial.getPlanet(id, dt);
+  if (id === undefined || id === null) return;
+  var p = Celestial.getPlanet(id, timeNow);
   centerOnCoords(p.ephemeris.pos[0], p.ephemeris.pos[1]);
 }
 

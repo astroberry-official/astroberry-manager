@@ -20,6 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
+import { timeNow } from './time.js';
 import { geoLocation } from './location.js';
 import { centerOnSolarObject } from './celestial.js';
 import { updateMoon } from './moon.js';
@@ -363,7 +364,7 @@ function toggleAltTrend(planet, alt) {
 
 function requestAlmanac() {
     var data = {};
-    data['time'] = new Date().toISOString();
+    data['time'] = timeNow.toISOString();
     data['latitude'] = parseFloat(geoLocation.latitude);
     data['longitude'] = parseFloat(geoLocation.longitude);
     data['altitude'] = parseFloat(geoLocation.altitude);
