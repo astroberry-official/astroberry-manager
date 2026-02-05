@@ -101,8 +101,10 @@ def get_disk_info():
     return disk_info
 
 def get_network_info():
+    online_status = connectivity_status()
     net_io_counters = psutil.net_io_counters()
     return {
+	"online": online_status,
         "bytes_sent": net_io_counters.bytes_sent,
         "bytes_recv": net_io_counters.bytes_recv
     }
@@ -139,7 +141,7 @@ def get_disk_io_counters():
         "read_time": io_counters.read_time,
         "write_time": io_counters.write_time
     }
- 
+
 def get_net_io_counters():
     io_counters = psutil.net_io_counters()
     return {
@@ -183,7 +185,7 @@ def getSystemReportOnce(socketio):
         "memory_info": get_memory_info(),
         "cpu_info": get_cpu_info(),
         "disk_info": get_disk_info(),
-        #"network_info": get_network_info(),
+        "network_info": get_network_info(),
         # "process_info": get_process_info(),
         "system_uptime": get_system_uptime(),
         "load_average": get_load_average(),
@@ -199,6 +201,18 @@ def process_status(process_name):
         if process.info['name'] == process_name:
             return True
     return False
+
+def connectivity_status():
+    url = "http://check-connectivity.astroberry.io"
+    headers = { 'astroberry-os': 'online' }
+    try:
+        status = requests.get(url=url, headers=headers)
+        if status.status_code == 204:
+            return True
+        else:
+            return False
+    except:
+        return False
 
 def runSystemUpdate(socketio):
     sudo = shutil.which("sudo")
