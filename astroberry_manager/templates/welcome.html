@@ -50,21 +50,23 @@
 		<div id="welcome">
 			<p>Astroberry OS is an operating system for Raspberry Pi for controlling astronomy equipment.</p>
 			<ul>
-				<li>Set wifi regulatory domain using <a href="https://www.raspberrypi.com/documentation/computers/configuration.html" target="_blank"
-				data-tooltip="tooltip" title="A command line configuration tool for Raspberry Pi">raspi-config</a> before connecting to an access point.</li>
-				<li>Connect your Raspberry Pi to a local network or home wifi. Hotspot connection limits certain functionalities, which
-				 require Internet connection.</li>
-				<li>Communication with Astroberry OS is protected with a unique security certificate. Install and trust the <a href="/ca.crt">certificate</a>
+				<li>Set localisation and WLAN country using <a href="#" data-tooltip="tooltip" title="A graphical configuration tool for Raspberry Pi">Control Center</a> or 
+				<a href="#" data-tooltip="tooltip" title="A command line configuration tool for Raspberry Pi">raspi-config</a>.</li>
+				<li>Connect your Raspberry Pi to a local network or home wifi. Hotspot connection <a href="#" data-tooltip="tooltip" 
+				title="Internet connection is used to update time and date, location, weather data and access online astronomical database and images.">
+				limits</a> certain functionalities, which require Internet connection.</li>
+				<li>Communication with Astroberry OS is protected with a unique security certificate. Install and trust the 
+				<a href="/ca.crt" data-tooltip="tooltip" title="Download certificate">certificate</a>
 				in your browser to avoid security warnings.</li>
 				<li>Remember, that Astroberry OS is a free and open-source operating system, made possible by your
-				<a href="https://www.astroberry.io/support" target="_blank">support</a>.</li>
+				<a href="https://astroberry.io/support" target="_blank" data-tooltip="tooltip" title="Find details on the project website">support</a>.</li>
 			</ul>
 			<input id="welcome-box" name="welcome-box" type="checkbox">
 			<label for="welcome-box">I understand and agree to these conditions.</label>
 		</div>
 		<a id="welcome-box-continue" href="https://astroberry.local" class="btn btn-primary button-active disabled" style="padding: 10px 30px;">Continue</a>
-                <a id="info" href="https://www.astroberry.io" class="fa fa-info-circle" data-tooltip="tooltip"
-                        title="www.astroberry.io"
+                <a id="info" href="https://astroberry.io" class="fa fa-info-circle" data-tooltip="tooltip"
+                        title="astroberry.io"
                         style="font-size:20px;display:inline-block;float:right;margin-top:25px;" target="_blank">
                 </a>
 	</div>
