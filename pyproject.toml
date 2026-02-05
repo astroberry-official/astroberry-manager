@@ -50,4 +50,4 @@ dependencies = [
 astroberry-manager = "astroberry_manager.main:main"
 
 [project.urls]
-"Homepage" = "https://www.astroberry.io/"
+"Homepage" = "https://astroberry.io/"
