@@ -32,7 +32,11 @@ headers = {"User-Agent": USER_AGENT}
 weather = yr_weather.Locationforecast(headers=headers, use_cache=False)
 
 def getWeather(socketio, latitude, longitude):
-	forecast = weather.get_forecast(latitude, longitude)
+	try:
+		forecast = weather.get_forecast(latitude, longitude)
+	except:
+		return
+
 	forecastJSON = json.dumps(forecast, default=vars)
 	emitWeather(socketio, forecastJSON)
 
