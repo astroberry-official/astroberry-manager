@@ -33,8 +33,11 @@ function updateTime(data) {
 
     var diffTime = Math.abs(d - c);
 
-    if ( diffTime > 5000 ) // milliseconds
-        syslogPrint("System time is different than your time", "danger", true);
+    if ( diffTime > 5000 ) { // milliseconds
+        $("#celestial-map-datetime").addClass("blink");
+    } else {
+        $("#celestial-map-datetime").removeClass("blink");
+    }
 
     timeNow = d; // update global variable
 
