@@ -47,10 +47,9 @@ function setSockets() {
         reconnection: true,
         reconnectionDelay: 3000,
         reconnectionDelayMax: 5000,
-        reconnectionAttempts: Infinity
+        reconnectionAttempts: Infinity,
+	transports: ["polling", "websocket", "webtransport"]
     });
-
-    //console.log(socket);
 
     /* General use */
     socket.onAny((event, ...args) => { // catch-all
@@ -60,6 +59,14 @@ function setSockets() {
     socket.on('connect', function(){
         console.log('Socket connected');
         connected = true;
+
+	const transport = socket.io.engine.transport.name; // in most cases, "polling"
+	console.log("Socket transport: " + transport);
+
+	socket.io.engine.on("upgrade", () => {
+		const upgradedTransport = socket.io.engine.transport.name; // in most cases, "websocket"
+		console.log("Socket transport: " + upgradedTransport);
+	});
     });
 
     socket.on('disconnect', function(reason){
@@ -105,28 +112,28 @@ function setSockets() {
 
     /* Application specific */
     socket.on('datetime', function (data) { // time
-        //console.log("Time data received");
+        //console.log("datetime: " + data);
         if ("now" in data) updateTime(data.now);
     });
 
     socket.on('location', function (data) { // location
-        //console.log("GPS data received");
+        //console.log("location: " + data);
         if ($('input[name="geoloc_mode"]:checked').val() == "gps")
             updateGeoLocation(data);
     });
 
     socket.on('weather', function (data) { // location
-        //console.log("Weather data received");
+        //console.log("weather: " + data);
         updateWeather(data);
     });
 
     socket.on('almanac', function (data) { // location & almanac
-        //console.log("Almanac data received");
+        //console.log("almanac: " + data);
         updateAlmanac(data);
     });
 
     socket.on('equipment', function (data) { // equipment
-        //console.log(data);
+        //console.log("equipment" + data);
         if (data.connect) indiServerConnected();
         if (data.disconnect) indiServerDisconnected();
         updateEquipment(data);
@@ -134,7 +141,7 @@ function setSockets() {
     });
 
     socket.on('system', function (data) { // equipment
-        //console.log("System data received");
+        //console.log("system: " + data);
         if ("update" in data) {
             if (data['update']) {
                 syslogPrint("System update successful", "success", true);
