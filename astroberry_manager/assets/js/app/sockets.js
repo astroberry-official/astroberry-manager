@@ -51,7 +51,6 @@ function setSockets() {
 	transports: ["polling", "websocket", "webtransport"]
     });
 
-    /* General use */
     socket.onAny((event, ...args) => { // catch-all
         //console.log(`socketio: ${event} received`);
     });
@@ -59,7 +58,7 @@ function setSockets() {
     socket.on('connect', function(){
         console.log('Socket connected');
         connected = true;
-
+	/*
 	const transport = socket.io.engine.transport.name; // in most cases, "polling"
 	console.log("Socket transport: " + transport);
 
@@ -67,6 +66,7 @@ function setSockets() {
 		const upgradedTransport = socket.io.engine.transport.name; // in most cases, "websocket"
 		console.log("Socket transport: " + upgradedTransport);
 	});
+	*/
     });
 
     socket.on('disconnect', function(reason){
