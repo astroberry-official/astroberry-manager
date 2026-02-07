@@ -77,11 +77,13 @@ equipmentThread = None
 # start/stop event for INDI client
 equipmentThreadEvent = Event()
 
-@app.route('/welcome')
+@app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
-    response = make_response(render_template('welcome.html'))
-    response.set_cookie("iku", value="true", max_age=31536000)
-    return response
+    if request.method == 'POST' and request.form['welcome-box'] == 'on':
+        response = make_response(redirect(url_for('login')))
+        response.set_cookie("kyc", value="true", max_age=31536000)
+        return response
+    return render_template('welcome.html')
 
 @app.route('/ca.crt')
 def certificate():
@@ -90,7 +92,7 @@ def certificate():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.cookies.get('iku') is None:
+    if request.cookies.get('kyc') is None:
         return redirect(url_for('welcome'))
     if 'username' in session:
         return redirect(url_for('index'))

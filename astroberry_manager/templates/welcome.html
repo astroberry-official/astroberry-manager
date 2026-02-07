@@ -61,14 +61,14 @@
 				<li>Remember, that Astroberry OS is a free and open-source operating system, made possible by your
 				<a href="https://astroberry.io/support" target="_blank" data-tooltip="tooltip" title="Find details on the project website">support</a>.</li>
 			</ul>
-			<input id="welcome-box" name="welcome-box" type="checkbox">
-			<label for="welcome-box">I understand and agree to these conditions.</label>
+			<form id="welcome-form" method="POST">
+				<input id="welcome-box" name="welcome-box" type="checkbox">
+				<label for="welcome-box">I understand and agree to these conditions.</label>
+			</form>
 		</div>
-		<a id="welcome-box-continue" href="https://astroberry.local" class="btn btn-primary button-active disabled" style="padding: 10px 30px;">Continue</a>
+		<button id="welcome-box-continue" class="btn btn-primary" style="padding: 10px 30px;" disabled>Continue</button>
                 <a id="info" href="https://astroberry.io" class="fa fa-info-circle" data-tooltip="tooltip"
-                        title="astroberry.io"
-                        style="font-size:20px;display:inline-block;float:right;margin-top:25px;" target="_blank">
-                </a>
+                        title="astroberry.io" style="font-size:20px;display:inline-block;float:right;margin-top:25px;" target="_blank"></a>
 	</div>
 </body>
 
@@ -79,11 +79,17 @@
 	const checkbox = document.getElementById('welcome-box')
 	checkbox.addEventListener('change', (event) => {
 		if (event.currentTarget.checked) {
-			document.getElementById("welcome-box-continue").classList.remove('disabled');
+			document.getElementById("welcome-box-continue").disabled = false;
+			document.getElementById("welcome-box-continue").classList.add("button-active");
 		} else {
-			document.getElementById("welcome-box-continue").classList.add('disabled');
+			document.getElementById("welcome-box-continue").disabled = true;
+			document.getElementById("welcome-box-continue").classList.remove("button-active");
 		}
 	})
+
+	document.getElementById("welcome-box-continue").addEventListener("click", function() {
+	        document.getElementById("welcome-form").submit();
+	});
 </script>
 
 </html>
