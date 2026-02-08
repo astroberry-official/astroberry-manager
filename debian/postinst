@@ -13,8 +13,6 @@ if [ "$1" == "configure" ]; then
 
 	if [ -e /etc/caddy/Caddyfile ] && [ ! -e /etc/caddy/Caddyfile.default ]; then cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.default; fi
 	cat <<EOF > /etc/caddy/Caddyfile
-\# installed by astroberry-manager
-
 {
         auto_https disable_redirects
 }
@@ -65,4 +63,13 @@ EOF
 		ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
 	fi
 
+	# reload services
+	systemctl daemon-reload
+
+	# restart services
+	systemctl restart caddy
+	systemctl restart vncserver
+	systemctl restart websockify
+	systemctl restart indiwebmanager
+	systemctl restart astroberry-manager
 fi
