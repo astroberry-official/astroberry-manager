@@ -9,25 +9,25 @@ if [ "$1" == "configure" ]; then
 
 	# deploy in python virtual environment
 	python -m venv /opt/astroberry-manager/.venv && \
-	/opt/astroberry-manager/.venv/bin/pip install /tmp/astroberry_manager-*-py3-none-any.whl
+	/opt/astroberry-manager/.venv/bin/pip install --upgrade /tmp/astroberry_manager-*-py3-none-any.whl
 
 	# enable vncserver
-	if [ -e /etc/systemd/system/vncserver.service ]; then
+	if [ -e /etc/systemd/system/vncserver.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
 		ln -s /etc/systemd/system/vncserver.service /etc/systemd/system/multi-user.target.wants/
 	fi
 
 	# enable indiwebmanager
-	if [ -e /etc/systemd/system/indiwebmanager.service]; then
+	if [ -e /etc/systemd/system/indiwebmanager.service] && [ ! -e /etc/systemd/system/multi-user.target.wants/indiwebmanager.service ]; then
 		ln -s /etc/systemd/system/indiwebmanager.service /etc/systemd/system/multi-user.target.wants/
 	fi
 
 	# enable websockify
-	if [ -e /etc/systemd/system/websockify.service ]; then
+	if [ -e /etc/systemd/system/websockify.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
 		ln -s /etc/systemd/system/websockify.service /etc/systemd/system/multi-user.target.wants/
 	fi
 
 	# enable astroberry-manager
-	if [ /etc/systemd/system/astroberry-manager.service ]; then
+	if [ /etc/systemd/system/astroberry-manager.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
 		ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
 	fi
 
