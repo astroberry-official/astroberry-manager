@@ -44,7 +44,7 @@ from .system import getSystemReports, getSystemReportOnce, runSystemUpdate, runS
 __author__ = 'Radek Kaczorek'
 __copyright__ = 'Copyright 2026, Radek Kaczorek'
 __license__ = 'GPL-3'
-__version__ = '1.0.0'
+__version__ = '1.0'
 
 # working directory
 wdir = os.getenv('HOME', '/')

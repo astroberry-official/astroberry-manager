@@ -1,3 +1,5 @@
+# installed by astroberry-manager
+
 [Unit]
 Description=Astroberry OS Web Manager
 Wants=vncserver.service
@@ -9,7 +11,7 @@ After=multi-user.target
 Type=idle
 User=astroberry
 Environment=TERM=xterm-256color
-ExecStart=sh -c ". /opt/astroberry-manager/.venv/bin/activate && astroberry-manager"
+ExecStart=sh -c "/opt/astroberry-manager/.venv/bin/astroberry-manager"
 Restart=always
 RestartSec=3
 

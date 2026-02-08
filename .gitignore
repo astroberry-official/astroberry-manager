@@ -3,6 +3,7 @@ __pycache__
 .venv
 dist
 build
+obj-aarch64-linux-gnu
 *.egg-info
 *.swp
 *.pyc

@@ -1,0 +1,34 @@
+#!/bin/bash
+# postinst script for astroberry-manager
+
+if [ "$1" == "configure" ]; then
+
+	if [ ! -e /opt/astroberry-manager ]; then
+		mkdir -p /opt/astroberry-manager
+	fi
+
+	# deploy in python virtual environment
+	python -m venv /opt/astroberry-manager/.venv && \
+	/opt/astroberry-manager/.venv/bin/pip install /tmp/astroberry_manager-*-py3-none-any.whl
+
+	# enable vncserver
+	if [ -e /etc/systemd/system/vncserver.service ]; then
+		ln -s /etc/systemd/system/vncserver.service /etc/systemd/system/multi-user.target.wants/
+	fi
+
+	# enable indiwebmanager
+	if [ -e /etc/systemd/system/indiwebmanager.service]; then
+		ln -s /etc/systemd/system/indiwebmanager.service /etc/systemd/system/multi-user.target.wants/
+	fi
+
+	# enable websockify
+	if [ -e /etc/systemd/system/websockify.service ]; then
+		ln -s /etc/systemd/system/websockify.service /etc/systemd/system/multi-user.target.wants/
+	fi
+
+	# enable astroberry-manager
+	if [ /etc/systemd/system/astroberry-manager.service ]; then
+		ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
+	fi
+
+fi

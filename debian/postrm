@@ -1,0 +1,13 @@
+#!/bin/bash
+# postrm script for astroberry-manager
+
+if [ "$1" == "remove" -o "$1" == "purge" ]; then
+
+	if [ -e /opt/astroberry-manager/.venv ]; then
+	        rm -rf /opt/astroberry-manager/.venv
+	fi
+
+	if [ -n "$(find /opt/astroberry-manager -maxdepth 0 -type d -empty 2>/dev/null)" ]; then
+		rm -rf /opt/astroberry-manager
+	fi
+fi

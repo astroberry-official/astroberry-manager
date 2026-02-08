@@ -1,0 +1,15 @@
+# installed by astroberry-manager
+
+[Unit]
+Description=Websockify for VNC
+After=multi-user.target
+
+[Service]
+Type=idle
+User=astroberry
+ExecStart=sh -c "/opt/astroberry-manager/.venv/bin/websockify 127.0.0.1:8070 127.0.0.1:5970 --auth-plugin ExpectOrigin --auth-source \"https://astroberry.local http://astroberry.local\""
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

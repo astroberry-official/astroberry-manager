@@ -1,0 +1,29 @@
+# installed by astroberry-manager
+
+{
+        auto_https disable_redirects
+}
+
+http://astroberry.local {
+        handle /api* {
+            reverse_proxy localhost:8624
+        }
+        handle /websockify* {
+            reverse_proxy localhost:8070
+        }
+        handle /* {
+            reverse_proxy localhost:8080
+        }
+}
+
+https://astroberry.local {
+        handle /api* {
+            reverse_proxy localhost:8624
+        }
+        handle /websockify* {
+            reverse_proxy localhost:8070
+        }
+        handle /* {
+            reverse_proxy localhost:8080
+        }
+}
