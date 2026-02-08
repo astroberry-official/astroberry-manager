@@ -20,6 +20,7 @@ if [ "$1" == "configure" ]; then
 	ln -s /usr/lib/systemd/system/vncserver.service /etc/systemd/system/multi-user.target.wants/
 	ln -s /usr/lib/systemd/system/websockify.service /etc/systemd/system/multi-user.target.wants/
 	ln -s /usr/lib/systemd/system/indiwebmanager.service /etc/systemd/system/multi-user.target.wants/
+	ln -s /usr/lib/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
 
 	# add config for reverse proxy
 	if [ -e /etc/caddy/Caddyfile ] && [ ! -e /etc/caddy/Caddyfile.default ]; then cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.default; fi
