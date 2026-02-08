@@ -4,7 +4,7 @@
 if [ "$1" == "remove" -o "$1" == "purge" ]; then
 
 	if [ -e /etc/caddy/Caddyfile.default ]; then
-		mv /etc/caddy/Caddyfile.bak
+		mv /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak
 		mv /etc/caddy/Caddyfile.default /etc/caddy/Caddyfile
 	fi
 
