@@ -51,7 +51,7 @@ EOF
 	fi
 
 	# enable indiwebmanager
-	if [ -e /etc/systemd/system/indiwebmanager.service] && [ ! -e /etc/systemd/system/multi-user.target.wants/indiwebmanager.service ]; then
+	if [ -e /etc/systemd/system/indiwebmanager.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/indiwebmanager.service ]; then
 		ln -s /etc/systemd/system/indiwebmanager.service /etc/systemd/system/multi-user.target.wants/
 	fi
 
