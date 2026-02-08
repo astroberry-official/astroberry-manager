@@ -46,24 +46,4 @@ https://astroberry.local {
 }
 EOF
 
-
-	# enable vncserver
-	if [ -e /etc/systemd/system/vncserver.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
-		ln -s /etc/systemd/system/vncserver.service /etc/systemd/system/multi-user.target.wants/
-	fi
-
-	# enable indiwebmanager
-	if [ -e /etc/systemd/system/indiwebmanager.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/indiwebmanager.service ]; then
-		ln -s /etc/systemd/system/indiwebmanager.service /etc/systemd/system/multi-user.target.wants/
-	fi
-
-	# enable websockify
-	if [ -e /etc/systemd/system/websockify.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
-		ln -s /etc/systemd/system/websockify.service /etc/systemd/system/multi-user.target.wants/
-	fi
-
-	# enable astroberry-manager
-	if [ /etc/systemd/system/astroberry-manager.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
-		ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
-	fi
 fi
