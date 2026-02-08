@@ -11,6 +11,40 @@ if [ "$1" == "configure" ]; then
 	python -m venv /opt/astroberry-manager/.venv && \
 	/opt/astroberry-manager/.venv/bin/pip install --upgrade /tmp/astroberry_manager-*-py3-none-any.whl
 
+	if [ -e /etc/caddy/Caddyfile ] && [ ! -e /etc/caddy/Caddyfile.default ]; then cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.default; fi
+	cat <<EOF > /etc/caddy/Caddyfile
+\# installed by astroberry-manager
+
+{
+        auto_https disable_redirects
+}
+
+http://astroberry.local {
+        handle /api* {
+            reverse_proxy localhost:8624
+        }
+        handle /websockify* {
+            reverse_proxy localhost:8070
+        }
+        handle /* {
+            reverse_proxy localhost:8080
+        }
+}
+
+https://astroberry.local {
+        handle /api* {
+            reverse_proxy localhost:8624
+        }
+        handle /websockify* {
+            reverse_proxy localhost:8070
+        }
+        handle /* {
+            reverse_proxy localhost:8080
+        }
+}
+EOF
+
+
 	# enable vncserver
 	if [ -e /etc/systemd/system/vncserver.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
 		ln -s /etc/systemd/system/vncserver.service /etc/systemd/system/multi-user.target.wants/

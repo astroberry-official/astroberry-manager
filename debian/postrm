@@ -3,6 +3,11 @@
 
 if [ "$1" == "remove" -o "$1" == "purge" ]; then
 
+	if [ -e /etc/caddy/Caddyfile.default ]; then
+		mv /etc/caddy/Caddyfile.bak
+		mv /etc/caddy/Caddyfile.default /etc/caddy/Caddyfile
+	fi
+
 	if [ -e /opt/astroberry-manager/.venv ]; then
 	        rm -rf /opt/astroberry-manager/.venv
 	fi
