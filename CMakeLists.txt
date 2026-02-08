@@ -4,8 +4,6 @@ PROJECT(astroberry-manager NONE)
 set (VERSION_MAJOR 1)
 set (VERSION_MINOR 0)
 
-set(INSTALL_DIR "/opt")
-set(CONFIG_INSTALL_DIR "/etc")
 set(TMP_DIR "/tmp")
 
 execute_process(COMMAND which python OUTPUT_VARIABLE PYTHON)
@@ -41,9 +39,5 @@ execute_process(
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/files/astroberry-manager.service DESTINATION ${CONFIG_INSTALL_DIR}/systemd/system)
-	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/files/indiwebmanager.service DESTINATION ${CONFIG_INSTALL_DIR}/systemd/system)
-	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/files/vncserver.service DESTINATION ${CONFIG_INSTALL_DIR}/systemd/system)
-	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/files/websockify.service DESTINATION ${CONFIG_INSTALL_DIR}/systemd/system)
 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dist/astroberry_manager-${VERSION_MAJOR}.${VERSION_MINOR}-py3-none-any.whl DESTINATION ${TMP_DIR})
 endif()
