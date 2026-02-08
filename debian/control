@@ -10,5 +10,6 @@ Homepage: https://www.astroberry.io/
 
 Package: astroberry-manager
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, caddy, tigervnc-standalone-server, gpsd, gpsd-tools, apparmor-utils
+Depends: ${shlibs:Depends}, ${misc:Depends}, caddy, tigervnc-standalone-server, gpsd, gpsd-tools, apparmor-utils,
+ libcairo2-dev, libgirepository-2.0-dev, libdbus-1-dev, libcfitsio-dev, libnova-dev, libindi-dev
 Description: Astroberry Manager is a web interface for Astroberry OS.
