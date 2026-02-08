@@ -43,6 +43,7 @@ dependencies = [
     "pyindi-client>=1.9.1",
     "fastapi>=0.116.1",
     "uvicorn>=0.35.0",
+    "legacy-cgi>=2.6.4",
 ]
 
 [project.scripts]
