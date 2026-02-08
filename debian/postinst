@@ -66,14 +66,4 @@ EOF
 	if [ /etc/systemd/system/astroberry-manager.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/vncserver.service ]; then
 		ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
 	fi
-
-	# reload services
-	systemctl daemon-reload
-
-	# restart services
-	systemctl restart caddy
-	systemctl restart vncserver
-	systemctl restart websockify
-	systemctl restart indiwebmanager
-	systemctl restart astroberry-manager
 fi
