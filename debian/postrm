@@ -1,7 +1,14 @@
 #!/bin/bash
 # postrm script for astroberry-manager
 
+set -e
+
 if [ "$1" == "remove" -o "$1" == "purge" ]; then
+
+        # disable required services
+        rm -rf /etc/systemd/system/multi-user.target.wants/vncserver.service
+        rm -rf /etc/systemd/system/multi-user.target.wants/websockify.service
+        rm -rf /etc/systemd/system/multi-user.target.wants/indiwebmanager.service
 
 	if [ -e /etc/caddy/Caddyfile.default ]; then
 		mv /etc/caddy/Caddyfile /etc/caddy/Caddyfile.bak
