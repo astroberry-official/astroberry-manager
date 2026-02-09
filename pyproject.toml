@@ -12,10 +12,11 @@ version = "1.0" # Also update __version__ in main.py
 authors = [
   { name="Radek Kaczorek", email="rkaczorek@gmail.com" }
 ]
-description = "Web frontend for Astroberry OS"
+description = "Astroberry Manager is a web interface for Astroberry OS"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
 classifiers = [
     'Natural Language :: English',
     'Programming Language :: Python',
@@ -50,4 +51,5 @@ dependencies = [
 astroberry-manager = "astroberry_manager.main:main"
 
 [project.urls]
-"Homepage" = "https://www.astroberry.io/"
+Homepage = "https://www.astroberry.io/"
+Issues = "https://github.com/astroberry-official/astroberry-manager/issues"

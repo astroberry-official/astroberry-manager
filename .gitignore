@@ -2,8 +2,6 @@ __pycache__
 .@__thumb
 .venv
 dist
-build
-obj-aarch64-linux-gnu
 *.egg-info
 *.swp
 *.pyc
