@@ -240,13 +240,7 @@ function appEvents() {
     });
 
     $("#open-almanac").on("click", function() {
-        // hide all
-        $("#main-dock span").removeClass("dock-item-active");
-        $(".panel-container").hide();
-        // open almanac
-        $("#main-dock-almanac").addClass("dock-item-active");
-        $("#panel-almanac").show();
-
+	$("#main-dock-almanac").trigger("click");
     });
 
 }
