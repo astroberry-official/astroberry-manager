@@ -36,6 +36,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}-${{ github.sha }}
+          name: build-${{ matrix.container }}-${{ github.sha }}
           path: build/whl_astroberry-manager/dist/*.whl
 
