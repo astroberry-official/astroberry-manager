@@ -12,9 +12,6 @@ jobs:
       matrix:
         container: ["debian-trixie"]
 
-    container:
-      image: ghcr.io/${{ github.repository }}/${{ matrix.container }}
-
     steps:
 
       - name: Install dependencies
