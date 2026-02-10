@@ -1,0 +1,58 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Run on a new version tag i.e. v1.0
+  workflow_dispatch: # Manual run
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt install -y \
+          python3 python-is-python3 python3-pip
+
+      - name: Get the sources of Astroberry Manager
+        uses: actions/checkout@v6
+        with:
+          repository: 'astroberry-official/astroberry-manager'
+          path: 'astroberry-manager'
+
+      - name: Build Astroberry Manager
+        run: |
+          pip install --upgrade packaging && \
+          pip install build && \
+          cd astroberry-manager && python -m build && cd - && \
+          zip --junk-paths astroberry-manager astroberry-manager/dist/*
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: ./astroberry-manager.zip
+
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ github.ref }}
+#          release_name: Release ${{ github.ref }}
+#          draft: false
+#          prerelease: false
+#
+#      - name: Upload Release Asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ./astroberry-manager.zip
+#          asset_name: astroberry-manager.zip
+#          asset_content_type: application/zip

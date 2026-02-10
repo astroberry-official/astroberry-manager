@@ -1,0 +1,586 @@
+<!--
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+
+ This library is part of Astroberry OS and Astroberry Manager
+ https://github.com/astroberry-official/astroberry-os
+ https://github.com/astroberry-official/astroberry-manager
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License version 3 as published by the Free Software Foundation.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public License
+ along with this library; see the file COPYING.LIB.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Title -->
+	<title>Astroberry OS</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Content-Language" content="en,en-us"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- favicon -->
+	<link rel="icon" sizes="16x16" type="image/png" href="assets/icons/astroberry-16x16.png">
+
+	<!-- CSS Styles -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="assets/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/leaflet.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/xterm.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<!-- Skymap -->
+	<div class="celestial-map-container">
+		<div id="celestial-map"></div>
+		<div id="celestial-form">
+			<span class="panel-title fa fa-map" ></span><h1>Star Chart Settings</h1>
+		</div>
+
+		<!-- Telescope coordinates -->
+		<div id="celestial-map-telescope-coords">
+			<span id="celestial-map-telescope-icon" data-tooltip="tooltip" title="Telescope"></span>
+			<div>
+				<span class="label">RA</span><span id="starchart_telescope_ra" class="starchart-coords">00ʰ 00ᵐ 00ˢ</span>
+				<span class="label">DEC</span><span id="starchart_telescope_dec" class="starchart-coords">00° 00′ 00″</span>
+				<button id="starchart_center" class="btn btn-primary" data-tooltip="tooltip" title="Center Star Chart on telescope coordinates" disabled>Center</button>
+			</div>
+			<div>
+				<span class="label">AZ</span><span id="starchart_telescope_az" class="starchart-coords">000° 00′ 00″</span>
+				<span class="label">ALT</span><span id="starchart_telescope_alt" class="starchart-coords">00° 00′ 00″</span>
+				<button id="starchart_lock" class="btn btn-primary" data-tooltip="tooltip" title="Lock Star Chart on and track telescope" disabled>Lock</button>
+			</div>
+		</div>
+
+		<!-- Star map coordinates -->
+		<div id="celestial-map-coords">
+			<span id="celestial-map-icon" class="fa fa-map" data-tooltip="tooltip" title="Star Chart"></span>
+			<div>
+				<span class="label">RA</span><span id="starchart_ra" class="starchart-coords">00ʰ 00ᵐ 00ˢ</span>
+				<span class="label">DEC</span><span id="starchart_dec" class="starchart-coords">00° 00′ 00″</span>
+				<button id="system-logout" class="btn btn-primary" data-tooltip="tooltip" title="Logout from system"><span class="fa fa-lock"></span> Logout</button>
+			</div>
+			<div>
+				<span class="label">AZ</span><span id="starchart_az" class="starchart-coords">000° 00′ 00″</span>
+				<span class="label">ALT</span><span id="starchart_alt" class="starchart-coords">00° 00′ 00″</span>
+			</div>
+		</div>
+
+		<!-- Star map time and location -->
+		<div id="celestial-map-timeloc">
+			<span id="celestial-map-location-icon" class="fa fa-globe" data-tooltip="tooltip" title="Time & Location"></span>
+			<div><span class="label" data-tooltip="tooltip" title="Local Time">Time</span><span id="celestial-map-datetime" class="">2024-12-01T00:00:00Z</span></div>
+			<div>
+				<span class="label">Latitude</span><span id="celestial-map-latitude" class="">00° 00′ 00″</span>
+				<span class="label">Longitude</span><span id="celestial-map-longitude" class="">000° 00′ 00″</span>
+			</div>
+		</div>
+
+		<!-- Star chart target -->
+		<div id="celestial-map-target">
+			<span id="celestial-map-target-icon" class="fa fa-dot-circle-o" data-tooltip="tooltip" title="Pointer coordinates"></span>
+			<div>
+				<span class="label">RA</span><span id="target_ra" class="starchart-coords">00ʰ 00ᵐ 00ˢ</span>
+				<span class="label">DEC</span><span id="target_dec" class="starchart-coords">00° 00′ 00″</span>
+			</div>
+			<div>
+				<span class="label">AZ</span><span id="target_az" class="starchart-coords">000° 00′ 00″</span>
+				<span class="label">ALT</span><span id="target_alt" class="starchart-coords">00° 00′ 00″</span>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- terminal -->
+	<div id="terminal-container">
+		<div id="terminal"></div>
+	</div>
+
+	<!-- noVNC -->
+	<div id="desktop-container"></div>
+
+	<!-- Slider menu -->
+	<div id="main-dock" class="dock-active">
+		<div id="main-dock-handle" data-tooltip="tooltip" title="Show/Hide sliding menu"></div>
+		<span id="main-dock-search" class="main-dock-item" data-tooltip="tooltip" title="Search"></span>
+		<span id="main-dock-equipment" class="main-dock-item" data-tooltip="tooltip" title="Equipment"></span>
+		<span id="main-dock-almanac" class="main-dock-item fa fa-sun-o" data-tooltip="tooltip" title="Almanac"></span>
+		<span id="main-dock-location" class="main-dock-item fa fa-globe" data-tooltip="tooltip" title="Location"></span>
+		<span id="main-dock-weather" class="main-dock-item fa fa-cloud" data-tooltip="tooltip" title="Weather"></span>
+		<span id="main-dock-system" class="main-dock-item fa fa-cog" data-tooltip="tooltip" title="System"></span>
+		<span id="main-dock-terminal" class="main-dock-item fa fa-terminal" data-tooltip="tooltip" title="Terminal"></span>
+		<span id="main-dock-chart" class="main-dock-item fa fa-map" data-tooltip="tooltip" title="Star Chart"></span>
+		<span id="main-dock-screen" class="main-dock-item fa fa-desktop" data-tooltip="tooltip" title="Desktop"></span>
+		<span id="main-dock-fullscreen" class="main-dock-item fa fa-arrows-alt" data-tooltip="tooltip" title="Full screen"></span>
+	</div>
+
+	<!-- Tiles -->
+	<div class="main-container">
+
+		<!-- SEARCH PANEL -->
+		<div class="panel-container" id="panel-search">
+			<div id="logo" href="https://astroberry.io/"><img src="assets/icons/astroberry-icon-white.svg" width="26"/></div>
+			<h1>Find & Explore</h1>
+
+			<div id="menu"><span class="fa fa-bars" ></span></div>
+
+			<div id="search">
+				<div class="ui-widget">
+					<input id="search-text" class="form-control" type="text" placeholder="Search with Astroberry..."></input>
+				</div>
+				<button id="toggle-search" class="btn btn-primary button-active" data-tooltip="tooltip" title="Search for an object in local database or online.">Search</button>
+				<button id="toggle-lucky" class="btn btn-primary" data-tooltip="tooltip" title="Find random object in local database.">I'm Feeling Lucky</button>
+			</div>
+			<div id="search-results">
+				<div id="search-results-text">
+					<!-- <h2>Start searching</h2> -->
+					<span>
+						Use object name or symbol to search for stars, clusters, nebulas and galaxies.<br><br>
+						For Solar System objects use <span id="open-almanac" class="fa fa-sun-o" data-tooltip="tooltip" title="Open Almanac"></span> Almanac.
+					</span>
+				</div>
+				<div id="search-results-image">
+					<img src="assets/images/deneb.jpg" width="178"/>
+				</div>
+				<div id="search-results-coordinates"></div>
+				<div id="search-results-description">
+					Objects are first looked up in the local database. If not found, online database is queried, which contains over 19 million objects.
+					Visit <a href="https://simbad.cds.unistra.fr/simbad/" target="_blank">SIMBAD</a> for details.
+				</div>
+				<div id="search-results-actions"></div>
+			</div>
+		</div>
+
+		<!-- LOCATION PANEL -->
+		<div class="panel-container" id="panel-location">
+			<span class="panel-title fa fa-globe" ></span><h1>Location</h1>
+
+			<div class="displayctl">
+				<button id="toggle-map" class="btn btn-primary button-active">Map</button>
+				<button id="toggle-skymap" class="btn btn-primary">Satellites</button>
+				<button id="toggle-gpsdetails" class="btn btn-primary">Details</button>
+				<button id="toggle-geolocsettings" class="btn btn-primary">Settings</button>
+			</div>
+
+			<div id="map_container">
+				<div id="map" class="map">
+					Loading...
+					<noscript>
+						<span class='warning'>You must enable javascript to view the maps.</span><br/>
+					</noscript>
+				</div>
+			</div>
+
+			<div id="skymap_container">
+				<canvas id="skymap" width="360" height="360"></canvas>
+			</div>
+
+			<div id="gpsdetails_container">
+				<div id="gpsdetails">
+					<div id="gpsinfo">
+						<table>
+							<tr><td class="gpshdr">Time</td><td><span id="gps_time">-</span></td></tr>
+							<tr><td class="gpshdr">Latitude</td><td><span id="gps_latitude">-</span></td></tr>
+							<tr><td class="gpshdr">Longitude</td><td><span id="gps_longitude">-</span></td></tr>
+							<tr><td class="gpshdr">Altitude</td><td><span id="gps_altitude">-</span></td></tr>
+							<tr><td class="gpshdr">Fix Type</td><td><span id="gps_mode">-</span></td></tr>
+							<tr><td class="gpshdr">Satellites</td><td><span id="gps_sats">-</span></td></tr>
+							<tr><td class="gpshdr">HDOP</td><td><span id="gps_hdop">-</span></td></tr>
+							<tr><td class="gpshdr">VDOP</td><td><span id="gps_vdop">-</span></td></tr>
+						</table>
+					</div>
+					<div class="vl"></div>
+					<div id="gpssats">
+						<table>
+							<tr align='right'><th>PRN</th><th>El</th><th>Az</th><th>Signal</th><th>Used</th></tr>
+							<tr align='right'><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></td>
+						</table>
+					</div>
+				</div>
+				<canvas id="sschart" width="360" height="150"></canvas>
+			</div>
+
+			<div id="geoloc_container">
+
+				<fieldset id="geoloc_mode">
+					<h2>Mode</h2>
+                                        <input id="geoloc_mode_telescope" name="geoloc_mode" type="radio" value="telescope" checked />
+                                        <label for="geoloc_mode_telescope" title="Get location from telescope">Telescope</label>
+					<input id="geoloc_mode_gps" name="geoloc_mode" type="radio" value="gps" />
+					<label for="geoloc_mode_gps" data-tooltip="tooltip" title="Get location from GPS">GPS</label>
+					<input id="geoloc_mode_network" name="geoloc_mode" type="radio" value="network" />
+					<label for="geoloc_mode_network" title="Get location from network">Network</label>
+					<input id="geoloc_mode_custom" name="geoloc_mode" type="radio" value="custom" />
+					<label for="geoloc_mode_custom" title="Set custom location">Custom</label>
+				</fieldset>
+
+				<fieldset id="geoloc_custom">
+					<label for="geoloc_latitude">Latitude</label><input id="geoloc_latitude" class="form-control" type="text" placeholder="Latitude (deg)" disabled>
+					<label for="geoloc_longitude">Longitude</label><input id="geoloc_longitude" class="form-control" type="text" placeholder="Longitude (deg)" disabled>
+					<label for="geoloc_altitude">Altitude</label><input id="geoloc_altitude" class="form-control" type="text" placeholder="Altitude (meters)" disabled>
+				</fieldset>
+
+				 <button id="control-set-location" class="btn btn-primary" data-tooltip="tooltip" title="Send location to telescope">Send</button>
+			</div>
+
+			<div id="coordtime" class="container-footer">
+				<div><span class="label">Latitude</span><span id="latitude" class="gpsvalues">00° 00′ 00″</span></div>
+				<div><span class="label">Longitude</span><span id="longitude" class="gpsvalues">00° 00′ 00″</span></div>
+				<div><span class="label">UTC Time</span><span id="gtime" class="gpsvalues">0000-00-00T00:00:00</span></div>
+				<div>
+					<span class="label">Mode</span>
+						<span id="gpsfix" class="gpsvalues blink" data-tooltip="tooltip">
+						<span class="gpsfix_waiting fa fa-circle" ></span>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- WEATHER PANEL -->
+		<div class="panel-container" id="panel-weather">
+
+			<span class="panel-title fa fa-cloud" ></span><h1>Conditions</h1>
+
+			<div class="displayctl">
+				<button id="toggle-weather-forecast" class="btn btn-primary button-active">Weather</button>
+				<button id="toggle-weather-settings" class="btn btn-primary">Settings</button>
+				<span id="weather_update" class="fa fa-refresh" data-tooltip="tooltip" title="Update weather"></span>
+			</div>
+
+			<div id="weather_forecast">
+				<div id="weather_img_container">
+					<img id="weather_icon" src="assets/images/weather/fair_day.svg" type="image/svg+xml" />
+				</div>
+				<div class="weather_tdhp">
+					<div id="weather_temperature">- °C</div>
+					<span id="weather_dewpoint">Dew point: - °C</span>
+					<span id="weather_humidity">Humidity: - %</span>
+					<span id="weather_pressure">Pressure: - hPa</span>
+				</div>
+
+				<div id="weather_legend">&nbsp;</div>
+
+				<div class="weather_cwr">
+					<span id="weather_clouds"><span class='fa fa-cloud'></span>- %</span>
+					<span id="weather_wind"><span class='fa fa-align-justify'></span>- m/s</span>
+					<span id="weather_precipitation"><span class='fa fa-tint'></span>- mm</span>
+				</div>
+
+				<div class="weather_next">
+					<div>
+						<span class="weather_weekday">-</span>
+						<img class="weather_icon_sm" src="assets/images/weather/fair_day.svg" type="image/svg+xml" />
+						<span class="weather_temp_sm"><span class='fa fa-thermometer-full'></span> - °C</span>
+						<span class="weather_clouds_sm"><span class='fa fa-cloud'></span> - %</span>
+					</div>
+					<div>
+						<span class="weather_weekday">-</span>
+						<img class="weather_icon_sm" src="assets/images/weather/fair_day.svg" type="image/svg+xml" />
+						<span class="weather_temp_sm"><span class='fa fa-thermometer-full'></span> - °C</span>
+						<span class="weather_clouds_sm"><span class='fa fa-cloud'></span> - %</span>
+					</div>
+					<div>
+						<span class="weather_weekday">-</span>
+						<img class="weather_icon_sm" src="assets/images/weather/fair_day.svg" type="image/svg+xml" />
+						<span class="weather_temp_sm"><span class='fa fa-thermometer-full'></span> - °C</span>
+						<span class="weather_clouds_sm"><span class='fa fa-cloud'></span> - %</span>
+					</div>
+					<div>
+						<span class="weather_weekday">-</span>
+						<img class="weather_icon_sm" src="assets/images/weather/fair_day.svg" type="image/svg+xml" />
+						<span class="weather_temp_sm"><span class='fa fa-thermometer-full'></span> - °C</span>
+						<span class="weather_clouds_sm"><span class='fa fa-cloud'></span> - %</span>
+					</div>
+					<div>
+						<span class="weather_weekday">-</span>
+						<img class="weather_icon_sm" src="assets/images/weather/fair_day.svg" type="image/svg+xml" />
+						<span class="weather_temp_sm"><span class='fa fa-thermometer-full'></span> - °C</span>
+						<span class="weather_clouds_sm"><span class='fa fa-cloud'></span> - %</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="weather_settings">
+
+				<fieldset id="weather_units">
+					<h2>Units</h2>
+					<input id="weather_units_c" name="weather_units" type="radio" value="C" checked /><label for="weather_units_c">Celsius</label>
+					<input id="weather_units_f" name="weather_units" type="radio" value="F" /><label for="weather_units_f">Fahrenheit</label>
+				</fieldset>
+
+				<fieldset id="weather_alerts">
+					<h2>Show alerts</h2>
+					<label class="checkbox-inline"><input id="weather_alerts_noclouds" type="checkbox">Clouds < 1%</label><br>
+					<label class="checkbox-inline"><input id="weather_alerts_humidity" type="checkbox">Relative Humidity > 80%</label><br>
+					<label class="checkbox-inline"><input id="weather_alerts_wind" type="checkbox">Wind > 20 m/s</label>
+				</fieldset>
+
+				<fieldset id="weather_forecast_time">
+					<h2>5-days forecast at specific time of a day/night</h2>
+					<input id="weather_forecast_00" name="weather_forecast_time" type="radio" value="00" checked /><label for="weather_forecast_00">00:00</label>
+					<input id="weather_forecast_06" name="weather_forecast_time" type="radio" value="06" /><label for="weather_forecast_06">06:00</label>
+					<input id="weather_forecast_12" name="weather_forecast_time" type="radio" value="12" /><label for="weather_forecast_12">12:00</label>
+					<input id="weather_forecast_18" name="weather_forecast_time" type="radio" value="18" /><label for="weather_forecast_18">18:00</label>
+				</fieldset>
+			</div>
+
+			<span id="weather_updated"></span><span class="weather-credits">Weather forecast from <a href="https://www.met.no/">met.no</a>, delivered by the Norwegian Meteorological Institute.</span>
+
+		</div>
+
+		<!-- EQUIPMENT PANEL -->
+		<div class="panel-container" id="panel-equipment">
+			<img src="assets/images/telescope.png" class="panel-title" /><h1>Equipment</h1>
+
+			<div class="displayctl">
+				<button id="toggle-profile" class="btn btn-primary button-active">Profiles</button>
+				<button id="toggle-profile-settings" class="btn btn-primary">Settings</button>
+			</div>
+
+			<div id="equipment-container">
+
+				<div id="profile_view">
+					<!-- Profile Select -->
+					<select id="profiles" class="form-control"></select>
+				</div>
+
+				<div id="profile_settings">
+					<fieldset id="profile_settings_main">
+						<label for="profile_name">Profile Name</label>
+						<input id="profile_name" class="form-control" type="text" placeholder="New name">
+
+						<!-- Devices Select -->
+						<label for="drivers_list" class="control-label">Local Devices</label>
+						<select id="drivers_list" class="form-control selectpicker show-tick" data-live-search="true" title="Select devices..." data-selected-text-format="count > 5" multiple></select>
+						<label for="remote_drivers" class="control-label">Remote Devices</label>
+						<input class="form-control" id="remote_drivers" type="text" placeholder="driver1@remotehost,driver2@remotehost">
+
+						<!-- Profile Options -->
+						<label class="checkbox-inline"><input id="profile_auto_start" type="checkbox" value="Autostart"  data-toggle="tooltip" title="Start profile automatically after system start">Auto Start</label>
+						<label class="checkbox-inline"><input id="profile_auto_connect" type="checkbox" value="Autoconnect" data-toggle="tooltip" title="Connect all devices automatically after profile start">Auto Connect</label>
+					</fieldset>
+
+					<!-- Profile Settings Confirm -->
+					<fieldset id="profile_settings_confirm">
+						<button id="profile_add" class="btn btn-primary" data-toggle="tooltip" title="Add Profile">Add</button>
+						<button id="profile_remove" class="btn btn-primary" data-toggle="tooltip" title="Delete Profile">Delete</button>
+						<!--
+						<button id="profile_save" class="btn btn-primary" data-toggle="tooltip" title="Save changes">Save</button>
+						<button id="profile_cancel" class="btn btn-primary" data-toggle="tooltip" title="Cancel changes">Cancel</button>
+						-->
+					</fieldset>
+				</div>
+
+				<!-- Profile Status -->
+				<object id="equipment_status" data="assets/images/equipment.svg" type="image/svg+xml" ></object>
+
+				<!-- Profile Start/Stop -->
+				<div id="profile_ctrl">
+					<button id="profile_start" class="btn btn-primary" style="display: none;" data-toggle="tooltip" title="Start profile"><span class='fa fa-play'></span> Start</button>
+					<button id="profile_stop" class="btn btn-primary" style="display: none;" data-toggle="tooltip" title="Stop profile"><span class='fa fa-cog fa-spin'></span> Stop</button>
+				</div>
+				
+				<div id="server_status">
+					<div id="driver_details"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ALMANAC -->
+		<div class="panel-container" id="panel-almanac">
+			<span class="panel-title fa fa-sun-o" ></span><h1>Almanac</h1>
+
+			<div class="displayctl">
+				<button id="toggle-moon" class="btn btn-primary button-active">Moon</button>
+				<button id="toggle-sun" class="btn btn-primary">Sun</button>
+				<button id="toggle-planets" class="btn btn-primary">Planets</button>
+				<button id="toggle-polaris" class="btn btn-primary">Polaris</button>
+			</div>
+
+			<div id="moon">
+				<div id="moon_container">
+					<img id="moon_picture" src="assets/images/moon.png">
+					<div id="moon_shadow" align="center"></div>	
+				</div>
+				<table>
+					<tr><td class="moonhdr">Azimuth</td><td class="moondata"><span id="moon_az">000.00°</span></td></tr>
+					<tr><td class="moonhdr">Altitude</td><td class="moondata"><span id="moon_alt">00.00°</span></td></tr>
+					<tr><td class="moonhdr">RA</td><td class="moondata"><span id="moon_ra">00° 00′ 00″</span></td></tr>
+					<tr><td class="moonhdr">DEC</td><td class="moondata"><span id="moon_dec">00° 00′ 00″</span></td></tr>
+					<tr></tr>
+					<tr><td class="moonhdr">Phase</td><td class="moondata"><span id="moon_phase_name">-</span></span></td></tr>
+					<tr><td class="moonhdr">Light</td><td class="moondata"><span id="moon_light">00.0%</span></td></tr>
+					<tr><td class="moonhdr">Rise</td><td class="moondata"><span id="moon_rise">00:00:00</span></td></tr>
+					<tr><td class="moonhdr">Transit</td><td class="moondata"><span id="moon_transit">00:00:00</span></td></tr>
+					<tr><td class="moonhdr">Set</td><td class="moondata"><span id="moon_set">00:00:00</span></td></tr>
+					<tr></tr>
+					<tr id="new_moon_first"><td class="moonhdr">Next New Moon</td><td class="moondata"><span class="moon_new">0000-00-00 00:00:00</span></td></tr>
+					<tr><td class="moonhdr">Next Full Moon</td><td class="moondata"><span id="moon_full">0000-00-00 00:00:00</span></td></tr>
+					<tr id="new_moon_second" style="display:none;"><td class="moonhdr">Next New Moon</td><td class="moondata"><span class="moon_new">0000-00-00 00:00:00</span></td></tr>
+				</table>
+				<div id="moon-actions">
+					<button id="moon-actions-center" class="btn btn-primary" data-tooltip="tooltip" title="Center in Star Chart">Center</button>
+				</div>
+			</div>
+
+			<div id="sun">
+				<img src="assets/images/sun.png"/>
+				<table>
+					<tr><td class="sunhdr">Azimuth</td><td class="sundata"><span id="sun_az">000.00°</span></td></tr>
+					<tr><td class="sunhdr">Altitude</td><td class="sundata"><span id="sun_alt">00.00°</span></td></tr>
+					<tr><td class="sunhdr">RA</td><td class="sundata"><span id="sun_ra">00° 00′ 00″</span></td></tr>
+					<tr><td class="sunhdr">DEC</td><td class="sundata"><span id="sun_dec">00° 00′ 00″</span></td></tr>
+					<tr></tr>
+					<tr><td class="sunhdr">Astronomical dawn</td><td class="sundata"><span id="sun_at_start">00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Civil dawn</td><td class="sundata"><span id="sun_ct_start">00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Sunrise</td><td class="sundata"><span id="sun_rise">00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Transit</td><td class="sundata"><span id="sun_transit">00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Sunset</td><td class="sundata"><span id="sun_set">00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Civil dusk</td><td class="sundata"><span id="sun_ct_end">00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Astronomical dusk</td><td class="sundata"><span id="sun_at_end">00:00:00</span></td></tr>
+					<tr></tr>
+					<tr id="sun_solstice_first"><td class="sunhdr">Next Solstice</td><td class="sundata"><span class="sun_solstice">0000-00-00 00:00:00</span></td></tr>
+					<tr><td class="sunhdr">Next Equinox</td><td class="sundata"><span id="sun_equinox"></td></tr>
+					<tr id="sun_solstice_second" style="display:none;"><td class="sunhdr">Solstice</td><td class="sundata"><span class="sun_solstice">0000-00-00 00:00:00</span></td></tr>
+				</table>
+				<div id="sun-actions">
+					<button id="sun-actions-center" class="btn btn-primary" data-tooltip="tooltip" title="Center in Star Chart">Center</button>
+				</div>
+			</div>
+
+			<div id="planets">
+				<table>
+					<tr><td class="planetshdr">&nbsp;</td><td>&nbsp;</td><td class="planetshdrdata">Rise</td><td class="planetshdrdata">Transit</td><td class="planetshdrdata">Set</td><td class="planetshdrdata">Azimuth</td><td class="planetshdrdata">Altitude</td></tr>
+					<tr id="mercury"><td class="planetshdr" data-tooltip="tooltip" Title="Center">Mercury</td><td><span class="planet_trend fa" ></span></td><td class="planetsdata"><span id="mercury_rise">-</td><td class="planetsdata"><span id="mercury_transit">-</td><td class="planetsdata"><span id="mercury_set">-</td><td class="planetsdata"><span id="mercury_az">-</td><td class="planetsdata"><span id="mercury_alt">-</td></tr>
+					<tr id="venus"><td class="planetshdr" data-tooltip="tooltip" Title="Center">Venus</td><td><span class="planet_trend fa" ></span><td class="planetsdata"><span id="venus_rise">-</td><td class="planetsdata"><span id="venus_transit">-</td><td class="planetsdata"><span id="venus_set">-</td><td class="planetsdata"><span id="venus_az">-</td><td class="planetsdata"><span id="venus_alt">-</td></tr>
+					<tr id="mars"><td class="planetshdr" data-tooltip="tooltip" Title="Center">Mars</td><td><span class="planet_trend fa" ></span><td class="planetsdata"><span id="mars_rise">-</td><td class="planetsdata"><span id="mars_transit">-</td><td class="planetsdata"><span id="mars_set">-</td><td class="planetsdata"><span id="mars_az">-</td><td class="planetsdata"><span id="mars_alt">-</td></tr>
+					<tr id="jupiter"><td class="planetshdr" data-tooltip="tooltip" Title="Center">Jupiter</td><td><span class="planet_trend fa" ></span><td class="planetsdata"><span id="jupiter_rise">-</td><td class="planetsdata"><span id="jupiter_transit">-</td><td class="planetsdata"><span id="jupiter_set">-</td><td class="planetsdata"><span id="jupiter_az">-</td><td class="planetsdata"><span id="jupiter_alt">-</td></tr>
+					<tr id="saturn"></span><td class="planetshdr" data-tooltip="tooltip" Title="Center">Saturn</td><td><span class="planet_trend fa" ><td class="planetsdata"><span id="saturn_rise">-</td><td class="planetsdata"><span id="saturn_transit">-</td><td class="planetsdata"><span id="saturn_set">-</td><td class="planetsdata"><span id="saturn_az">-</td><td class="planetsdata"><span id="saturn_alt">-</td></tr>
+					<tr id="uranus"><td class="planetshdr" data-tooltip="tooltip" Title="Center">Uranus</td><td><span class="planet_trend fa" ></span><td class="planetsdata"><span id="uranus_rise">-</td><td class="planetsdata"><span id="uranus_transit">-</td><td class="planetsdata"><span id="uranus_set">-</td><td class="planetsdata"><span id="uranus_az">-</td><td class="planetsdata"><span id="uranus_alt">-</td></tr>
+					<tr id="neptune"><td class="planetshdr" data-tooltip="tooltip" Title="Center">Neptune</td><td><span class="planet_trend fa" ></span><td class="planetsdata"><span id="neptune_rise">-</td><td class="planetsdata"><span id="neptune_transit">-</td><td class="planetsdata"><span id="neptune_set">-</td><td class="planetsdata"><span id="neptune_az">-</td><td class="planetsdata"><span id="neptune_alt">-</td></tr>
+				</table>
+				<img src="assets/images/solar_system.png"/>
+			</div>
+
+			<div id="polaris">
+				<canvas id="polaris-reticle" width="360" height="340"></canvas>
+				<div id="polarisdata" class="container-footer">
+					<div><span class="label">Hour Angle</span><span class="polarisdata" id="pha">-</span></div>
+					<div><span class="label">Next Transit</span><span class="polarisdata" id="polaris_next_transit">-</span></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- SYSTEM PANEL -->
+		<div class="panel-container" id="panel-system">
+			<span class="panel-title fa fa-cog" ></span><h1>System</h1>
+
+			<div class="systemctl">
+				<button id="_system-status" class="btn btn-primary button-active">Info</button>
+				<button id="_system-events" class="btn btn-primary">Events</button>
+				<button id="_system-settings" class="btn btn-primary">Settings</button>
+			</div>
+
+			<div id="system-status">
+				<div id="sysmon">
+					<div class="sysmon-resource">
+						<a href="https://astroberry.io/" target="_blank" data-tooltip="tooltip" title="Astroberry Website"><img src="assets/icons/astroberry-icon-white.svg" width="80" height="80" /></a>
+						<h2>Astroberry OS</h2>
+						<span class="label">User Interface</span><span id="sysmon-resource-ui_version" class="sysinfo"></span><br>
+						<span class="label">Operating System</span><span id="sysmon-resource-os_version" class="sysinfo"></span><br>
+						<span class="label">INDI Library</span><span id="sysmon-resource-indi_version" class="sysinfo"></span><br>
+						<span class="label">KStars</span><span id="sysmon-resource-kstars_version" class="sysinfo"></span><br>
+						<span class="label">PHD2</span><span id="sysmon-resource-phd2_version" class="sysinfo"></span>
+					</div>
+
+					<div class="sysmon-resource">
+						<h2>System</h2>
+						<!-- <span class="label">Name</span><span id="sysmon-resource-name" class="sysinfo"></span><br> -->
+						<span class="label">Type</span><span id="sysmon-resource-system" class="sysinfo"></span><br>
+						<span class="label">Kernel</span><span id="sysmon-resource-kernel" class="sysinfo"></span><br>
+						<span class="label">CPU</span><span id="sysmon-resource-cpu" class="sysinfo"></span><br>
+						<span class="label">Usage</span><span id="sysmon-resource-cpuusage" class="sysinfo"></span><br>
+						<span class="label">Load</span><span id="sysmon-resource-load" class="sysinfo"></span><br>
+						<span class="label">Uptime</span><span id="sysmon-resource-uptime" class="sysinfo"></span><br>
+						<span class="label">Model</span><span id="sysmon-resource-model" class="sysinfo"></span><br>
+					</div>
+					<div class="sysmon-resource">
+						<h2>Memory</h2>
+						<span class="label">Total</span><span id="sysmon-resource-memtot" class="sysinfo"></span><br>
+						<span class="label">Available</span><span id="sysmon-resource-memavail" class="sysinfo"></span><br>
+						<span class="label">Used</span><span id="sysmon-resource-memused" class="sysinfo"></span><br>
+					</div>
+					<div class="sysmon-resource">
+						<h2>Disk</h2>
+						<span class="label">Total</span><span id="sysmon-resource-disktot" class="sysinfo"></span><br>
+						<span class="label">Available</span><span id="sysmon-resource-diskavail" class="sysinfo"></span><br>
+						<span class="label">Used</span><span id="sysmon-resource-diskused" class="sysinfo"></span><br>
+					</div>
+					<div class="sysmon-resource">
+						Astroberry OS is free and open source software. 
+						You can use it and modify under the terms of the 
+						<a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">General Public License version 3</a>. 
+						System components released as part of Astroberry OS are licenced under own respective terms.
+					</div>
+				</div>
+			</div>
+
+			<div id="system-events">
+				<div id="syslog"></div>
+			</div>
+
+			<div id="system-settings">
+				<fieldset id="starchart-settings">
+					<h2>Star Chart</h2>
+					<label class="checkbox-inline"><input id="telescope_coordinates_enable" type="checkbox" checked>Show telescope coordinates</label><br>
+					<label class="checkbox-inline"><input id="starchart_coordinates_enable" type="checkbox" checked>Show star chart coordinates</label><br>
+					<label class="checkbox-inline"><input id="timeloc_enable" type="checkbox" checked>Show time and location</label><br>
+					<label class="checkbox-inline"><input id="target_enable" type="checkbox" checked>Show pointer coordinates</label><br>
+					<label class="checkbox-inline"><input id="target_autohide" type="checkbox" checked>Autohide pointer coordinates</label><br>
+					<label class="checkbox-inline"><input id="system_timeloc" type="checkbox" checked>Use system location and time</label>
+				</fieldset>
+
+				<fieldset id="system-maintenance">
+					<h2>Maintenance</h2>
+					<span class="system-maintenance-desc">Maintenance actions require system level priviledges.</span>
+					<button id="system-update" class="btn btn-primary" data-tooltip="tooltip" title="Install available updates">Update</button>
+					<button id="system-backup" class="btn btn-primary" data-tooltip="tooltip" title="Create backup copy of system configuration">Backup</button>
+					<button id="system-restore" class="btn btn-primary" data-tooltip="tooltip" title="Restore system configuration from backup copy">Restore</button>
+					<button id="system-restart" class="btn btn-primary" data-tooltip="tooltip" title="Stop all processes and reboot the system">Restart</button>
+					<button id="system-shutdown" class="btn btn-primary" data-tooltip="tooltip" title="Stop all processes and poweroff the system">Shutdown</button>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="notify_message"></div>
+
+	<script src="assets/js/socket.io/socket.io.min.js" type="text/javascript"></script>
+	<script src="assets/js/jquery/jquery.min.js" type="text/javascript"></script>
+	<script src="assets/js/jquery/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="assets/js/popper/popper.min.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap/bootstrap-select.min.js" type="text/javascript"></script>
+	<script src="assets/js/d3-celestial/lib/d3.min.js" type="text/javascript"></script>
+	<script src="assets/js/d3-celestial/lib/d3.geo.projection.min.js" type="text/javascript"></script>
+	<script src="assets/js/d3-celestial/celestial.js" type="text/javascript"></script>
+	<script src="assets/js/xterm/xterm.js" type="module"></script>
+	<script src="assets/js/xterm/xterm-addon-fit.js" type="module"></script>
+	<script src="assets/js/xterm/xterm-addon-search.js" type="module"></script>
+	<script src="assets/js/xterm/xterm-addon-web-links.js" type="module"></script>
+	<script src="assets/js/leaflet/leaflet.js" type="module"></script>
+	<script src="assets/js/app.js" type="module"></script>
+</body>
+</html>

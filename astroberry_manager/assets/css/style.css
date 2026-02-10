@@ -1,0 +1,591 @@
+/*
+ Copyright(c) 2026 Radek Kaczorek  <rkaczorek AT gmail DOT com>
+
+ This library is part of Astroberry OS and Astroberry Manager
+ https://github.com/astroberry-official/astroberry-os
+ https://github.com/astroberry-official/astroberry-manager
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License version 3 as published by the Free Software Foundation.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public License
+ along with this library; see the file COPYING.LIB.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02110-1301, USA.
+*/
+
+@font-face {font-family: 'Roboto Light';font-style: normal;src: local('?'), url('../fonts/Roboto-Light.ttf') format('truetype');}
+@font-face {font-family: 'Roboto Medium';font-style: normal;src: local('?'), url('../fonts/Roboto-Medium.ttf') format('truetype');}
+@font-face {font-family: 'Roboto Regular';font-style: normal;src: local('?'), url('../fonts/Roboto-Regular.ttf') format('truetype');}
+
+html { height: 100%; }
+
+body { background-color: #0c0c0c; font-family: 'Roboto Medium', Arial, Helvetica; font-size:16px; font-weight: normal; color: #fff; 
+	padding: 2px; margin: 0; height: 100%; display: flex; flex-direction: column; }
+
+h1 { display: inline-block; font-size: 1.3em; color: white; font-weight: bold; }
+h2 { font-size: 1.2em; }
+h3 { font-size: 1.1em; }
+
+a { color: #aaa; text-decoration: none; }
+a:hover { color: #009933; text-decoration: none;}
+
+button { background: #333; color: #fff; min-width: 75px; }
+button:hover { background: #009933; }
+
+table { display: block; margin-left: 5px; }
+table, th, td { border: none; font-size: 0.90em; }
+tr { height: 1.6em; }
+
+.btn { padding: .225rem .75rem; }
+.btn:disabled {
+  background-color: #333333;
+  border-color: #333333;
+}
+.btn-primary {
+  background-color: #333333;
+  border-color: #333333;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+  background-color: #009933;
+  border-color: #333333;
+}
+.button-active { background: #009933; }
+.warning { color: #FF0000; }
+
+.blink { animation: blinker 1s step-start infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
+
+#particles-js { position:absolute; left:0; top:0; width:100%; height: 99%; z-index:-100; }
+#notify_message { display: block; position: absolute; width: 30%; left: 40%; top: 30%; z-index: 500; }
+.alert { text-align: center; }
+
+/*************************************/
+/*              Welcome
+/*************************************/
+#welcome-container { display: block; width: 640px; margin: auto auto; padding: 20px 30px; background: #1c1c1c; 
+        border: solid 1px #333; border-radius: 5px; opacity: 0.9; box-shadow: 10px 10px 5px #0c0c0ccc; }
+#welcome-container h1 { margin-left: 10px; font-size: 1.5em; vertical-align: bottom; }
+#welcome { width: 100%; margin-top: 20px; margin-bottom: 20px; }
+#welcome ul { margin-top: 10px; }
+#welcome li { margin-top: 15px; font-size: 0.9em; font-family: 'Roboto'; }
+#welcome a { color: #009933; }
+#welcome input[type=checkbox] { margin-top: 10px; margin-right: 10px; }
+#welcome label { display: inline-block; width: 90%; vertical-align: top; margin-top: 5px; margin-bottom: 10px; }
+
+/*************************************/
+/*              	Login
+/*************************************/
+#login-form-container { display: block; width: 350px; margin: auto auto; padding: 20px 30px; background: #1c1c1c; 
+	border: solid 1px #333; border-radius: 5px; opacity: 0.9; box-shadow: 10px 10px 5px #0c0c0ccc; }
+#login-form-container h1 { margin-left: 10px; font-size: 1.5em; vertical-align: bottom; }
+#login-form { width: 100%; margin-top: 10px; }
+#login-form input[type=checkbox] { margin-top: 10px; margin-right: 10px; }
+#login-form label { vertical-align: top; margin-top: 5px; }
+#login-form .form-control { margin-top: 10px; font-size: 1.0em; }
+#login-form .form-control:first-of-type { margin-top: 20px; }
+#login-form-container button { margin-top: 10px; }
+
+/*************************************/
+/*              noVNC
+/*************************************/
+#desktop-container { flex: 1; overflow: hidden; display: none; }
+#desktop-container :first-child { background: #000 !important; }
+
+/*************************************/
+/*             TERMINAL
+/*************************************/
+#terminal-container { display: none; position: absolute; top:20%; left: 25%; z-index: 500; 
+	background: #000; border: 5px solid #ff330066; opacity: 0.8; padding: 10px; }
+#terminal { overflow: hidden;}
+div.xterm-viewport { overflow-x: hidden; overflow-y: auto !important; }
+
+/*************************************/
+/*         SKY VIEW PANEL
+/*************************************/
+
+/* main container */
+.celestial-map-container {
+	flex: auto;
+	width: 100%;
+	overflow: hidden;
+	background: #000;
+}
+
+div#error { opacity: 0.8 !important; font-size: 0.9em;  color: #ff3300; display: none; }
+
+#d3-celestial-footer { text-align:center; color:#666; font:10pt/1 'Roboto Medium', Arial, Helvetica, sans-serif; }
+#d3-celestial-footer a { text-decoration:none; color:#99f; }
+
+#celestial-map { display: block; width: 100%; height: 100%; margin: 0; padding: 0; position: relative; overflow: hidden; cursor: crosshair !important; }
+#celestial-map input[type=button] { background: #333; color: #fff; }
+#celestial-map input[type=button]:hover { background: #009933; }
+
+#celestial-zoomin, #celestial-zoomout { display: block;	width: 32px; height: 32px; border: 0; border-radius: 5px; position: absolute; z-index: 100; right: 30px; }
+#celestial-zoomin:hover { cursor: pointer; } 
+#celestial-zoomout:hover { cursor: pointer; } 
+#celestial-zoomin {	top: 20px; }
+#celestial-zoomout { top: 60px; }
+
+#celestial-map-timeloc { display: block; position: absolute; z-index: 10; padding: 5px 20px; border-radius: 5px; background: #1c1c1c66; 
+	font-size: 0.8em; width: 380px; bottom: 20px; left: 10px; }
+#celestial-map-timeloc div { margin: 5px auto; display: inline-block; }
+#celestial-map-timeloc span { margin-right: 10px; text-align: right; }
+#celestial-map-timeloc .label { vertical-align: top; }
+#celestial-map-location-icon { float: left; height: 40px; font-size: 2em; margin-top: 20px; padding-right: 15px; cursor: pointer; }
+#celestial-map-location-icon:hover { color: #009933; }
+#celestial-map-datetime { display: inline-block; width: 230px; }
+
+#celestial-map-coords {display: block; position: absolute; z-index: 10; padding: 5px 20px; border-radius: 5px; background: #1c1c1c66; 
+	font-size: 0.9em; width: 450px; top: 20px; right: 100px; }
+#celestial-map-coords .label { width: 35px; }
+#celestial-map-coords span { margin-left: 5px; }
+#celestial-map-coords div { margin: 5px auto; display: inline-block; }
+#celestial-map-coords button { font-size: 0.75em; margin-left: 20px; }
+
+#celestial-map-telescope-coords {display: none; position: absolute; z-index: 10; padding: 5px 20px; border-radius: 5px; background: #1c1c1c66; 
+	font-size: 0.9em; width: 450px; top: 20px; left: 10px; }
+#celestial-map-telescope-coords .label { width: 35px; }
+#celestial-map-telescope-coords span { margin-left: 5px; }
+#celestial-map-telescope-coords button { font-size: 0.75em; margin-left: 20px; }
+#celestial-map-telescope-coords div { margin: 5px auto; display: inline-block; }
+
+#celestial-map-target {display: block; position: absolute; z-index: 10; padding: 5px 20px; border-radius: 5px; background: #1c1c1c66; 
+	font-size: 0.9em; width: 350px; bottom: 20px; right: 100px; }
+#celestial-map-target div { margin: 5px auto; display: inline-block; }
+#celestial-map-target span { margin-right: 10px; text-align: right; opacity: 0.85;}
+#celestial-map-target .label { vertical-align: top; }
+
+#celestial-map-icon { float: left; width: 25px; height: 25px; margin-top: 25px; margin-right: 20px; font-size: 1.25em; cursor: pointer; }
+#celestial-map-telescope-icon { background: url("../images/telescope.png") no-repeat; background-position: 0px 20px;
+	float: left; width: 40px; height: 65px; cursor: pointer; }
+#celestial-map-target-icon { float: left; width: 25px; height: 25px; margin-top: 20px; margin-right: 20px !important; font-size: 1.6em; cursor: pointer; }
+
+.starchart-coords { display: inline-block; text-align: right; font-size: 0.9em; width: 80px; }
+
+#reticle-chart { position:absolute; top:-9999px; left:-9999px; cursor: crosshair; }
+#reticle-telescope { position:absolute; top:-9999px; left:-9999px; cursor: crosshair; }
+
+#region-of-interest { position:absolute; top:-9999px; left:-9999px; background:#1c1c1c; border:1px solid #333; border-radius:5px; 
+	opacity:0; transition:opacity 1s linear; font-size: 0.85em; padding: 5px; }
+#region-of-interest-fav { font-size: 1.5em; color: #aaa }
+#region-of-interest-fav:hover { cursor: pointer; color: #ffc107; }
+#region-of-interest-close { font-size: 1.5em; color: #aaa }
+#region-of-interest-close:hover { cursor: pointer; color: #ff3300; }
+#region-of-interest-center { font-size: 1.0em; width: 70px; position: absolute; bottom: 65px; left: 15px; padding: 2px; }
+#region-of-interest-details { position: absolute; bottom: 65px; left: 98px; padding: 3px 10px; background: #333; border: none; border-radius: 3px; 
+	color: #fff; font-size: 0.8; vertical-align: bottom; width: 70px; text-align: center; }
+#region-of-interest-details:hover { background: #009933; }
+#region-of-interest-goto { font-size: 1.0em; width: 70px; position: absolute; bottom: 65px; left: 175px; padding: 2px; }
+
+#region-of-interest .label { min-width: 30px; margin-top: 5px; }
+#region-of-interest .starchart-coords { margin-right: 15px; }
+#region-of-interest-image { width:256px; height:256px; /* border: 1px solid #333; */ cursor: pointer; }
+#region-of-interest .title { }
+#region-of-interest .data { }
+
+#m-show { margin:0 6px 6px 0;  background: #1c1c1c; border: 1px solid #333; border-radius:3px;  }
+#m-show:hover { background-color:#eee; }
+
+#celestial-form { display: none; font-size: 0.8em; position: absolute; top: 20%; left: 25%;
+	background: #1c1c1cdd; padding: 20px 10px; border: 1px solid #e1e1e11f; border-radius: 5px; overflow: hidden; z-index: 100;}
+#celestial-form input[type=number] { margin: 0 6px; text-align: right; }
+#celestial-form input[type=checkbox] { margin: 0 5px; accent-color: #ccc;cursor: pointer; }
+#celestial-form input[type=color] {	width: 32px; height: 32px; margin: 0 4px; padding: 0; }
+#celestial-form input[type=button] { background: #333; color: #fff; border: 0px; border-radius: 3px; 
+	display: inline-block; text-align: center; margin: 0px 5px; padding: 2px 5px; cursor: pointer; }
+#celestial-form input[type=button]:hover { background: #009933; }
+#celestial-form select { height: 28px; margin: 0 4px 0 0; cursor: pointer; }
+#celestial-form label { margin:10px 2px 4px 0; color: #fff !important;}
+
+#celestial-form label.header,
+#location.col label:nth-child(1),
+#location.col label:nth-child(19),
+#general.col label:nth-child(4),
+#general.col label:nth-child(9) { display: inline-block; padding: 2px 5px; min-width: 50px; margin-right: 5px; background: #009933; font-size: 1.2em;}
+
+#celestial-form input + span { margin:0 4px 0 2px; height: 24px; }
+#celestial-form label:first-child, #celestial-form br + label { margin-left:0; }
+
+#celestial-form #location,
+#celestial-form #general,
+#celestial-form #stars,
+#celestial-form #dsos,
+#celestial-form #constellations,
+#celestial-form #lines,
+#celestial-form #other,
+#celestial-form #download { display: block }
+
+/* Disable inner spinner in number input fields */
+
+/* Chrome, Safari, Edge, Opera */
+#celestial-form input::-webkit-outer-spin-button,
+#celestial-form input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+#celestial-form input[type=number] {
+	appearance: textfield;
+	-moz-appearance: textfield;
+  }
+
+#celestial-form h1 { margin-bottom: 10px; }
+#celestial-form span { margin-left: 15px; }
+input[type=button]#here { margin-right: 20px; opacity: 0; cursor: default; }
+input[type=button]#day-left { opacity: 0; cursor: default; }
+input[type=button]#now { opacity: 0; cursor: default; }
+input[type=button]#day-right { opacity: 0; cursor: default; }
+#celestial-date, #datepick { display: none; }
+#celestial-form #lat, #celestial-form #lon { width: 100px; }
+
+/* Hide width parameter */
+#general label:nth-child(1) { display: none; }
+#general #width { display: none; }
+div#general.col :nth-child(3) { display: none; }
+
+/*************************************/
+/*          MAIN DOCK
+/*************************************/
+#main-dock { display: block; position: absolute; top: 35%; left: 0; z-index: 500; width: 50px;
+	background-color:#1c1c1cdd; border: 1px solid #e1e1e11f; border-radius: 0 10px 10px 0; padding: 5px; box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);}
+
+#main-dock-handle { display: block; position: absolute; left: 48px; top: 40px; width: 15px; height: 50px; cursor: pointer; background: #1c1c1c;
+	background-image: url('../images/handle_bg.svg'); background-repeat: no-repeat; background-position: right; 
+	z-index: -1 !important; border-radius: 0 5px 5px 0; border: solid 1px #e1e1e11f }
+
+#main-dock .dock-item-active { color:#009933; }
+
+#main-dock span { display: block; font-size: 1.4em; padding: 5px; margin: auto auto; text-align: center; width: 40px; height: 40px; }
+#main-dock span:hover { color: #009933; cursor: pointer;}
+span#main-dock-chart { display: none; }
+
+#main-dock-search { background: url("../icons/astroberry-icon-white.svg") no-repeat center; background-size: 25px; margin-bottom: 5px !important; }
+#main-dock-search:hover { background-size: 30px; }
+
+#main-dock-equipment { background: url("../images/telescope.png") no-repeat; background-position: center 3px; background-size: 25px; cursor: pointer; }
+#main-dock-equipment:hover { background: url("../images/telescope-active.png") no-repeat; background-position: center 3px; }
+#main-dock-equipment.dock-item-active { background: url("../images/telescope-active.png") no-repeat center; background-position: center 3px; }
+
+
+/*************************************/
+/*            PANELS
+/*************************************/
+.main-container { position: absolute; width: 380px; margin: 0; z-index: 100; top: 20%; left: 80px; }
+.main-container div:nth-child(n).panel-container { display: none; }
+
+.panel-container { display: none; position: relative; float: left; min-width: 380px; width: 380px; height: 540px; margin: 2px;
+	padding: 10px; background-color: #1c1c1cdd; border: 1px solid #e1e1e11f; border-radius: 5px; }
+
+.panel-title { margin-right: 10px; font-size: 1.25em; /* color: #ff3300; */ }
+img.panel-title { margin-bottom: 5px; }
+
+.container-footer { display: block; width: 100%; position: absolute; bottom: 5px; padding: 5px 0; }
+.container-footer div { display: inline-block; min-width: 35%; margin-bottom: 3px; margin-right: 3px; }
+.container-footer button { font-size: 0.8em; padding: 2px 0px; }
+
+.displayctl { margin-bottom: 10px; width: 100%; }
+.label { display: inline-block; font-size: 0.85em; padding: 1px 5px; background-color: #333; vertical-align: top;}
+.vl { display: inline-block; border-left: 2px solid #666; height: 165px; margin-left: 15px; }
+
+/*************************************/
+/*         SEARCH PANEL
+/*************************************/
+
+#panel-search h1 { margin-left: 7px; margin-top: 2px; }
+
+#logo { float: left; }
+#logo img { width: 24px; }
+
+#menu { display: none; float: right; font-size: 24px; margin-right: 5px; }
+#menu :hover { color: #009933; cursor: pointer; }
+
+#search { width: 100%; margin-top: 20px;}
+#search-text.form-control { display: inline-block; width: 100%; }
+#toggle-search, #toggle-lucky { margin-top: 10px; margin-right: 5px; width: 47%; }
+#toggle-search:hover { background: #333; }
+
+.ui-autocomplete { max-height: 250px; overflow-y: auto; overflow-x: hidden; }
+.ui-autocomplete.ui-front { border-radius: 0 0 5px 5px; }
+
+#search-results { width: 100%; height: 70%; margin-top: 10px; font-size: 0.75em; /* background: #111; */ }
+#search-results-text { display: inline-block; width: 150px; height: 170px; vertical-align: top; line-height: 1.6em; margin-right: 20px;}
+#search-results-text span { display: block; }
+#search-results-text span.fa { display: inline-block; margin-bottom: 2px; font-size: 0.9em; color: #009933; cursor: pointer; }
+
+#search-results-image { display: inline-block; width: 180px; height: 180px; border: 1px solid #333; background: #000; }
+	
+#search-results-coordinates { display: block; height: 30px; text-align: right; font-size: 0.95em; padding-right: 10px; }
+#search-results-description { display: block; height: 75px; font-family: 'Roboto Light', Arial, Helvetica, sans-serif;
+	margin-top: 10px; overflow-x: hidden; overflow-y: auto; }
+#search-results-actions { position: absolute; width: 100%; bottom: 20px; }
+#search-results-actions button { margin-right: 5px; }
+#search-results-actions a { display: inline-block; padding: 5px 10px 4px 10px; margin-right: 5px; background: #333; border: none; border-radius: 3px; 
+	color: #fff; font-size: 1rem; vertical-align: bottom; min-width: 75px; }
+#search-results-actions a:hover { background: #009933; }
+
+#open-almanac { font-size: 1.2em !important; }
+
+/*************************************/
+/*         LOCATION PANEL
+/*************************************/
+#coordtime { width: 95% }
+#coordtime.container-footer div:nth-child(even) { float: right; }
+#coordtime.container-footer span.label { min-width: 50px; }
+
+.gpsvalues { color: white; font-size: 0.90em; display: inline-block; text-align: right; margin-left: 5px; }
+
+#gpsfix { text-align: center; padding: 2px 25px 0px 25px; border: none; border-radius: 3px; }
+.gpsfix_waiting { color: #ff3300; }
+.gpsfix_obtained { color: #009933; }
+
+#map_container,
+#skymap_container,
+#gpsdetails_container,
+#geoloc_container { display: none; }
+
+#map_container { display: block; }
+#mapsettings_container { display: block; position: relative; height: 160px; margin-top: 10px; }
+
+#gpsdetails_container { position: relative; overflow: hidden; }
+#geoloc_container { position: relative; overflow: hidden; font-size: 0.75em; }
+
+#map { width: 100%; height: 360px; }
+#map button { min-width: 0; }
+
+#skymap { display: block; margin: 0px auto 0px auto; }
+
+#gpsdetails { display: block; font-size: 0.85em; margin-top: 10px; }
+#gpsinfo { display: inline-block; vertical-align: top; width: 40%; }
+#gpsinfo td.gpshdr { display: block; min-width: 70px; }
+#gpssats { float: right; vertical-align: top; padding-right: 15px; height: 180px; overflow: hide; }
+#gpssats td { min-width: 34px; }
+#sschart { display: block; /* width: 95%;*/ margin: 20px auto 0px auto; }
+
+#geoloc_container input[type=text] { margin-bottom: 10px; font-size: 1.1em; }
+#geoloc_container input[type=radio] { margin-right: 5px; }
+#geoloc_container input[type=checkbox] { margin-right: 5px; }
+
+#geoloc_mode { display: block; margin-bottom: 10px; }
+#geoloc_mode label { margin-right: 15px; }
+
+#control-set-location { display: none; }
+
+.ol-attribution { display: none; font-family: 'Roboto Light', Arial, Helvetica; font-size: 0.8em; display: flex; }
+.ol-attribution.ol-uncollapsible button { display: block; }
+.ol-attribution ul { font-size: 0.65em; }
+
+/* leafletjs dark mode */
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+
+/*************************************/
+/*       WEATHER PANEL
+/*************************************/
+#panel-weather { }
+
+#weather_update { float: right; margin-right: 20px; font-size: 1.5em; }
+#weather_update:hover { color: #009933; cursor: pointer; }
+
+#weather_forecast,
+#weather_settings { display: none; }
+
+#weather_forecast { display: block; width: 100%; height: 85%; /* background: #111;*/ position: relative; }
+
+#weather_img_container { display: inline-block; width: 100px; height: 100px; overflow: hidden; margin-top: 20px; margin-left: 10%; }
+#weather_icon { display: block; width: 100%; height: 100%; }
+
+#weather_temperature { display: inline-block; width: 200px; font-size: 42px; vertical-align: top; padding-left: 5px; padding-top: 20px; }
+
+.weather_tdhp { /* display: inline-block; */ font-size: 0.8em; width: 200px; float: right; }
+.weather_tdhp span { display: block; padding-left: 10px; }
+
+#weather_legend { display: block; width: 100px; text-align: center; margin-left: 10%; margin-top: 0; }
+
+.weather_cwr {display: block; width: 100%; margin: 10% auto 0 auto; font-size: 0.95em; }
+.weather_cwr span { display: inline-block; min-width: 25%; margin-right: 5px; text-align: right;}
+#weather_wind {width: 35%;}
+
+.weather_next { display: block; width: 100%; height: 30%; padding-top: 5%; margin-left: 3%; }
+.weather_next div { display: inline-block; width: 18%; margin-right: 3px; }
+.weather_weekday { display: block; font-size: 0.8em; margin-left: 7px; }
+.weather_icon_sm { width: 36px; display: block; }
+.weather_temp_sm { display: block; font-size: 0.8em;  }
+.weather_clouds_sm { display: block; font-size: 0.8em;  }
+
+.weather_alert_noclouds { color: #009933; }
+.weather_alert_humidity { color: #f08c00; }
+.weather_alert_wind { color: #f08c00; }
+
+#weather_updated { display: block; position: absolute; bottom: 0; left: 0; font-family: 'Roboto Light', Arial, Helvetica; font-size: 0.65em; padding: 5px 10px; }
+.weather-credits { position: absolute; bottom: 0; right: 0; font-family: 'Roboto Light', Arial, Helvetica; font-size: 0.65em; padding: 5px 10px; width: 60%; margin: auto; text-align: right; }
+
+#weather_settings { font-size: 0.8em; margin-top: 10px;}
+#weather_settings label { margin-right: 10px; }
+#weather_settings input[type=text], input[type=password] { margin-bottom: 5px; font-size: 1.1em; }
+#weather_settings input[type=radio] { margin-right: 10px; }
+#weather_settings input[type=checkbox] { margin-right: 10px; }
+#weather_settings fieldset { margin-bottom: 20px; }
+
+/*************************************/
+/*           ALMANAC PANEL
+/*************************************/
+
+#moon, #sun, #planets, #polaris { display: none; }
+#moon { display:block; }
+
+/* #moon_phase_container { position: relative; display: block; width: 140px; height: 140px; margin: 50px 10px 0px 0px; float: left; }
+#moon_phase { background-image: url("../images/moon.png"); background-repeat: no-repeat; background-size: 140px 140px; position: absolute; margin: auto; top: 0; right: 0; bottom: 0; left: 0; z-index: 10; } */
+
+#moon_container { position:relative; display: block; width: 140px; height: 140px; margin: 50px 10px 0px 0px; float: left; /*min-height: xxx;*/ /*overflow: hidden;*/ }
+#moon_container:after { clear: both; content: ""; display: block; }
+#moon_picture { position:absolute; top:0px; z-index:1; width:140px; height:140px; }
+#moon_shadow { position:absolute; top:0px; z-index:100; }
+.moonLight { fill: #ffd54f; shape-rendering: geometricPrecision; }
+.moonShade { fill: black; opacity: 0.75; }
+
+#moon table { display: inline-block; width: 55%; }
+.moonhdr { width: 60%; }
+.moondata { text-align: right; }
+
+#sun { display:none; }
+#sun table { display: inline-block; width: 55%; }
+#sun img { width: 140px; margin: 50px 10px 0px 0px; float: left; }
+.sunhdr { width: 60%; }
+.sundata { text-align: right; }
+
+#planets { display:none; }
+#planets img { margin-top: 20px; width: 100%; }
+#planets tr { height: 2.0em; }
+
+.planetshdr { width: 80px; cursor: pointer; }
+.planetshdr:hover { color: #009933; }
+.planetshdrdata { width: 75px; text-align: right; }
+.planetsdata { text-align: right; font-size: 0.85em; }
+.belowhorizon { color: #666; }
+.lowhorizon { color: #aaa; }
+.highhorizon { color: #fff; }
+
+#polaris { display: none; }
+#polaris-reticle { display: block; margin: 10px auto 32px auto; /* background: #000111; */ }
+#polaris .label { display: inline-block; /*min-width: 50px;*/ margin-right: 5px; }
+#polaris .polarisdata { display: inline-block; /*min-width: 60px;*/ text-align: right; font-size: 0.9em; margin-right: 15px; }
+
+#moon-actions, #sun-actions { position: absolute; bottom: 20px; width: 100%; }
+#moon-actions-center, #sun-actions-center { margin-right: 1px; } /* buttons aligment fix between panels */
+
+/*************************************/
+/*          EQUIPMENT PANEL
+/*************************************/
+
+#profile_view,
+#profile_settings,
+#equipment-container { width: 100%; }
+#equipment-container { display: block; }
+#equipment-container label { margin-bottom: 2px; }
+#equipment-container .btn-icon { min-width: 30px; margin-right: 2px; }
+#equipment-container .form-control { font-size: 0.9em; color: #495057; }
+
+#profile_view { display: inline-block; }
+#profile_view button { margin-top: 5px; }
+
+#profile_settings { margin-top: 2px; display: none; }
+#profile_settings label { font-size: 0.8em; }
+#profile_settings label.checkbox-inline { margin-right: 15px; }
+#profile_settings label.checkbox-inline input { margin-right: 3px; }
+#profile_settings button { margin-top: 5px; }
+
+#profile_settings .filter-option, span.text { font-size: 1.1em; }
+#profile_settings .btn { padding: .375rem .75rem; font-size: 0.9em; }
+
+#profile_settings_main { margin-top: 5px; }
+#profile_settings_main input { margin-bottom: 10px; }
+
+#profile_settings_confirm { margin-top: 15px; }
+
+#profiles { display: block; }
+
+#profile_ctrl { width: 100%; display: block; height: 50px; }
+#profile_start, #profile_stop { display: block; width: 120px; margin: auto auto; padding: 10px 5px;}
+#profile_stop:hover { background: #ff3300; }
+
+#drivers_list { padding-left: 10px; }
+
+#equipment_status { display: block; width: 100%; max-width: 360px; height: 190px; margin: auto auto; margin-top: 10px; }
+#server_status { display:block; min-height: 90px; overflow: hidden; /* margin-top: 5px; */ font-size: 0.9em; }
+
+#driver_details { display: none; margin-top: 20px; width: 100%; background: #666; padding: 5px 10px; height: 125px; overflow-x: hidden; overflow-y: 
+	auto; border: 0px solid #333; border-radius: 5px; position: relative; z-index: 10;}
+.driver_details { display: block; width: 100%; }
+.driver_details span {width: 70%; }
+.driver_details span.name { font-size: 0.95em; display: inline-block; color: #222; margin-top: 5px; }
+.driver_details span.details { font-size: 0.8em; display: inline-block; color: #eee; }
+.driver_details button { font-size: 0.8em; display: inline-block; margin-left: 10px; margin-top: -10px;}
+.driver_details button:hover { background: #ff3300; }
+
+.dropdown-menu ul { font-size: 0.75em; }
+
+/*************************************/
+/*            SYSTEM PANEL
+/*************************************/
+
+#system-status,
+#system-events,
+#system-settings { display: none; width:100%; height: 85%; font-size: 0.75em; font-family: 'Roboto Regular'; }
+#system-status { display: block; }
+#system-status h2 { font-size: 1em; }
+#system-status span { margin-bottom: 3px; }
+#system-status .sysinfo { display: inline-block; margin-left: 10px; font-size: 0.9em; }
+#system-status #sysmon-resource-model { width: 100px; }
+#system-status #sysmon { display: block; width:100%; height: 50%; margin-top: 10px; }
+#sysmon .sysmon-resource { float: left; margin-bottom: 5px; width: 49%; vertical-align: top; background: #111; padding: 10px; 
+	border-radius: 5px; }
+#sysmon .sysmon-resource:first-of-type { width: 100%; }
+#sysmon .sysmon-resource:first-of-type a { float: right; margin-right: 20px; margin-top: 20px; }
+#sysmon .sysmon-resource:first-of-type .sysinfo { width: 120px; overflow: hidden; vertical-align: bottom; }
+#sysmon .sysmon-resource:nth-of-type(2) { margin-right: 5px; height: 217px; overflow: hidden; }
+#sysmon .sysmon-resource:last-of-type { width: 100%; font-family: 'Roboto Regular'; font-size: 0.8em; margin: 0; padding: 8px 5px; }
+#system-events #syslog { display: block; width:100%; height: 100%; margin-top: 5px; overflow-x:hidden; overflow-y: auto;  
+	background: #111; padding: 5px; }
+
+#system-settings { font-size: 0.75em; margin-top: 20px; }
+#starchart-settings,
+#system-maintenance { margin-top: 20px; }
+#system-maintenance button { font-size: 1em; min-width: 40px; }
+
+#starchart-settings input { margin-right: 5px; }
+#system-restart:hover { background: #ff3300; }
+#system-shutdown:hover { background: #ff3300; }
+
+.system-maintenance-desc { display: block; font-size: 0.9em; margin-bottom: 10px; }
+
+/*************************************/
+/*         AUTO SCALING
+/*************************************/
+
+@media screen and (max-width: 450px) {
+	/* #toggle-search, #toggle-lucky, #stream, #menu { display: none; } */
+	.panel-container { width: 405px; }
+	.panel-container { height: 840px; }
+}
+
+@media screen and (min-width: 1921px) {
+	.main-container { width: 1834px; }
+	.panel-container { width: 450px; }
+}
+

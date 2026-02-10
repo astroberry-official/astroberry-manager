@@ -1,0 +1,3 @@
+include AUTHORS LICENSE README.md requirements.txt
+recursive-include astroberry_manager/assets *
+recursive-include astroberry_manager/templates *
