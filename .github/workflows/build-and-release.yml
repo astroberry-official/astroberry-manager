@@ -34,7 +34,7 @@ jobs:
           cd build/whl_astroberry-manager && python -m build && cd ../../ && deactivate && \
           ls build/whl_astroberry-manager/dist/*.whl
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: build-${{ matrix.container }}-${{ github.sha }}
           path: build/whl_astroberry-manager/dist/*.whl
