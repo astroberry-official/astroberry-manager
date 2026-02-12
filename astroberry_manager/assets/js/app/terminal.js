@@ -21,6 +21,9 @@
 */
 
 import { socket } from "./sockets.js";
+import { FitAddon } from "../xterm/xterm-addon-fit.js";
+import { SearchAddon } from "../xterm/xterm-addon-search.js";
+import { WebLinksAddon } from "../xterm/xterm-addon-web-links.js";
 
 const logo = "\
                _             _                            \
@@ -44,7 +47,7 @@ const term = new Terminal({
   scrollback: true,
 });
 
-const fit = new FitAddon.FitAddon();
+const fit = new FitAddon();
 const wait_ms = 50;
 window.onresize = debounce(fitToscreen, wait_ms);
 
