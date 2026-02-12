@@ -28,7 +28,7 @@ import { deg2dms } from './functions.js';
 import { socket } from './sockets.js';
 
 // Global Geographic location variable [Mode, Latitude, Longitude, Altitude]
-var geoLocation = {'mode': 'telescope', 'latitude': 0, 'longitude': 0, 'altitude': 0};
+var geoLocation = { 'mode': 'telescope', 'latitude': 0, 'longitude': 0, 'altitude': 0 };
 
 // Map and home marker
 var mainMap, homePosition;
@@ -73,7 +73,7 @@ function loadMap() { // https://leafletjs.com/examples/quick-start/
         $("#geoloc_longitude").val(coordinates.lng);
 
         // Center map
-        setTimeout(function() {
+        setTimeout(function () {
             updateGeoLocation();
         }, 500);
     });
@@ -100,9 +100,9 @@ function loadGeoLocation() {
         $("#geoloc_mode_network").prop("checked", true);
     } else {
         $("#geoloc_mode_custom").prop("checked", true);
-        $("#geoloc_latitude").prop( "disabled", false );
-        $("#geoloc_longitude").prop( "disabled", false );
-        $("#geoloc_altitude").prop( "disabled", false );
+        $("#geoloc_latitude").prop("disabled", false);
+        $("#geoloc_longitude").prop("disabled", false);
+        $("#geoloc_altitude").prop("disabled", false);
     }
 
     // Set lat/lon/alt values
@@ -145,36 +145,36 @@ function updateGeoLocation(location = {}) {
         $("#toggle-gpsdetails").show();
         $("#control-set-location").show();
         $("#geoloc_mode_gps").prop("checked", true); // trigger save
-        $("#geoloc_latitude").prop( "disabled", true );
-        $("#geoloc_longitude").prop( "disabled", true );
-        $("#geoloc_altitude").prop( "disabled", true );
+        $("#geoloc_latitude").prop("disabled", true);
+        $("#geoloc_longitude").prop("disabled", true);
+        $("#geoloc_altitude").prop("disabled", true);
         homePosition.dragging.disable();
     } else if (location.mode == "network") {
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
         $("#control-set-location").show();
         $("#geoloc_mode_network").prop("checked", true); // trigger save
-        $("#geoloc_latitude").prop( "disabled", true );
-        $("#geoloc_longitude").prop( "disabled", true );
-        $("#geoloc_altitude").prop( "disabled", true );
+        $("#geoloc_latitude").prop("disabled", true);
+        $("#geoloc_longitude").prop("disabled", true);
+        $("#geoloc_altitude").prop("disabled", true);
         homePosition.dragging.disable();
     } else if (location.mode == "telescope") {
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
         $("#control-set-location").hide();
         $("#geoloc_mode_telescope").prop("checked", true); // trigger save
-        $("#geoloc_latitude").prop( "disabled", true );
-        $("#geoloc_longitude").prop( "disabled", true );
-        $("#geoloc_altitude").prop( "disabled", true );
+        $("#geoloc_latitude").prop("disabled", true);
+        $("#geoloc_longitude").prop("disabled", true);
+        $("#geoloc_altitude").prop("disabled", true);
         homePosition.dragging.disable();
     } else {
         $("#toggle-skymap").hide();
         $("#toggle-gpsdetails").hide();
         $("#control-set-location").show();
         $("#geoloc_mode_custom").prop("checked", true); // trigger save
-        $("#geoloc_latitude").prop( "disabled", false );
-        $("#geoloc_longitude").prop( "disabled", false );
-        $("#geoloc_altitude").prop( "disabled", false );
+        $("#geoloc_latitude").prop("disabled", false);
+        $("#geoloc_longitude").prop("disabled", false);
+        $("#geoloc_altitude").prop("disabled", false);
         homePosition.dragging.enable();
     }
 
@@ -259,7 +259,7 @@ function updateGeoLocation(location = {}) {
             $("#gps_altitude").html(geoLocation.altitude);
 
             // Save location
-            setCookie("config", JSON.stringify({"location": geoLocation}));
+            setCookie("config", JSON.stringify({ "location": geoLocation }));
 
             // Update home marker and center
             centerMap([geoLocation.latitude, geoLocation.longitude]);
@@ -340,8 +340,8 @@ function gpsSkyChart(satellites) {
 
     if (!width || !height) return;
 
-    var center_x = parseInt(width/2);
-    var center_y = parseInt(height/2);
+    var center_x = parseInt(width / 2);
+    var center_y = parseInt(height / 2);
     var radius = parseInt(0.39 * Math.min(width, height));
 
     var grid_color = "#aaa";
@@ -350,7 +350,7 @@ function gpsSkyChart(satellites) {
     var labels_color = "red";
     var text_color = "white";
     var text_font = "Roboto Medium";
-    var text_font_size = (width > 200) ? width/27 : 8;
+    var text_font_size = (width > 200) ? width / 27 : 8;
     var text_font_size_small = 0.85 * text_font_size;
 
     var sat_radius = 0.8 * text_font_size_small;
@@ -385,7 +385,7 @@ function gpsSkyChart(satellites) {
 
     // grid
     var angle = 360 * Math.PI / 180;
-    var step = (360/24) * Math.PI / 180;
+    var step = (360 / 24) * Math.PI / 180;
 
     ctx.beginPath();
 
@@ -400,7 +400,7 @@ function gpsSkyChart(satellites) {
 
     var x2, y2;
 
-    for (var i = 0; i < angle ; i += step) {
+    for (var i = 0; i < angle; i += step) {
         x2 = center_x + radius * Math.sin(i);
         y2 = center_y + radius * Math.cos(i);
 
@@ -414,10 +414,10 @@ function gpsSkyChart(satellites) {
     // draw labels
     ctx.font = text_font_size + "px " + text_font;
     ctx.fillStyle = labels_color;
-    ctx.fillText("N", center_x - text_font_size/4, center_y - radius - text_font_size/4);
-    ctx.fillText("S", center_x - text_font_size/2, center_y + radius + text_font_size);
-    ctx.fillText("E", center_x + radius + text_font_size/4, center_y + text_font_size/4);
-    ctx.fillText("W", center_x - radius - text_font_size, center_y + text_font_size/4);
+    ctx.fillText("N", center_x - text_font_size / 4, center_y - radius - text_font_size / 4);
+    ctx.fillText("S", center_x - text_font_size / 2, center_y + radius + text_font_size);
+    ctx.fillText("E", center_x + radius + text_font_size / 4, center_y + text_font_size / 4);
+    ctx.fillText("W", center_x - radius - text_font_size, center_y + text_font_size / 4);
 
     // draw signal color coding legend
     var box_size = 15;
@@ -539,8 +539,8 @@ function gpsSignalChart(satellites) {
 
     if (!width || !height) return;
 
-    var center_x = parseInt(width/2);
-    var center_y = parseInt(height/2);
+    var center_x = parseInt(width / 2);
+    var center_y = parseInt(height / 2);
 
     var x = parseInt(width / 10); // bars starting position
     var bar_spacing = 3;
@@ -548,7 +548,7 @@ function gpsSignalChart(satellites) {
     var grid_color = "white";
     var text_color = "white";
     var text_font = "Roboto Medium";
-    var text_font_size = (width > 200) ? width/27 : 8;
+    var text_font_size = (width > 200) ? width / 27 : 8;
 
     const canvas = document.getElementById("sschart");
     const ctx = canvas.getContext("2d");
@@ -594,20 +594,20 @@ function gpsSignalChart(satellites) {
         // draw values
         ctx.font = 0.8 * text_font_size + "px " + text_font;
         ctx.fillStyle = text_color;
-        ctx.fillText(satellites[sat]['ss'] + '%', x - 0.7 * text_font_size, height - 21 - parseInt(satellites[sat]['ss'])/2 - 2);
+        ctx.fillText(satellites[sat]['ss'] + '%', x - 0.7 * text_font_size, height - 21 - parseInt(satellites[sat]['ss']) / 2 - 2);
 
         // draw labels
         ctx.font = 0.8 * text_font_size + "px " + text_font;
         ctx.fillStyle = text_color;
-        ctx.fillText(('0' + satellites[sat]['PRN']).substr(-2), x - parseInt(text_font_size/2), height - 3);
+        ctx.fillText(('0' + satellites[sat]['PRN']).substr(-2), x - parseInt(text_font_size / 2), height - 3);
 
         ctx.lineWidth = 2;
 
         // mark used satellites
         if (satellites[sat]['used']) {
             ctx.beginPath();
-            ctx.moveTo(x - parseInt(text_font_size/2), height);
-            ctx.lineTo(x + parseInt(text_font_size/2), height);
+            ctx.moveTo(x - parseInt(text_font_size / 2), height);
+            ctx.lineTo(x + parseInt(text_font_size / 2), height);
             ctx.strokeStyle = text_color;
             ctx.stroke();
         }
@@ -617,13 +617,13 @@ function gpsSignalChart(satellites) {
 }
 
 function setTelescopeLocation() {
-  socket.timeout(5000).emit("equipment", geoLocation, (err) => {
-      if (err) {
-          console.log("Setting telescope location timed out");
-      } else {
-          //console.log("Telescope location requested");
-      }
-  });
+    socket.timeout(5000).emit("equipment", geoLocation, (err) => {
+        if (err) {
+            console.log("Setting telescope location timed out");
+        } else {
+            //console.log("Telescope location requested");
+        }
+    });
 }
 
 
@@ -663,7 +663,7 @@ function locationEvents() {
         updateGeoLocation();
     });
 
-    $("#celestial-map-location-icon").on("click", function() {
+    $("#celestial-map-location-icon").on("click", function () {
         $("#main-dock-location").trigger("click");
         mainMap.invalidateSize(); // fix for map display
     });
@@ -725,10 +725,6 @@ export {
     updateGeoLocation,
     mainMap,
     loadMap,
-    centerMap,
-    gpsSkyChart,
-    gpsSatellites,
-    gpsSignalChart,
     locationEvents
 };
 

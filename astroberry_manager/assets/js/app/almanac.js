@@ -28,13 +28,13 @@ import { deg2dms, deg2hms } from './functions.js';
 import { socket } from './sockets.js';
 
 function loadAlmanac() {
-     requestAlmanac();
-     console.log("Almanac loaded");
+    requestAlmanac();
+    console.log("Almanac loaded");
 }
 
 function updateAlmanac(data) {
     if (data === undefined || data === null)
-      return;
+        return;
 
     // Moon
     $("#moon_phase_name").html(data.moon_phase);
@@ -138,9 +138,9 @@ function updateAlmanac(data) {
         eval('planet_alt = parseFloat(data.' + planet + '_alt' + ');'); // create dynamic variable
         // set color based on altitude
         $("#" + planet).removeClass(); // remove existing color
-        if ( planet_alt > 25 ) { // set color based on altitude
+        if (planet_alt > 25) { // set color based on altitude
             $("#" + planet).addClass("highhorizon");
-        } else if ( planet_alt > 0 ) {
+        } else if (planet_alt > 0) {
             $("#" + planet).addClass("lowhorizon");
         } else {
             $("#" + planet).addClass("belowhorizon");
@@ -170,9 +170,9 @@ function updateAlmanac(data) {
     };
 
     // Update Moon Phase
-    var shadow = parseFloat(data.moon_light)/100;
+    var shadow = parseFloat(data.moon_light) / 100;
     var phase = data.moon_phase.split(" ")[0];
-    if ( phase == "Waning") {
+    if (phase == "Waning") {
         shadow *= -1
     }
     updateMoon(shadow);
@@ -190,8 +190,8 @@ function getReticle(pha_angle) {
 
     if (!width || !height) return;
 
-    var center_x = parseInt(width/2);
-    var center_y = parseInt(height/2);
+    var center_x = parseInt(width / 2);
+    var center_y = parseInt(height / 2);
     var radius = parseInt(0.375 * Math.min(width, height));
     var major = parseInt(radius / 7);
     var minor = parseInt(radius / 10);
@@ -203,7 +203,7 @@ function getReticle(pha_angle) {
     var polaris_color = "#ffffcc";
     var text_color_small = "white";
     var text_font = "Roboto Medium";
-    var text_font_size = (width > 200) ? parseInt(width/27) : 8;
+    var text_font_size = (width > 200) ? parseInt(width / 27) : 8;
 
     const canvas = document.getElementById("polaris-reticle");
     const ctx = canvas.getContext("2d");
@@ -227,7 +227,7 @@ function getReticle(pha_angle) {
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(center_x, center_y, radius - minor/2, 0, 2 * Math.PI);
+    ctx.arc(center_x, center_y, radius - minor / 2, 0, 2 * Math.PI);
     ctx.strokeStyle = grid_color;
     ctx.stroke();
 
@@ -236,24 +236,24 @@ function getReticle(pha_angle) {
     ctx.beginPath();
 
     ctx.moveTo(center_x, center_y);
-    ctx.lineTo(center_x, center_y - radius - major/2);
+    ctx.lineTo(center_x, center_y - radius - major / 2);
     ctx.moveTo(center_x, center_y);
-    ctx.lineTo(center_x, center_y + radius + major/2);
+    ctx.lineTo(center_x, center_y + radius + major / 2);
     ctx.moveTo(center_x, center_y);
-    ctx.lineTo(center_x + radius + major/2, center_y);
+    ctx.lineTo(center_x + radius + major / 2, center_y);
     ctx.moveTo(center_x, center_y);
-    ctx.lineTo(center_x - radius - major/2, center_y);
+    ctx.lineTo(center_x - radius - major / 2, center_y);
 
     var angle = 360 * Math.PI / 180;
     var step = 45 * Math.PI / 180;
 
     var x1, y1, x2, y2;
 
-    for (var i = 0; i < angle ; i += step) {
-        x1 = center_x + (radius - minor - major/5) * Math.sin(i);
-        y1 = center_y + (radius - minor - major/5) * Math.cos(i);
-        x2 = center_x + (radius + major/5) * Math.sin(i);
-        y2 = center_y + (radius + major/5) * Math.cos(i);
+    for (var i = 0; i < angle; i += step) {
+        x1 = center_x + (radius - minor - major / 5) * Math.sin(i);
+        y1 = center_y + (radius - minor - major / 5) * Math.cos(i);
+        x2 = center_x + (radius + major / 5) * Math.sin(i);
+        y2 = center_y + (radius + major / 5) * Math.cos(i);
 
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -268,7 +268,7 @@ function getReticle(pha_angle) {
 
     var step = 15 * Math.PI / 180;
 
-    for (i = 0; i < angle ; i += step) {
+    for (i = 0; i < angle; i += step) {
         x1 = center_x + (radius - minor) * Math.sin(i);
         y1 = center_y + (radius - minor) * Math.cos(i);
         x2 = center_x + (radius) * Math.sin(i);
@@ -286,11 +286,11 @@ function getReticle(pha_angle) {
 
     var step = 5 * Math.PI / 180;
 
-    for (i = 0; i < angle ; i += step) {
-        x1 = center_x + (radius - minor + minor/6) * Math.sin(i);
-        y1 = center_y + (radius - minor + minor/6) * Math.cos(i);
-        x2 = center_x + (radius - minor/6) * Math.sin(i);
-        y2 = center_y + (radius - minor/6) * Math.cos(i);
+    for (i = 0; i < angle; i += step) {
+        x1 = center_x + (radius - minor + minor / 6) * Math.sin(i);
+        y1 = center_y + (radius - minor + minor / 6) * Math.cos(i);
+        x2 = center_x + (radius - minor / 6) * Math.sin(i);
+        y2 = center_y + (radius - minor / 6) * Math.cos(i);
 
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -302,10 +302,10 @@ function getReticle(pha_angle) {
     // Labels
     ctx.font = text_font_size + "px " + text_font;
     ctx.fillStyle = text_color;
-    ctx.fillText("12", center_x - text_font_size/2, center_y - radius - text_font_size);
-    ctx.fillText("0", center_x - text_font_size/3, center_y + radius + text_font_size * 1.5);
-    ctx.fillText("6", center_x + radius + text_font_size, center_y + text_font_size/4);
-    ctx.fillText("18", center_x - radius - text_font_size * 2, center_y + text_font_size/4);
+    ctx.fillText("12", center_x - text_font_size / 2, center_y - radius - text_font_size);
+    ctx.fillText("0", center_x - text_font_size / 3, center_y + radius + text_font_size * 1.5);
+    ctx.fillText("6", center_x + radius + text_font_size, center_y + text_font_size / 4);
+    ctx.fillText("18", center_x - radius - text_font_size * 2, center_y + text_font_size / 4);
 
     ctx.font = text_font_size + "px " + text_font;
     ctx.fillStyle = text_color_small;
@@ -326,8 +326,8 @@ function getReticle(pha_angle) {
 
     // Draw Polaris
     ctx.beginPath();
-    var x = center_x + (radius - minor/2) * Math.sin(pha_angle);
-    var y = center_y + (radius - minor/2) * Math.cos(pha_angle);
+    var x = center_x + (radius - minor / 2) * Math.sin(pha_angle);
+    var y = center_y + (radius - minor / 2) * Math.cos(pha_angle);
     ctx.arc(x, y, polaris_radius, 0, 2 * Math.PI);
     ctx.strokeStyle = polaris_color;
     ctx.stroke();
@@ -351,11 +351,11 @@ function toggleAltTrend(planet, alt) {
     //console.log(new_alt, last_alt);
 
     // set trend
-    if ( new_alt > last_alt) {
+    if (new_alt > last_alt) {
         $("#" + planet + " span.planet_trend").removeClass("fa-arrow-down");
         $("#" + planet + " span.planet_trend").addClass("fa-arrow-up");
         $("#" + planet + " span.planet_trend").css("color", "#009933");
-    } else if ( new_alt < last_alt) {
+    } else if (new_alt < last_alt) {
         $("#" + planet + " span.planet_trend").removeClass("fa-arrow-up");
         $("#" + planet + " span.planet_trend").addClass("fa-arrow-down");
         $("#" + planet + " span.planet_trend").css("color", "#ff3300");
@@ -402,39 +402,39 @@ function almanacEvents() {
         togglePolaris();
     });
 
-    $("#moon-actions-center").on("click", function() {
+    $("#moon-actions-center").on("click", function () {
         centerOnSolarObject("lun");
     });
 
-    $("#sun-actions-center").on("click", function() {
+    $("#sun-actions-center").on("click", function () {
         centerOnSolarObject("sol");
     });
 
-    $("#mercury").on("click", function() {
+    $("#mercury").on("click", function () {
         centerOnSolarObject("mer");
     });
 
-    $("#venus").on("click", function() {
+    $("#venus").on("click", function () {
         centerOnSolarObject("ven");
     });
 
-    $("#mars").on("click", function() {
+    $("#mars").on("click", function () {
         centerOnSolarObject("mar");
     });
 
-    $("#jupiter").on("click", function() {
+    $("#jupiter").on("click", function () {
         centerOnSolarObject("jup");
     });
 
-    $("#saturn").on("click", function() {
+    $("#saturn").on("click", function () {
         centerOnSolarObject("sat");
     });
 
-    $("#uranus").on("click", function() {
+    $("#uranus").on("click", function () {
         centerOnSolarObject("ura");
     });
 
-    $("#neptune").on("click", function() {
+    $("#neptune").on("click", function () {
         centerOnSolarObject("nep");
     });
 }
@@ -491,7 +491,5 @@ export {
     loadAlmanac,
     requestAlmanac,
     updateAlmanac,
-    getReticle,
-    toggleAltTrend,
     almanacEvents
 };

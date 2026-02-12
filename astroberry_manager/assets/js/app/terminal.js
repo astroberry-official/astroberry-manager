@@ -112,4 +112,4 @@ function customKeyEventHandler(e) {
   return true;
 }
 
-export { requestTerminal, focusTerminal, fitToscreen }
+export { requestTerminal, focusTerminal }

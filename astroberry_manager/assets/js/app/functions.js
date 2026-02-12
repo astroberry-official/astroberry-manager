@@ -21,58 +21,58 @@
 */
 
 function hour2degree(ra) {
-  return ra > 12 ? (ra - 24) * 15 : ra * 15;
+    return ra > 12 ? (ra - 24) * 15 : ra * 15;
 }
 
-function dms2deg (dms) {
+function dms2deg(dms) {
     var _dms = dms.split(' ');
     var _deg = parseFloat(_dms[0].substr(-3, 2));
     var _min = parseFloat(_dms[0].substr(-3, 2));
-    var _sec  = parseFloat(_dms[0].substr(-3, 2));
+    var _sec = parseFloat(_dms[0].substr(-3, 2));
 
     var deg = (_deg * 3600 + _min * 60 + _sec) / 3600;
     return deg;
 }
 
-function deg2hms (deg) {
+function deg2hms(deg) {
     if (deg === null || isNaN(parseFloat(deg))) return;
     var ra = deg < 0 ? (deg + 360) / 15 : deg / 15,
-       h = Math.floor (ra),
-       rest1 = (ra - h) * 60,
-       m = Math.floor(rest1),
-       rest2 = (rest1 - m) * 60,
-       s = Math.round(rest2);
+        h = Math.floor(ra),
+        rest1 = (ra - h) * 60,
+        m = Math.floor(rest1),
+        rest2 = (rest1 - m) * 60,
+        s = Math.round(rest2);
     return '' + pad(h) + 'ʰ ' + pad(m) + 'ᵐ ' + pad(s) + 'ˢ';
 }
 
-function deg2dms (deg) {
+function deg2dms(deg) {
     if (deg === null || isNaN(parseFloat(deg))) return;
-    var d = Math.floor (deg),
-       rest1 = (deg - d) * 60,
-       m = Math.floor(rest1),
-       rest2 = (rest1 - m) * 60;
-       var s = Math.round(rest2);
+    var d = Math.floor(deg),
+        rest1 = (deg - d) * 60,
+        m = Math.floor(rest1),
+        rest2 = (rest1 - m) * 60;
+    var s = Math.round(rest2);
     return '' + pad(d) + '° ' + pad(m) + '′ ' + pad(s) + '″'; // 2 digits padding
     //return '' + pad(pad(d)) + '° ' + pad(m) + '′ ' + pad(s) + '″'; // 3 digits padding
 }
 
-function pad(n) { 
+function pad(n) {
     if (n < 0) return n > -10 ? '-0' + Math.abs(n) : n;
-    return n < 10 ? '0' + n : n; 
+    return n < 10 ? '0' + n : n;
 }
 
 //Greg Miller (gmiller@gregmiller.net) 2021
 //Released as public domain
 //http://www.celestialprogramming.com/
 
-function JulianDateFromUnixTime(t){
-	//Not valid for dates before Oct 15, 1582
-	return (t / 86400000) + 2440587.5;
+function JulianDateFromUnixTime(t) {
+    //Not valid for dates before Oct 15, 1582
+    return (t / 86400000) + 2440587.5;
 }
 
-function UnixTimeFromJulianDate(jd){
-	//Not valid for dates before Oct 15, 1582
-	return (jd-2440587.5)*86400000;
+function UnixTimeFromJulianDate(jd) {
+    //Not valid for dates before Oct 15, 1582
+    return (jd - 2440587.5) * 86400000;
 }
 
 //All input and output angles are in radians, jd is Julian Date in UTC
@@ -82,18 +82,18 @@ function raDecToAltAz(ra, dec, lat, lon, jd_ut) {
     let localSiderealTime = (gmst + lon) % (2 * Math.PI);
 
     let H = (localSiderealTime - ra);
-    if (H < 0) {H += 2 * Math.PI;}
-    if (H > Math.PI) { H = H - 2 * Math.PI;}
+    if (H < 0) { H += 2 * Math.PI; }
+    if (H > Math.PI) { H = H - 2 * Math.PI; }
 
     let az = (Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(lat) - Math.tan(dec) * Math.cos(lat)));
     let alt = (Math.asin(Math.sin(lat) * Math.sin(dec) + Math.cos(lat) * Math.cos(dec) * Math.cos(H)));
     az -= Math.PI;
 
-    if (az < 0) {az += 2 * Math.PI;}
+    if (az < 0) { az += 2 * Math.PI; }
     return [az, alt, localSiderealTime, H];
 }
 
-function greenwichMeanSiderealTime(jd){
+function greenwichMeanSiderealTime(jd) {
     //"Expressions for IAU 2000 precession quantities" N. Capitaine1,P.T.Wallace2, and J. Chapront
     const t = ((jd - 2451545.0)) / 36525.0;
 
@@ -105,7 +105,7 @@ function greenwichMeanSiderealTime(jd){
     return gmst;
 }
 
-function earthRotationAngle(jd){
+function earthRotationAngle(jd) {
     //IERS Technical Note No. 32
 
     const t = jd - 2451545.0;
@@ -120,13 +120,7 @@ function earthRotationAngle(jd){
 
 export {
     JulianDateFromUnixTime,
-    UnixTimeFromJulianDate,
     raDecToAltAz,
-    greenwichMeanSiderealTime,
-    earthRotationAngle,
-    hour2degree,
-    dms2deg,
     deg2hms,
     deg2dms,
-    pad
 };

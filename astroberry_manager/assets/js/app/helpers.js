@@ -70,9 +70,9 @@ function mainLoop() {
 
 function toggleFullScreen() {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
+        document.documentElement.requestFullscreen();
     } else if (document.exitFullscreen) {
-      document.exitFullscreen();
+        document.exitFullscreen();
     }
 }
 
@@ -81,16 +81,16 @@ function toggleFullScreen() {
 /* ================================================================== */
 
 function appEvents() {
-    $("#main-dock-handle").on("click", function() {
-        if($("#main-dock").hasClass("dock-active")) {
-            $("#main-dock").animate({left: '-50px'}); // hide main dock
+    $("#main-dock-handle").on("click", function () {
+        if ($("#main-dock").hasClass("dock-active")) {
+            $("#main-dock").animate({ left: '-50px' }); // hide main dock
             $("#main-dock").removeClass("dock-active");
         } else {
-            $("#main-dock").animate({left: '0px'}); // hide main dock
+            $("#main-dock").animate({ left: '0px' }); // hide main dock
             $("#main-dock").addClass("dock-active");
         }
     })
-    $("#main-dock span").on("click", function() {
+    $("#main-dock span").on("click", function () {
         var index = parseInt($("#main-dock span").index(this));
         switch (index) {
             case 0: // Search
@@ -117,10 +117,10 @@ function appEvents() {
                     $("#main-dock-equipment").addClass("dock-item-active");
                     $("#panel-equipment").show();
 
-		    // wait for svg image to load
-		    setTimeout(function() {
-		        updateINDI();
-		    }, 500);
+                    // wait for svg image to load
+                    setTimeout(function () {
+                        updateINDI();
+                    }, 500);
                     //$("equipment_status").ready( function() {
                     //    updateINDI();
                     //});
@@ -239,8 +239,8 @@ function appEvents() {
         }
     });
 
-    $("#open-almanac").on("click", function() {
-	$("#main-dock-almanac").trigger("click");
+    $("#open-almanac").on("click", function () {
+        $("#main-dock-almanac").trigger("click");
     });
 
 }
@@ -255,9 +255,9 @@ function syslogPrint(msg, level, popup = false) {
     var color = "#eeeeee";
     var stream = "Astroberry OS";
 
-    if (level !== undefined && ['success', 'danger', 'warning'].includes(level) ) {
+    if (level !== undefined && ['success', 'danger', 'warning'].includes(level)) {
         alert_level = "alert-" + level;
-        switch(level) {
+        switch (level) {
             case "success":
                 msg_level = "INFO";
                 color = "#009933";
@@ -285,7 +285,7 @@ function syslogPrint(msg, level, popup = false) {
 
     console.log(msg);
 
-    if(popup)
+    if (popup)
         $("#notify_message").html('<div class="alert ' + alert_level + '">' + msg + '</div>').fadeIn().delay(3000).fadeOut("slow");
 
     document.getElementById('syslog').scrollTop = document.getElementById('syslog').scrollHeight;
@@ -296,8 +296,8 @@ function syslogPrint(msg, level, popup = false) {
 /* ================================================================== */
 
 function setCookie(name, value) {
-    if(getCookie(name)) {
-        var _value =  JSON.parse(getCookie(name));
+    if (getCookie(name)) {
+        var _value = JSON.parse(getCookie(name));
     } else {
         var _value = {};
     }
@@ -343,11 +343,11 @@ function eventHandlers() {
     $('[data-toggle="tooltip"]').tooltip();
 
     // On exit procedures
-    $(window).on("beforeunload", function() {
+    $(window).on("beforeunload", function () {
         return "Are you sure you want to leave?";
     });
 
-    $(window).on("unload", function(){
+    $(window).on("unload", function () {
         //console.log("Window closed");
     });
 
@@ -356,10 +356,8 @@ function eventHandlers() {
 
 export {
     initTimer,
-    mainLoop,
     eventHandlers,
     syslogPrint,
     getCookie,
     setCookie,
-    eatCookie
 };

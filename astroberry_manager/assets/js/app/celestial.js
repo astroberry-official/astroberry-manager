@@ -25,17 +25,21 @@
 import { timeNow } from './time.js';
 import { geoLocation, updateGeoLocation } from './location.js';
 import { syslogPrint } from './helpers.js';
-import { JulianDateFromUnixTime, raDecToAltAz,  deg2dms, deg2hms } from './functions.js';
+import { JulianDateFromUnixTime, raDecToAltAz, deg2dms, deg2hms } from './functions.js';
 import { celestialConfig } from './celestial.config.js';
 import { socket } from './sockets.js';
 
-var planets = {"sol": "Sun", "mer": "Mercury", "ven": "Venus", "lun": "Moon", "mar": "Mars", "jup": "Jupiter",
-  "sat": "Saturn", "ura": "Uranus", "nep": "Neptune", "cer": "Ceres", "plu": "Pluto"};
+var planets = {
+  "sol": "Sun", "mer": "Mercury", "ven": "Venus", "lun": "Moon", "mar": "Mars", "jup": "Jupiter",
+  "sat": "Saturn", "ura": "Uranus", "nep": "Neptune", "cer": "Ceres", "plu": "Pluto"
+};
 
-var dsoType = {g: "Galaxy", s: "Spiral Galaxy", s0: "Lenticular Galaxy", sd: "Dwarf Galaxy", e: "Elliptical Galaxy",
+var dsoType = {
+  g: "Galaxy", s: "Spiral Galaxy", s0: "Lenticular Galaxy", sd: "Dwarf Galaxy", e: "Elliptical Galaxy",
   i: "Irregular Galaxy", oc: "Open Cluster", gc: "Globular Cluster", en: "Emission Nebula", bn: "Bright Nebula",
   sfr: "HII Region", rn: "Reflection Nebula", pn: "Planetary Nebula", snr: "Supernova Remnant",
-  dn: "Dark Nebula", pos:"N/A"};
+  dn: "Dark Nebula", pos: "N/A"
+};
 
 var telescopeCoords = { 'RA': 0, 'DEC': 0, 'chartlock': false };
 
@@ -46,14 +50,14 @@ var reticleChart = d3.select("body").append("img")
   .attr("width", reticleRadius)
   .attr("height", reticleRadius)
   .attr("src", "assets/images/reticle_chart.svg")
-  .style({opacity: 0.8, "z-index": 50});
+  .style({ opacity: 0.8, "z-index": 50 });
 
 var reticleTelescope = d3.select("body").append("img")
   .attr("id", "reticle-telescope")
   .attr("width", reticleRadius)
   .attr("height", reticleRadius)
   .attr("src", "assets/images/reticle_telescope.svg")
-  .style({opacity: 0.8, "z-index": 50, display: "none"});
+  .style({ opacity: 0.8, "z-index": 50, display: "none" });
 
 var targetTimeout = 0; // hides target widget after 3s of inactivity
 
@@ -91,78 +95,78 @@ function updateStarChartLocation() { // update star chart geo location based on 
 }
 
 function updateTelescope(data) {
-    if (data === undefined || data === null)
-        return;
+  if (data === undefined || data === null)
+    return;
 
-    data = data['equipment']; // strip header
-    if (data === undefined || data.TELESCOPE === undefined)
-        return;
+  data = data['equipment']; // strip header
+  if (data === undefined || data.TELESCOPE === undefined)
+    return;
 
-    var telescopeNames = Object.keys(data.TELESCOPE); // get all active telescopes
+  var telescopeNames = Object.keys(data.TELESCOPE); // get all active telescopes
 
-    const telescopeId = 0; // use the first telescope ONLY
+  const telescopeId = 0; // use the first telescope ONLY
 
-    if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
-        // remember last coordinates
-        var lastRA = telescopeCoords.RA ? telescopeCoords.RA : 0;
-        var lastDEC = telescopeCoords.DEC ? telescopeCoords.DEC : 0;
+  if (data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD']) {
+    // remember last coordinates
+    var lastRA = telescopeCoords.RA ? telescopeCoords.RA : 0;
+    var lastDEC = telescopeCoords.DEC ? telescopeCoords.DEC : 0;
 
-        // get coordinates from telescope
-        var _telescopeCoords = data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD'];
-        telescopeCoords.RA = _telescopeCoords.RA[0];
-        telescopeCoords.DEC = _telescopeCoords.DEC[0];
+    // get coordinates from telescope
+    var _telescopeCoords = data.TELESCOPE[telescopeNames[telescopeId]]['EQUATORIAL_EOD_COORD'];
+    telescopeCoords.RA = _telescopeCoords.RA[0];
+    telescopeCoords.DEC = _telescopeCoords.DEC[0];
 
-        // update telescope status
-        updateTelescopeStatusIcon(true);
+    // update telescope status
+    updateTelescopeStatusIcon(true);
 
-        // update position of telescope reticle
-        updateTelescopeReticle(telescopeCoords);
+    // update position of telescope reticle
+    updateTelescopeReticle(telescopeCoords);
 
-        // get equatorial coordinates from star chart
-        var starchartCoords = Celestial.rotate()
+    // get equatorial coordinates from star chart
+    var starchartCoords = Celestial.rotate()
 
-        // convert RA from -180...+180 to 0...360 deg
-        if (starchartCoords[0] < 0)
-            starchartCoords[0] += 360;
+    // convert RA from -180...+180 to 0...360 deg
+    if (starchartCoords[0] < 0)
+      starchartCoords[0] += 360;
 
-        //console.log({'RA': telescopeCoords.RA * 15, 'DEC': telescopeCoords.DEC}, {'RA': starchartCoords[0], 'DEC': starchartCoords[1]});
+    //console.log({'RA': telescopeCoords.RA * 15, 'DEC': telescopeCoords.DEC}, {'RA': starchartCoords[0], 'DEC': starchartCoords[1]});
 
-        // If star chart coords equal telescope coords ~30 arsec, set icon status
-        var coordsPrecision = 30/3600;
-        if (Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) < coordsPrecision && Math.abs(telescopeCoords.DEC - starchartCoords[1]) < coordsPrecision) {
-            updateStarchartStatusIcon(true);
-        } else {
-            updateStarchartStatusIcon(false);
-        }
-
-        // If chart locked on telescope, follow the telescope
-        var updateThreshold = 15 * 60 / 3600;
-        if (telescopeCoords.chartlock && (!telescopeCoords || Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) > updateThreshold  || Math.abs(telescopeCoords.DEC - starchartCoords[1]) > updateThreshold)) {
-            centerOnTelescope();
-        }
+    // If star chart coords equal telescope coords ~30 arsec, set icon status
+    var coordsPrecision = 30 / 3600;
+    if (Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) < coordsPrecision && Math.abs(telescopeCoords.DEC - starchartCoords[1]) < coordsPrecision) {
+      updateStarchartStatusIcon(true);
+    } else {
+      updateStarchartStatusIcon(false);
     }
 
-    if (data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']) {
-	//console.log(data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']);
-
-        var scopeLocation = {
-            mode: "telescope",
-            latitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LAT[0],
-            longitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] > 180 ? 180 - data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] : data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0],
-            altitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].ELEV[0]
-        };
-
-        if ($('input[name="geoloc_mode"]:checked').val() == "telescope")
-	    updateGeoLocation(scopeLocation);
-
-        if (scopeLocation.latitude.toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation.longitude.toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
-            updateLocationStatusIcon(true);
-        } else {
-            updateLocationStatusIcon(false);
-            syslogPrint("Telescope location and Star chart location are different", "danger", true);
-            //console.log(scopeLocation.latitude, scopeLocation.longitude);
-        }
+    // If chart locked on telescope, follow the telescope
+    var updateThreshold = 15 * 60 / 3600;
+    if (telescopeCoords.chartlock && (!telescopeCoords || Math.abs(telescopeCoords.RA * 15 - starchartCoords[0]) > updateThreshold || Math.abs(telescopeCoords.DEC - starchartCoords[1]) > updateThreshold)) {
+      centerOnTelescope();
     }
+  }
+
+  if (data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']) {
+    //console.log(data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD']);
+
+    var scopeLocation = {
+      mode: "telescope",
+      latitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LAT[0],
+      longitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] > 180 ? 180 - data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0] : data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].LONG[0],
+      altitude: data.TELESCOPE[telescopeNames[telescopeId]]['GEOGRAPHIC_COORD'].ELEV[0]
+    };
+
+    if ($('input[name="geoloc_mode"]:checked').val() == "telescope")
+      updateGeoLocation(scopeLocation);
+
+    if (scopeLocation.latitude.toFixed(2) == parseFloat(geoLocation.latitude).toFixed(2) && scopeLocation.longitude.toFixed(2) == parseFloat(geoLocation.longitude).toFixed(2)) {
+      updateLocationStatusIcon(true);
+    } else {
+      updateLocationStatusIcon(false);
+      syslogPrint("Telescope location and Star chart location are different", "danger", true);
+      //console.log(scopeLocation.latitude, scopeLocation.longitude);
+    }
+  }
 }
 
 function getAzAlt(ra, dec) {
@@ -206,7 +210,7 @@ function updateTargetCoords(data) {
   if (ra < 0)
     ra += 360;
 
-  var azalt = getAzAlt(ra/15, dec);
+  var azalt = getAzAlt(ra / 15, dec);
 
   // display current alt, az
   var az = deg2dms(azalt[0] * 180 / Math.PI);
@@ -236,7 +240,7 @@ function updateStarChartCoords() {
   if (ra < 0)
     ra += 360;
 
-  var azalt = getAzAlt(ra/15, dec);
+  var azalt = getAzAlt(ra / 15, dec);
 
   // display current alt, az
   var az = deg2dms(azalt[0] * 180 / Math.PI);
@@ -298,7 +302,7 @@ function centerOnTelescope() { // Center on celestial coordinates
   centerOnCoords(ra, dec);
 }
 
-function centerOnCoords(ra, dec, rot=0) { // degrees
+function centerOnCoords(ra, dec, rot = 0) { // degrees
   if (ra === undefined || ra === null || dec === undefined || dec === null)
     return;
 
@@ -325,11 +329,11 @@ function setTelescopeCoordinates(ra, dec) {
   var coordinates = { ra: ra, dec: dec };
 
   socket.timeout(5000).emit("equipment", coordinates, (err) => {
-      if (err) {
-          console.log("Setting telescope coordinates timed out");
-      } else {
-          //console.log("Telescope coordinates requested");
-      }
+    if (err) {
+      console.log("Setting telescope coordinates timed out");
+    } else {
+      //console.log("Telescope coordinates requested");
+    }
   });
 }
 
@@ -367,7 +371,7 @@ function px(n) { return n + "px"; }
 function updateChartReticle() {
   var coordinates = Celestial.rotate()
   var pt = Celestial.mapProjection(coordinates);
-  reticleChart.style({left: px(pt[0]-reticleRadius/2+2), top:px(pt[1]-reticleRadius/2+2), opacity:0.8});
+  reticleChart.style({ left: px(pt[0] - reticleRadius / 2 + 2), top: px(pt[1] - reticleRadius / 2 + 2), opacity: 0.8 });
 }
 
 function updateTelescopeReticle(data) {
@@ -380,7 +384,7 @@ function updateTelescopeReticle(data) {
 
   var coordinates = [ra, dec];
   var pt = Celestial.mapProjection(coordinates);
-  reticleTelescope.style({left: px(pt[0]-reticleRadius/2+2), top:px(pt[1]-reticleRadius/2+2), opacity:0.8});
+  reticleTelescope.style({ left: px(pt[0] - reticleRadius / 2 + 2), top: px(pt[1] - reticleRadius / 2 + 2), opacity: 0.8 });
 }
 
 function getRegionOfInterest(coordinates, fov = 5) {
@@ -399,23 +403,23 @@ function getRegionOfInterest(coordinates, fov = 5) {
   var box = d3.select("body").append("div").attr("id", "region-of-interest").style("z-index", 100);
   var pt = Celestial.mapProjection(coordinates);
 
-  var imageUrl = 'https://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + coordinates[0]/15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
+  var imageUrl = 'https://www.sky-map.org/imgcut?survey=DSS2&w=128&h=128&ra=' + coordinates[0] / 15 + '&de=' + dec + '&angle=' + fov + '&output=PNG';
   //var imageUrl = 'https://sky.esa.int/esasky-tap/skyimage?target=' + ra + ' ' + dec + '&fov=' + fov + '&aspectratio=1&size=400';
-  var aladinUrl = 'https://aladin.cds.unistra.fr/AladinLite/?target='+ra+'+'+dec+'&fov='+fov+'&survey=CDS%2FP%2FDSS2%2Fcolor';
+  var aladinUrl = 'https://aladin.cds.unistra.fr/AladinLite/?target=' + ra + '+' + dec + '&fov=' + fov + '&survey=CDS%2FP%2FDSS2%2Fcolor';
   //var detailsUrl = 'https://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&Radius=' + fov + '&Radius.unit=deg&output.max=10'
   var detailsUrl = 'https://simbad.u-strasbg.fr/simbad/sim-coo?Coord=' + ra + '+' + dec + '&CooFrame=ICRS&CooEqui=2000.0&CooEpoch=J2000&&&Radius.unit=deg&submit=Query+around&Radius=' + fov + '&output.max=10';
 
   // var properties = {'name': 'NGC 224', 'desig': 'M31', 'alt': 'Andromeda Galaxy', 'cl': 'Spiral Galaxy', 'mag': 5, 'dim': 10};
   var properties = {}; // TODO: show data for a major object in the region
 
-  box.style({left:px(ra + pt[0] - width/2), top:px(dec + pt[1]), opacity:1, border: "solid 1px #e1e1e11f"});
+  box.style({ left: px(ra + pt[0] - width / 2), top: px(dec + pt[1]), opacity: 1, border: "solid 1px #e1e1e11f" });
 
   box.selectAll("*").remove();
 
   if (properties.name || properties.desig || properties.alt || properties.cl || dsoType[properties.type]) {
     box.append("span").classed("data", true).text("Names: ");
-    if (properties.name) box.append("span").classed("title", true).text(properties.name+", ")
-    if (properties.desig) box.append("span").text(properties.desig  + ", ");
+    if (properties.name) box.append("span").classed("title", true).text(properties.name + ", ")
+    if (properties.desig) box.append("span").text(properties.desig + ", ");
     if (properties.alt) box.append("span").text(properties.alt).append("br");
     if (dsoType[properties.type]) box.append("span").text(dsoType[properties.type]).append("br");
     if (properties.cl) {
@@ -437,24 +441,24 @@ function getRegionOfInterest(coordinates, fov = 5) {
   }
 
   if (imageUrl && aladinUrl) {
-    box.append("div").attr("id", "region-of-interest-image").append("a").attr({"href": aladinUrl, "target": "_blank", "data-tooltip": "tooltip", title: "Look up object in Aladin Sky Atlas"})
-      .append("img").attr({"src": imageUrl, "width": 256});
+    box.append("div").attr("id", "region-of-interest-image").append("a").attr({ "href": aladinUrl, "target": "_blank", "data-tooltip": "tooltip", title: "Look up object in Aladin Sky Atlas" })
+      .append("img").attr({ "src": imageUrl, "width": 256 });
   }
 
-  box.append("span").attr({"id": "region-of-interest-fav", "class": "fa fa-star", "data-tooltip": "tooltip", title: "Add this region to favorites"})
-    .style({position: "absolute", top: "15px", left: "15px"});
+  box.append("span").attr({ "id": "region-of-interest-fav", "class": "fa fa-star", "data-tooltip": "tooltip", title: "Add this region to favorites" })
+    .style({ position: "absolute", top: "15px", left: "15px" });
 
-  box.append("span").text("Region of Interest").style({position: "absolute", top: "14px", left: "45px", color: "#aaa"});
+  box.append("span").text("Region of Interest").style({ position: "absolute", top: "14px", left: "45px", color: "#aaa" });
 
-  if (fov) box.append("span").text("FOV: " + fov + "  ").style({position: "absolute", top: "14px", right: "50px", color: "#aaa"});
+  if (fov) box.append("span").text("FOV: " + fov + "  ").style({ position: "absolute", top: "14px", right: "50px", color: "#aaa" });
 
-  box.append("span").attr({"id": "region-of-interest-close", "class": "fa fa-times", "data-tooltip": "tooltip", title: "Close region of interest"})
-    .style({position: "absolute", top: "12px", right: "12px"});
+  box.append("span").attr({ "id": "region-of-interest-close", "class": "fa fa-times", "data-tooltip": "tooltip", title: "Close region of interest" })
+    .style({ position: "absolute", top: "12px", right: "12px" });
 
   box.append("button").attr("id", "region-of-interest-center").attr("class", "btn btn-primary").attr("data-tooltip", "tooltip").attr("title", "Center object in star chart").text("Center");
 
   if (detailsUrl) {
-    box.append("a").attr({"id": "region-of-interest-details", "href": detailsUrl, target: "_blank", "data-tooltip": "tooltip", title: "Look up the region in SIMBAD online database"}).text("Details");
+    box.append("a").attr({ "id": "region-of-interest-details", "href": detailsUrl, target: "_blank", "data-tooltip": "tooltip", title: "Look up the region in SIMBAD online database" }).text("Details");
   }
 
   box.append("button").attr("id", "region-of-interest-goto").attr("class", "btn btn-primary").attr("data-tooltip", "tooltip").attr("title", "Center telescope on the object").text("Go to");
@@ -466,7 +470,7 @@ function getRegionOfInterest(coordinates, fov = 5) {
   box.append("br");
 
   // get azimuth and altitude
-  var azalt = getAzAlt(ra/15, dec);
+  var azalt = getAzAlt(ra / 15, dec);
   var az = deg2dms(azalt[0] * 180 / Math.PI);
   var alt = deg2dms(azalt[1] * 180 / Math.PI);
 
@@ -478,31 +482,31 @@ function getRegionOfInterest(coordinates, fov = 5) {
   // register events
   $("#region-of-interest").draggable();
 
-  d3.select("#region-of-interest-fav").on("click", function(data) {
+  d3.select("#region-of-interest-fav").on("click", function (data) {
     addROItoFavorites(data);
   });
 
-  d3.select("#region-of-interest-center").on("click", function() {
+  d3.select("#region-of-interest-center").on("click", function () {
     centerOnCoords(ra, dec);
   });
 
-  d3.select("#region-of-interest-goto").on("click", function() {
+  d3.select("#region-of-interest-goto").on("click", function () {
     setTelescopeCoordinates(ra, dec);
   });
 
-  d3.select("#region-of-interest-close").on("click", function() {
+  d3.select("#region-of-interest-close").on("click", function () {
     $("#region-of-interest").remove();
   });
 }
 
 function updateTelescopeStatusIcon(status) {
   if (status) {
-    $("#celestial-map-telescope-icon").css({"background-image": "url(assets/images/telescope-active.png)"});
+    $("#celestial-map-telescope-icon").css({ "background-image": "url(assets/images/telescope-active.png)" });
     $("#celestial-map-telescope-coords").show();
     $("#starchart_center").prop('disabled', false);
     $("#starchart_lock").prop('disabled', false);
   } else {
-    $("#celestial-map-telescope-icon").css({"background-image": "url(assets/images/telescope.png)"});
+    $("#celestial-map-telescope-icon").css({ "background-image": "url(assets/images/telescope.png)" });
     $("#celestial-map-telescope-coords").hide();
     $("#starchart_center").prop('disabled', true);
     $("#starchart_lock").prop('disabled', true);
@@ -512,26 +516,26 @@ function updateTelescopeStatusIcon(status) {
 function updateStarchartStatusIcon(status) {
   return // disabled
   if (status === undefined) {
-      var color = "#ffffff";
+    var color = "#ffffff";
   } else if (status) {
-      var color = "#009933";
+    var color = "#009933";
   } else {
-      var color = "#ff0000";
+    var color = "#ff0000";
   }
 
-  $("#celestial-map-icon").css({color: color});
+  $("#celestial-map-icon").css({ color: color });
 }
 
 function updateLocationStatusIcon(status) {
   if (status === undefined) {
-      var color = "#ffffff";
+    var color = "#ffffff";
   } else if (status) {
-      var color = "#009933";
+    var color = "#009933";
   } else {
-      var color = "#ff0000";
+    var color = "#ff0000";
   }
 
-  $("#celestial-map-location-icon").css({color: color});
+  $("#celestial-map-location-icon").css({ color: color });
 }
 
 function systemLocationTime(enabled) { // Enable/Disable location and date/time fields in celestial display settings
@@ -588,61 +592,61 @@ function starchartEvents() {
     $("#celestial-form").toggle();
   });
 
-  $("#celestial-map-telescope-icon").on("click", function() {
+  $("#celestial-map-telescope-icon").on("click", function () {
     $("#main-dock-equipment").trigger("click");
   });
 
   $("#celestial-map")
-  .on("click", function (data) {
-    if (data === undefined || data === null)
-      return;
-    //clearWorkspace(); // hide dock, panels, terminal etc
-  })
-  .on("dblclick", function (data) { // Get cursor celestial coordinates
-    if (data === undefined || data === null)
-      return;
+    .on("click", function (data) {
+      if (data === undefined || data === null)
+        return;
+      //clearWorkspace(); // hide dock, panels, terminal etc
+    })
+    .on("dblclick", function (data) { // Get cursor celestial coordinates
+      if (data === undefined || data === null)
+        return;
 
-    var coordinates = getPointCoordinates(data);
-    centerOnCoords(coordinates[0], coordinates[1]);
-  })
-  .on("mousemove", function (data) { // Get cursor celestial coordinates
-    if (data === undefined || data === null)
-      return;
+      var coordinates = getPointCoordinates(data);
+      centerOnCoords(coordinates[0], coordinates[1]);
+    })
+    .on("mousemove", function (data) { // Get cursor celestial coordinates
+      if (data === undefined || data === null)
+        return;
 
-    clearTimeout(targetTimeout);
+      clearTimeout(targetTimeout);
 
-    if ($("#target_enable").is(':checked'))
-      $("#celestial-map-target").fadeIn();
+      if ($("#target_enable").is(':checked'))
+        $("#celestial-map-target").fadeIn();
 
-    var coordinates = getPointCoordinates(data);
-    updateTargetCoords(coordinates);
+      var coordinates = getPointCoordinates(data);
+      updateTargetCoords(coordinates);
 
-    targetTimeout = setTimeout(function(){
-      if ($("#target_autohide").is(':checked'))
-        $("#celestial-map-target").fadeOut(2000);
-    }, 3000)
-  });
+      targetTimeout = setTimeout(function () {
+        if ($("#target_autohide").is(':checked'))
+          $("#celestial-map-target").fadeOut(2000);
+      }, 3000)
+    });
 
-  $("#reticle-chart").on("dblclick", function() {
+  $("#reticle-chart").on("dblclick", function () {
     var coordinates = Celestial.rotate();
     getRegionOfInterest(coordinates);
   })
 
-  $("#reticle-telescope").on("dblclick", function() {
+  $("#reticle-telescope").on("dblclick", function () {
     var coordinates = Celestial.rotate();
     getRegionOfInterest(coordinates);
   })
 
-  $("#reticle-chart").bind('mousewheel', function(e) {
-    if(e.originalEvent.wheelDelta < 0) {
+  $("#reticle-chart").bind('mousewheel', function (e) {
+    if (e.originalEvent.wheelDelta < 0) {
       Celestial.zoomBy(0.25);
     } else {
       Celestial.zoomBy(4);
     }
   })
 
-  $("#reticle-telescope").bind('mousewheel', function(e) {
-    if(e.originalEvent.wheelDelta < 0) {
+  $("#reticle-telescope").bind('mousewheel', function (e) {
+    if (e.originalEvent.wheelDelta < 0) {
       Celestial.zoomBy(0.25);
     } else {
       Celestial.zoomBy(4);
@@ -655,15 +659,9 @@ export {
   requestStarChart,
   updateStarChartLocation,
   updateTelescope,
-  loadStarChartLock,
-  updateTelecopeCoords,
-  updateStarChartCoords,
-  centerOnTelescope,
   centerOnCoords,
   centerOnSolarObject,
   updateTelescopeStatusIcon,
-  updateStarchartStatusIcon,
-  updateLocationStatusIcon,
   systemLocationTime,
   starchartEvents
 };
