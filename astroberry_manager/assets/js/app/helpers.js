@@ -347,10 +347,6 @@ function eventHandlers() {
         return "Are you sure you want to leave?";
     });
 
-    $(window).on("unload", function () {
-        //console.log("Window closed");
-    });
-
     console.log("Event handlers loaded");
 }
 
