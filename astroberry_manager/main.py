@@ -215,15 +215,15 @@ def main():
         print("Astroberry Manager v"+__version__+"\n")
 
         if timeThread is None:
-            print("✓ Starting time services")
+            print("Starting time services")
             timeThread = socketio.start_background_task(getTime, socketio)
 
         if locationThread is None:
-            print("✓ Starting location services")
+            print("Starting location services")
             locationThread = socketio.start_background_task(getLocation, socketio)
 
         if terminalThread is None:
-            print("✓ Starting terminal services")
+            print("Starting terminal services")
             terminalThread = socketio.start_background_task(read_and_forward_pty_output)
             (child_pid, fd) = pty.fork()
             if child_pid == 0:
@@ -232,15 +232,15 @@ def main():
                     subprocess.run([cmd])
 
         if sysmonThread is None:
-            print("✓ Starting system services")
+            print("Starting system services")
             sysmonThread = socketio.start_background_task(getSystemReports, socketio)
 
         if equipmentThread is None:
-            print("✓ Starting equipment services")
+            print("Starting equipment services")
             equipmentThreadEvent.set() # call equipmentThreadEvent.clear() to terminate background thread
             equipmentThread = socketio.start_background_task(getEquipment, socketio, equipmentThreadEvent)
 
-        print("✓ Starting main application\n")
+        print("Starting main application\n")
 
         print("Point your browser to http://%s:%d/\n" % (app_addr, app_port))
 
