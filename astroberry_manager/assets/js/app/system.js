@@ -45,7 +45,7 @@ function updateSystem(data) {
 
     $("#sysmon-resource-memtot").html(data.memory_info.total_memory.toFixed(2));
     $("#sysmon-resource-memavail").html(data.memory_info.available_memory.toFixed(2));
-    $("#sysmon-resource-memused").html(data.memory_info.used_memory.toFixed(2) + " (" + data.memory_info.memory_percentage + "%)" );
+    $("#sysmon-resource-memused").html(data.memory_info.used_memory.toFixed(2) + " (" + data.memory_info.memory_percentage + "%)");
 
     $("#sysmon-resource-disktot").html(data.disk_info['/'].total_space.toFixed(2) + " GB");
     $("#sysmon-resource-diskavail").html(data.disk_info['/'].free_space.toFixed(2) + " GB");
@@ -53,27 +53,27 @@ function updateSystem(data) {
 
     // decorations
     if (data.cpu_info.total_cpu_usage > 80) { // CPU Usage
-        $("#sysmon-resource-cpuusage").prev().css({background: '#ff3300'});
+        $("#sysmon-resource-cpuusage").prev().css({ background: '#ff3300' });
     } else if (data.cpu_info.total_cpu_usage > 60) {
-        $("#sysmon-resource-cpuusage").prev().css({background: '#f08c00'});
+        $("#sysmon-resource-cpuusage").prev().css({ background: '#f08c00' });
     } else {
-        $("#sysmon-resource-cpuusage").prev().css({background: '#333'});
+        $("#sysmon-resource-cpuusage").prev().css({ background: '#333' });
     }
 
     if (data.memory_info.memory_percentage > 80) { // Memory Usage
-        $("#sysmon-resource-memused").prev().css({background: '#ff3300'});
+        $("#sysmon-resource-memused").prev().css({ background: '#ff3300' });
     } else if (data.memory_info.memory_percentage > 60) {
-        $("#sysmon-resource-memused").prev().css({background: '#f08c00'});
+        $("#sysmon-resource-memused").prev().css({ background: '#f08c00' });
     } else {
-        $("#sysmon-resource-memused").prev().css({background: '#333'});
+        $("#sysmon-resource-memused").prev().css({ background: '#333' });
     }
 
     if (data.disk_info['/'].usage_percentage > 80) { // Disk Usage
-        $("#sysmon-resource-diskused").prev().css({background: '#ff3300'});
+        $("#sysmon-resource-diskused").prev().css({ background: '#ff3300' });
     } else if (data.disk_info['/'].usage_percentage > 60) {
-        $("#sysmon-resource-diskused").prev().css({background: '#f08c00'});
+        $("#sysmon-resource-diskused").prev().css({ background: '#f08c00' });
     } else {
-        $("#sysmon-resource-diskused").prev().css({background: '#333'});
+        $("#sysmon-resource-diskused").prev().css({ background: '#333' });
     }
 }
 
@@ -121,88 +121,88 @@ function systemEvents() {
         toggleSettings();
     });
 
-    $("#system-logout").on("click", function() {
+    $("#system-logout").on("click", function () {
         window.open('/logout', '_self');
     });
 
-    $("#system-update").on("click", function() {
+    $("#system-update").on("click", function () {
         systemUpdate();
     });
 
-    $("#system-backup").on("click", function() {
+    $("#system-backup").on("click", function () {
         systemBackup();
     });
 
-    $("#system-restore").on("click", function() {
+    $("#system-restore").on("click", function () {
         systemRestore();
     });
 
-    $("#system-restart").on("click", function() {
+    $("#system-restart").on("click", function () {
         systemRestart();
     });
 
-    $("#system-shutdown").on("click", function() {
+    $("#system-shutdown").on("click", function () {
         systemShutdown();
     });
 
-    $("#telescope_coordinates_enable").on("change", function() {
+    $("#telescope_coordinates_enable").on("change", function () {
         if ($('#telescope_coordinates_enable').is(':checked')) {
             $("#celestial-map-telescope-coords").show();
-            setCookie("config", JSON.stringify({"telescope_coords": true }));
+            setCookie("config", JSON.stringify({ "telescope_coords": true }));
         } else {
             $("#celestial-map-telescope-coords").hide();
-            setCookie("config", JSON.stringify({"telescope_coords": false }));
+            setCookie("config", JSON.stringify({ "telescope_coords": false }));
         }
     });
 
-    $("#starchart_coordinates_enable").on("change", function() {
+    $("#starchart_coordinates_enable").on("change", function () {
         if ($('#starchart_coordinates_enable').is(':checked')) {
             $("#celestial-map-coords").show();
-            setCookie("config", JSON.stringify({"chart_coords": true }));
+            setCookie("config", JSON.stringify({ "chart_coords": true }));
         } else {
             $("#celestial-map-coords").hide();
-            setCookie("config", JSON.stringify({"chart_coords": false }));
+            setCookie("config", JSON.stringify({ "chart_coords": false }));
         }
     });
 
-    $("#timeloc_enable").on("change", function() {
+    $("#timeloc_enable").on("change", function () {
         if ($('#timeloc_enable').is(':checked')) {
             $("#celestial-map-timeloc").show();
-            setCookie("config", JSON.stringify({"timeloc": true }));
+            setCookie("config", JSON.stringify({ "timeloc": true }));
         } else {
             $("#celestial-map-timeloc").hide();
-            setCookie("config", JSON.stringify({"timeloc": false }));
+            setCookie("config", JSON.stringify({ "timeloc": false }));
         }
     });
 
-    $("#target_enable").on("change", function() {
+    $("#target_enable").on("change", function () {
         if ($('#target_enable').is(':checked')) {
             $("#celestial-map-target").show();
             $("#target_autohide").attr('disabled', false);
-            setCookie("config", JSON.stringify({"target_coords": true }));
+            setCookie("config", JSON.stringify({ "target_coords": true }));
         } else {
             $("#celestial-map-target").hide();
             $("#target_autohide").attr('disabled', true);
-            setCookie("config", JSON.stringify({"target_coords": false }));
+            setCookie("config", JSON.stringify({ "target_coords": false }));
         }
     });
 
-    $("#target_autohide").on("change", function() {
+    $("#target_autohide").on("change", function () {
         if ($('#target_autohide').is(':checked')) {
             $("#celestial-map-target").show();
-            setCookie("config", JSON.stringify({"target_autohide": true }));
+            setCookie("config", JSON.stringify({ "target_autohide": true }));
         } else {
-            setCookie("config", JSON.stringify({"target_autohide": false }));
+            setCookie("config", JSON.stringify({ "target_autohide": false }));
         }
     });
 
-    $("#system_timeloc").on("change", function() {
+    $("#system_timeloc").on("change", function () {
         if ($("#system_timeloc").is(':checked')) {
             systemLocationTime(true);
-            setCookie("config", JSON.stringify({"use_system_loctime": true }));
+            setCookie("config", JSON.stringify({ "use_system_loctime": true }));
         } else {
             systemLocationTime(false);
-            setCookie("config", JSON.stringify({"use_system_loctime": false }));
+            setCookie("config", JSON.stringify({ "use_system_loctime": false }));
         }
     });
 }
@@ -238,15 +238,15 @@ function toggleSettings() {
 }
 
 function systemUpdate() {
-    syslogPrint("System update procedure initiated", "warning", true);
+    syslogPrint("System update initiated", "warning", true);
     if (!confirm("Press OK to confirm system update")) {
         return;
     }
 
-    var data = {'action': "update"};
+    var data = { 'action': "update" };
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            console.log("System update request timed out");
+            console.log("System update timed out");
         } else {
             //console.log("System update requested");
         }
@@ -254,15 +254,15 @@ function systemUpdate() {
 }
 
 function systemBackup() {
-    syslogPrint("System backup procedure initiated", "warning", true);
+    syslogPrint("System backup initiated", "warning", true);
     if (!confirm("Press OK to confirm system backup")) {
         return;
     }
 
-    var data = {'action': "backup"};
+    var data = { 'action': "backup" };
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            console.log("System backup request timed out");
+            console.log("System backup timed out");
         } else {
             //console.log("System backup requested");
         }
@@ -270,15 +270,15 @@ function systemBackup() {
 }
 
 function systemRestore() {
-    syslogPrint("System restore procedure initiated", "warning", true);
+    syslogPrint("System restore initiated", "warning", true);
     if (!confirm("Press OK to confirm system restore")) {
         return;
     }
 
-    var data = {'action': "restore"};
+    var data = { 'action': "restore" };
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            console.log("System restore request timed out");
+            console.log("System restore timed out");
         } else {
             //console.log("System restore requested");
         }
@@ -286,15 +286,15 @@ function systemRestore() {
 }
 
 function systemRestart() {
-    syslogPrint("System restart procedure initiated", "warning", true);
+    syslogPrint("System restart initiated", "warning", true);
     if (!confirm("Press OK to confirm system restart")) {
         return;
     }
 
-    var data = {'action': "restart"};
+    var data = { 'action': "restart" };
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            console.log("System restart request timed out");
+            console.log("System restart timed out");
         } else {
             //console.log("System restart requested");
         }
@@ -302,15 +302,15 @@ function systemRestart() {
 }
 
 function systemShutdown() {
-    syslogPrint("System shudown procedure initiated", "warning", true);
-    if (!confirm("Press OK to confirm system restore")) {
+    syslogPrint("System shutdown initiated", "warning", true);
+    if (!confirm("Press OK to confirm system shutdown")) {
         return;
     }
 
-    var data = {'action': "shutdown"};
+    var data = { 'action': "shutdown" };
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
-            console.log("System shutdown request timed out");
+            console.log("System shutdown timed out");
         } else {
             //console.log("System shudown requested");
         }
@@ -318,7 +318,7 @@ function systemShutdown() {
 }
 
 function systemUpdateInfo() {
-    var data = {'action': "info"};
+    var data = { 'action': "info" };
     socket.timeout(5000).emit("system", data, (err) => {
         if (err) {
             console.log("System info request timed out");
