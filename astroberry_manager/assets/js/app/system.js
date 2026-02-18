@@ -238,10 +238,12 @@ function toggleSettings() {
 }
 
 function systemUpdate() {
-    syslogPrint("System update initiated", "warning", true);
+
     if (!confirm("Press OK to confirm system update")) {
         return;
     }
+
+    syslogPrint("System update initiated", "warning", true);
 
     var data = { 'action': "update" };
     socket.timeout(5000).emit("system", data, (err) => {
@@ -254,10 +256,11 @@ function systemUpdate() {
 }
 
 function systemBackup() {
-    syslogPrint("System backup initiated", "warning", true);
     if (!confirm("Press OK to confirm system backup")) {
         return;
     }
+
+    syslogPrint("System backup initiated", "warning", true);
 
     var data = { 'action': "backup" };
     socket.timeout(5000).emit("system", data, (err) => {
@@ -270,10 +273,11 @@ function systemBackup() {
 }
 
 function systemRestore() {
-    syslogPrint("System restore initiated", "warning", true);
     if (!confirm("Press OK to confirm system restore")) {
         return;
     }
+
+    syslogPrint("System restore initiated", "warning", true);
 
     var data = { 'action': "restore" };
     socket.timeout(5000).emit("system", data, (err) => {
@@ -286,10 +290,11 @@ function systemRestore() {
 }
 
 function systemRestart() {
-    syslogPrint("System restart initiated", "warning", true);
     if (!confirm("Press OK to confirm system restart")) {
         return;
     }
+
+    syslogPrint("System restart initiated", "warning", true);
 
     var data = { 'action': "restart" };
     socket.timeout(5000).emit("system", data, (err) => {
@@ -302,10 +307,11 @@ function systemRestart() {
 }
 
 function systemShutdown() {
-    syslogPrint("System shutdown initiated", "warning", true);
     if (!confirm("Press OK to confirm system shutdown")) {
         return;
     }
+
+    syslogPrint("System shutdown initiated", "warning", true);
 
     var data = { 'action': "shutdown" };
     socket.timeout(5000).emit("system", data, (err) => {
