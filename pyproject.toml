@@ -8,7 +8,7 @@ include-package-data = true
 
 [project]
 name = "astroberry_manager"
-version = "1.0" # Also update __version__ in main.py
+version = "1.1" # Also update __version__ in main.py
 authors = [
   { name="Radek Kaczorek", email="rkaczorek@gmail.com" }
 ]
