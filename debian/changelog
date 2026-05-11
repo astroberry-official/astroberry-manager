@@ -1,0 +1,5 @@
+astroberry-manager (1.1) main; urgency=medium
+
+  * Initial release of debian package of Astroberry Manager
+
+ -- Astroberry <contact@astroberry.io>  Sat, 9 May 2026 23:44:18 +0200

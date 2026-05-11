@@ -1,0 +1,9 @@
+#!/bin/bash
+# prerm script for astroberry-manager
+
+if [ "$1" == "remove" ]; then
+
+    # Disable service
+    systemctl stop astroberry-manager.service && systemctl disable astroberry-manager.service
+
+fi

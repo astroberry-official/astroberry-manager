@@ -1,0 +1,11 @@
+#!/bin/bash
+# postinst script for astroberry-manager
+
+if [ "$1" == "configure" ] || [ "$1" == "abort-upgrade" ] || [ "$1" == "abort-deconfigure" ] || [ "$1" == "abort-remove" ]; then
+
+    # Enable service
+    if [ -e /etc/systemd/system/astroberry-manager.service ] && [ ! -e /etc/systemd/system/multi-user.target.wants/astroberry-manager.service ]; then
+        ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/
+    fi
+
+fi

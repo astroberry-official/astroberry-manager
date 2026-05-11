@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=astroberry-manager
+export PYBUILD_SYSTEM=pyproject
+
+%:
+	dh $@ --with python3 --buildsystem pybuild
+
+override_dh_auto_test:
+	# Tests skipped during package build as they require installed dependencies
