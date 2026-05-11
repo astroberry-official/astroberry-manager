@@ -10,5 +10,5 @@ Package: astroberry-manager
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, python3, python-is-python3,
  python3-pampy, python3-gevent, python3-flask, python3-flask-socketio, python3-ephem, python3-psutil,
- python3-gpsdclient, python3-yr-weather, python3-python3-indi-client
+ python3-gpsdclient, python3-yr-weather, python3-indi-client
 Description: Astroberry Manager is a web interface for Astroberry OS.
