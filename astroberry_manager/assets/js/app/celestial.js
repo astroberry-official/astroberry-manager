@@ -122,6 +122,9 @@ function updateTelescope(data) {
     // update position of telescope reticle
     updateTelescopeReticle(telescopeCoords);
 
+    // update position of telescope RA/DEC text
+    updateTelescopeCoords(telescopeCoords);
+
     // get equatorial coordinates from star chart
     var starchartCoords = Celestial.rotate()
 
@@ -261,13 +264,13 @@ function updateStarChartCoords() {
   updateTelescopeReticle(telescopeCoords); // update telescope reticle
 }
 
-function updateTelecopeCoords() {
-  // get current RA & DEC
-  if (!telescopeCoords)
+function updateTelescopeCoords(data) {
+  if (data === undefined || data === null) {
     return;
+  }
 
-  var ra = telescopeCoords.RA;
-  var dec = telescopeCoords.DEC;
+  var ra = data.RA;
+  var dec = data.DEC;
 
   // display current ra in HMS
   $("#starchart_telescope_ra").text(deg2hms(ra * 15));
@@ -276,7 +279,7 @@ function updateTelecopeCoords() {
   $("#starchart_telescope_dec").text(deg2dms(dec));
 
   // get current LAT & LON
-  if (!geoLocation || !geoLocation.latitude || !geoLocation.longitude)
+  if (!geoLocation)
     return;
 
   var azalt = getAzAlt(ra, dec);

@@ -41,20 +41,18 @@ function updateTime(data) {
 
     timeNow = d; // update global variable
 
-    if ($('input[name="geoloc_mode"]:checked').val() != "gps") { // gps gives us own time
-        var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
+    var date = d.getUTCFullYear() + "-" + ("0" + (d.getUTCMonth() + 1)).substr(-2) + "-" + ("0" + d.getUTCDate()).substr(-2) + "T" + ("0" + d.getUTCHours()).substr(-2) + ":" + ("0" + d.getUTCMinutes()).substr(-2) + ":" + ("0" + d.getUTCSeconds()).substr(-2);
 
-        // Update date/time in footer
-        $("#gtime").html(date);
+    // Update date/time in footer
+    $("#gtime").html(date);
 
-        // Update date/time in details tab
-        var gps_time = date.split("T");
-        $("#gps_time").html(gps_time[0] + "<br>" + gps_time[1]);
+    // Update date/time in details tab
+    var gps_time = date.split("T");
+    $("#gps_time").html(gps_time[0] + "<br>" + gps_time[1]);
 
-        // Update Star Chart
-        if ($("#system_timeloc").is(':checked'))
-            Celestial.date(d);
-    }
+    // Update Star Chart
+    if ($("#system_timeloc").is(':checked'))
+        Celestial.date(d);
 }
 
 export {
