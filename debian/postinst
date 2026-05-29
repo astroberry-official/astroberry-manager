@@ -7,7 +7,7 @@ if [ "$1" == "configure" ]; then
 
     # Enable service
     if [ ! ischroot ]; then
-        if [ ! -e /etc/systemd/system/multi-user.target.wants/astroberry-manager.service ]; then ln -s /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/; fi
+        if [ ! -e /etc/systemd/system/multi-user.target.wants/astroberry-manager.service ]; then ln -fs /etc/systemd/system/astroberry-manager.service /etc/systemd/system/multi-user.target.wants/; fi
     else
         systemctl enable astroberry-manager.service && systemctl start astroberry-manager.service
     fi
