@@ -1,5 +1,18 @@
+astroberry-manager (1.2) main; urgency=medium
+
+  * Fix GPS not updating in Location Panel
+  * Fix Telescope coordinates not shown
+
+ -- Astroberry <contact@astroberry.io>  Fri, 29 May 2026 03:54:18 +0200
+
 astroberry-manager (1.1) main; urgency=medium
 
   * Initial release of debian package of Astroberry Manager
 
  -- Astroberry <contact@astroberry.io>  Sat, 9 May 2026 23:44:18 +0200
+
+astroberry-manager (1.0) main; urgency=medium
+
+  * Initial release
+
+ -- Astroberry <contact@astroberry.io>  Wed, 3 Sep 2025 12:44:18 +0200
