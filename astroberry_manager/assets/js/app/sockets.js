@@ -113,7 +113,7 @@ function setSockets() {
     /* Application specific */
     socket.on('datetime', function (data) { // time
         //console.log("datetime: " + data);
-        if ("now" in data) updateTime(data.now);
+        if ("now" in data && $('input[name="geoloc_mode"]:checked').val() != "gps") updateTime(data.now);
     });
 
     socket.on('location', function (data) { // location

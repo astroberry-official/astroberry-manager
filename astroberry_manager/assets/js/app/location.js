@@ -140,7 +140,7 @@ function updateGeoLocation(location = {}) {
         location.gpstime = timeNow.toISOString();
 
     // Process mode
-    if (location.mode == "gps") {
+    if (location.mode == "gps" || location.mode == 1 || location.mode == 2 || location.mode == 3) {
         $("#toggle-skymap").show();
         $("#toggle-gpsdetails").show();
         $("#control-set-location").show();
