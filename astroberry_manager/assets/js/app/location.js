@@ -20,7 +20,7 @@
  Boston, MA 02110-1301, USA.
 */
 
-import { getCookie, setCookie, syslogPrint } from './helpers.js';
+import { getData, setData, syslogPrint } from './helpers.js';
 import { timeNow, updateTime } from './time.js';
 import { updateStarChartLocation } from './celestial.js';
 import { requestWeather } from './weather.js';
@@ -81,8 +81,8 @@ function loadMap() { // https://leafletjs.com/examples/quick-start/
 
 function loadGeoLocation() {
     // Load from cookie
-    if (getCookie("config")) {
-        var config = JSON.parse(getCookie("config"));
+    if (getData("config")) {
+        var config = JSON.parse(getData("config"));
         if ('location' in config) {
             geoLocation.mode = config.location.mode ? config.location.mode : "telescope";
             geoLocation.latitude = config.location.latitude ? config.location.latitude : 0;
@@ -259,7 +259,7 @@ function updateGeoLocation(location = {}) {
             $("#gps_altitude").html(geoLocation.altitude);
 
             // Save location
-            setCookie("config", JSON.stringify({ "location": geoLocation }));
+            setData("config", JSON.stringify({ "location": geoLocation }));
 
             // Update home marker and center
             centerMap([geoLocation.latitude, geoLocation.longitude]);

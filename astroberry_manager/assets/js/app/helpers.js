@@ -292,6 +292,32 @@ function syslogPrint(msg, level, popup = false) {
 }
 
 /* ================================================================== */
+/*                             WEB STORAGE
+/* ================================================================== */
+
+function setData(name, value) {
+    if (getData(name)) {
+        var _value = JSON.parse(getData(name));
+    } else {
+        var _value = {};
+    }
+
+    for (const [key, val] of Object.entries(JSON.parse(value))) {
+        _value[key] = val;
+    }
+
+    localStorage.setItem(name, JSON.stringify(_value));
+}
+
+function getData(name) {
+    return localStorage.getItem(name);
+}
+
+function eatData(name) {
+    localStorage.removeItem(name);
+}
+
+/* ================================================================== */
 /*                             COOKIES
 /* ================================================================== */
 
@@ -356,4 +382,8 @@ export {
     syslogPrint,
     getCookie,
     setCookie,
+    eatCookie,
+    getData,
+    setData,
+    eatData,
 };

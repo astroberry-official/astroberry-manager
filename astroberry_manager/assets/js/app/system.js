@@ -21,7 +21,7 @@
 */
 
 import { systemLocationTime } from "./celestial.js";
-import { getCookie, setCookie, syslogPrint } from "./helpers.js";
+import { getData, setData, syslogPrint } from "./helpers.js";
 import { socket } from "./sockets.js";
 
 function updateSystem(data) {
@@ -83,8 +83,8 @@ function updateSystem(data) {
 
 function systemEvents() {
     // load config from cookies
-    if (getCookie("config")) {
-        var config = JSON.parse(getCookie("config"));
+    if (getData("config")) {
+        var config = JSON.parse(getData("config"));
 
         if (config.telescope_coords !== undefined && config.telescope_coords !== null)
             $('#telescope_coordinates_enable').prop("checked", config.telescope_coords);
@@ -148,30 +148,30 @@ function systemEvents() {
     $("#telescope_coordinates_enable").on("change", function () {
         if ($('#telescope_coordinates_enable').is(':checked')) {
             $("#celestial-map-telescope-coords").show();
-            setCookie("config", JSON.stringify({ "telescope_coords": true }));
+            setData("config", JSON.stringify({ "telescope_coords": true }));
         } else {
             $("#celestial-map-telescope-coords").hide();
-            setCookie("config", JSON.stringify({ "telescope_coords": false }));
+            setData("config", JSON.stringify({ "telescope_coords": false }));
         }
     });
 
     $("#starchart_coordinates_enable").on("change", function () {
         if ($('#starchart_coordinates_enable').is(':checked')) {
             $("#celestial-map-coords").show();
-            setCookie("config", JSON.stringify({ "chart_coords": true }));
+            setData("config", JSON.stringify({ "chart_coords": true }));
         } else {
             $("#celestial-map-coords").hide();
-            setCookie("config", JSON.stringify({ "chart_coords": false }));
+            setData("config", JSON.stringify({ "chart_coords": false }));
         }
     });
 
     $("#timeloc_enable").on("change", function () {
         if ($('#timeloc_enable').is(':checked')) {
             $("#celestial-map-timeloc").show();
-            setCookie("config", JSON.stringify({ "timeloc": true }));
+            setData("config", JSON.stringify({ "timeloc": true }));
         } else {
             $("#celestial-map-timeloc").hide();
-            setCookie("config", JSON.stringify({ "timeloc": false }));
+            setData("config", JSON.stringify({ "timeloc": false }));
         }
     });
 
@@ -179,30 +179,30 @@ function systemEvents() {
         if ($('#target_enable').is(':checked')) {
             $("#celestial-map-target").show();
             $("#target_autohide").attr('disabled', false);
-            setCookie("config", JSON.stringify({ "target_coords": true }));
+            setData("config", JSON.stringify({ "target_coords": true }));
         } else {
             $("#celestial-map-target").hide();
             $("#target_autohide").attr('disabled', true);
-            setCookie("config", JSON.stringify({ "target_coords": false }));
+            setData("config", JSON.stringify({ "target_coords": false }));
         }
     });
 
     $("#target_autohide").on("change", function () {
         if ($('#target_autohide').is(':checked')) {
             $("#celestial-map-target").show();
-            setCookie("config", JSON.stringify({ "target_autohide": true }));
+            setData("config", JSON.stringify({ "target_autohide": true }));
         } else {
-            setCookie("config", JSON.stringify({ "target_autohide": false }));
+            setData("config", JSON.stringify({ "target_autohide": false }));
         }
     });
 
     $("#system_timeloc").on("change", function () {
         if ($("#system_timeloc").is(':checked')) {
             systemLocationTime(true);
-            setCookie("config", JSON.stringify({ "use_system_loctime": true }));
+            setData("config", JSON.stringify({ "use_system_loctime": true }));
         } else {
             systemLocationTime(false);
-            setCookie("config", JSON.stringify({ "use_system_loctime": false }));
+            setData("config", JSON.stringify({ "use_system_loctime": false }));
         }
     });
 }

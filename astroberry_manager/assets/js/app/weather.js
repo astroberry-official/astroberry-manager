@@ -22,7 +22,7 @@
 
 import { timeNow } from './time.js';
 import { geoLocation } from "./location.js";
-import { getCookie, setCookie } from "./helpers.js";
+import { getData, setData, eatData } from "./helpers.js";
 import { socket } from "./sockets.js";
 
 var path = "../assets/images/weather/";
@@ -49,8 +49,8 @@ function requestWeather() {
 
 function loadWeather() {
     // Load units preferrence
-    if (getCookie("config")) {
-      var config = JSON.parse(getCookie("config"));
+    if (getData("config")) {
+      var config = JSON.parse(getData("config"));
 
       // load units
       if (config.weather_units == "F") {
@@ -271,36 +271,36 @@ function weatherEvents() {
   });
 
   $("#weather_units").on("change", function() {
-      setCookie("config", JSON.stringify({"weather_units": $('input[name="weather_units"]:checked').val()}));
+      setData("config", JSON.stringify({"weather_units": $('input[name="weather_units"]:checked').val()}));
       requestWeather();
   });
 
   $("#weather_alerts_noclouds").on("change", function() {
     if ($('#weather_alerts_noclouds').is(':checked')) {
-      setCookie("config", JSON.stringify({"alert_noclouds": true}));
+      setData("config", JSON.stringify({"alert_noclouds": true}));
     } else {
-      setCookie("config", JSON.stringify({"alert_noclouds": false}));
+      setData("config", JSON.stringify({"alert_noclouds": false}));
     }
   });
 
   $("#weather_alerts_humidity").on("change", function() {
     if ($('#weather_alerts_humidity').is(':checked')) {
-      setCookie("config", JSON.stringify({"alert_humidity": true}));
+      setData("config", JSON.stringify({"alert_humidity": true}));
     } else {
-      setCookie("config", JSON.stringify({"alert_humidity": false}));
+      setData("config", JSON.stringify({"alert_humidity": false}));
     }
   });
 
   $("#weather_alerts_wind").on("change", function() {
     if ($('#weather_alerts_wind').is(':checked')) {
-      setCookie("config", JSON.stringify({"alert_wind": true}));
+      setData("config", JSON.stringify({"alert_wind": true}));
     } else {
-      setCookie("config", JSON.stringify({"alert_wind": false}));
+      setData("config", JSON.stringify({"alert_wind": false}));
     }
   });
 
   $("#weather_forecast_time").change(function () {
-      setCookie("config", JSON.stringify({"weather_forecast_at": $('input[name="weather_forecast_time"]:checked').val()}));
+      setData("config", JSON.stringify({"weather_forecast_at": $('input[name="weather_forecast_time"]:checked').val()}));
       requestWeather();
   });
 
