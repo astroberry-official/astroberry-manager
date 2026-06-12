@@ -532,7 +532,9 @@ img.panel-title { margin-bottom: 5px; }
 #driver_details { display: none; margin-top: 20px; width: 100%; background: #666; padding: 5px 10px; height: 125px; overflow-x: hidden; overflow-y: 
 	auto; border: 0px solid #333; border-radius: 5px; position: relative; z-index: 10;}
 .driver_details { display: block; width: 100%; }
-.driver_details span {width: 70%; }
+.driver_details_item { width: 45%; display: inline-block; }
+.driver_details_control { width: 55%; display: inline-block; }
+.driver_details span { /* width: 70%; */ }
 .driver_details span.name { font-size: 0.95em; display: inline-block; color: #222; margin-top: 5px; }
 .driver_details span.details { font-size: 0.8em; display: inline-block; color: #eee; }
 .driver_details button { font-size: 0.8em; display: inline-block; margin-left: 10px; margin-top: -10px;}
@@ -543,7 +545,6 @@ img.panel-title { margin-bottom: 5px; }
 /*************************************/
 /*            SYSTEM PANEL
 /*************************************/
-
 #system-status,
 #system-events,
 #system-settings { display: none; width:100%; height: 85%; font-size: 0.75em; font-family: 'Roboto Regular'; }

@@ -308,9 +308,14 @@ function getDriverDetails(data) {
         $.each(drivers, function(index, driver) {
             if (driver.family == family) {
                 details += "<div class='driver_details'>";
+                details += "<div class='driver_details_item'>";
                 details += "<span class='name'>" + driver.label + "</span>";
                 details += "<span class='details'>" + driver.binary + "</span>";
-                details += "<button class='btn btn-primary' data-driver=\"" + driver.label + "\" data-toggle='tooltip'>Restart</button>";
+                details += "</div>";
+                details += "<div class='driver_details_control'>";
+                details += "<button class='btn btn-primary' data-driver='" + driver.label + "' data-toggle='tooltip'>Connect</button>";
+                details += "<button class='btn btn-primary' data-driver='" + driver.label + "' data-toggle='tooltip'>Restart</button>";
+                details += "</div>";
                 details += "</div>";
                 count++;
             }
