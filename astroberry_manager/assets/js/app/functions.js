@@ -47,12 +47,14 @@ function deg2hms(deg) {
 
 function deg2dms(deg) {
     if (deg === null || isNaN(parseFloat(deg))) return;
+    var sign = deg < 0 ? -1 : 1;
+    deg = Math.abs(deg);
     var d = Math.floor(deg),
         rest1 = (deg - d) * 60,
         m = Math.floor(rest1),
         rest2 = (rest1 - m) * 60;
     var s = Math.round(rest2);
-    return '' + pad(d) + '° ' + pad(m) + '′ ' + pad(s) + '″'; // 2 digits padding
+    return '' + pad(sign * d) + '° ' + pad(m) + '′ ' + pad(s) + '″'; // 2 digits padding
     //return '' + pad(pad(d)) + '° ' + pad(m) + '′ ' + pad(s) + '″'; // 3 digits padding
 }
 
